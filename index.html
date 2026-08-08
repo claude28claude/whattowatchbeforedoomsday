@@ -207,35 +207,47 @@
     -webkit-backdrop-filter:saturate(118%);
             backdrop-filter:saturate(118%);
     border:0;
+    /* a finished edge: hairline, bevel, seated shadow — six layers of it */
     box-shadow:
-      inset 0 1.5px 0 rgba(226,255,236,.34),      /* top rim light   */
-      inset 1.5px 0 0 rgba(200,240,214,.14),      /* left rim        */
-      inset -1.5px 0 0 rgba(200,240,214,.11),     /* right rim       */
-      inset 0 -1.5px 0 rgba(160,220,180,.17),     /* bottom rim      */
-      inset 0 22px 30px -26px rgba(236,255,242,.5),
-      0 20px 50px rgba(0,0,0,.30),
-      0 2px 10px rgba(0,0,0,.20);
+      inset 0 0 0 1px rgba(198,246,214,.10),        /* continuous hairline */
+      inset 0 1.5px 0 rgba(232,255,240,.42),        /* lit top bevel       */
+      inset 1.5px 0 0 rgba(206,244,220,.17),        /* left bevel          */
+      inset -1.5px 0 0 rgba(206,244,220,.13),       /* right bevel         */
+      inset 0 -2px 0 rgba(120,190,145,.26),         /* shadowed under-edge */
+      inset 0 26px 34px -30px rgba(240,255,246,.55),/* light rolling in    */
+      inset 0 -20px 30px -28px rgba(0,0,0,.55),     /* thickness at base   */
+      0 1px 0 rgba(198,246,214,.05),                /* seat                */
+      0 22px 54px rgba(0,0,0,.34),
+      0 3px 12px rgba(0,0,0,.24);
   }
-  /* the refracting edge — a rim-only band that bends the backdrop */
+  /* the refracting edge — a rim-only band that bends the backdrop, softened
+     inward so it fades into the pane instead of stopping at a hard step */
   .lglass::before{
     content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;
-    padding:10px;box-sizing:border-box;opacity:.72;
-    -webkit-backdrop-filter:blur(4px) saturate(140%) brightness(1.04);
-            backdrop-filter:blur(4px) saturate(140%) brightness(1.04);
-    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-            mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+    padding:14px;box-sizing:border-box;opacity:.78;
+    -webkit-backdrop-filter:blur(5px) saturate(150%) brightness(1.05);
+            backdrop-filter:blur(5px) saturate(150%) brightness(1.05);
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+            mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
     -webkit-mask-composite:xor;
             mask-composite:exclude;
   }
-  /* specular sheen across the face */
+  /* specular sheen across the face, plus a caught highlight along the top edge */
   .lglass::after{
     content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;
-    background:linear-gradient(138deg,
-      rgba(255,255,255,.16) 0%,
-      rgba(255,255,255,.04) 18%,
-      rgba(255,255,255,0) 42%,
-      rgba(255,255,255,0) 70%,
-      rgba(190,255,214,.07) 100%);
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.13) 0, rgba(255,255,255,0) 12px),
+      radial-gradient(120% 60% at 22% -8%, rgba(226,255,238,.13), rgba(255,255,255,0) 62%),
+      linear-gradient(138deg,
+        rgba(255,255,255,.14) 0%,
+        rgba(255,255,255,.035) 18%,
+        rgba(255,255,255,0) 42%,
+        rgba(255,255,255,0) 70%,
+        rgba(190,255,214,.075) 100%);
     mix-blend-mode:screen;
   }
   .lglass > *{position:relative;z-index:1}
@@ -538,13 +550,13 @@
 <svg id="emblemWrap" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
   <defs>
     <linearGradient id="metalG" x1="0.12" y1="0" x2="0.88" y2="1">
-      <stop offset="0%"   stop-color="#b9d0dd"/>
-      <stop offset="13%"  stop-color="#6d8d9d"/>
-      <stop offset="33%"  stop-color="#2a3f48"/>
-      <stop offset="52%"  stop-color="#16262d"/>
-      <stop offset="70%"  stop-color="#31505d"/>
-      <stop offset="86%"  stop-color="#5c8091"/>
-      <stop offset="100%" stop-color="#0b151a"/>
+      <stop offset="0%"   stop-color="#718895"/>
+      <stop offset="13%"  stop-color="#3d5461"/>
+      <stop offset="33%"  stop-color="#152128"/>
+      <stop offset="52%"  stop-color="#0a1216"/>
+      <stop offset="70%"  stop-color="#182c35"/>
+      <stop offset="86%"  stop-color="#314c58"/>
+      <stop offset="100%" stop-color="#04090c"/>
     </linearGradient>
     <radialGradient id="paneG" cx="0.5" cy="0.82" r="0.78">
       <stop offset="0%"   stop-color="#f2ffa8"/>
@@ -559,10 +571,10 @@
       <stop offset="100%" stop-color="rgba(58,150,80,0)"/>
     </radialGradient>
     <linearGradient id="specG" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%"   stop-color="rgba(232,248,255,.60)"/>
-      <stop offset="20%"  stop-color="rgba(232,248,255,.10)"/>
+      <stop offset="0%"   stop-color="rgba(206,228,242,.30)"/>
+      <stop offset="20%"  stop-color="rgba(206,228,242,.05)"/>
       <stop offset="48%"  stop-color="rgba(232,248,255,0)"/>
-      <stop offset="78%"  stop-color="rgba(196,226,244,.18)"/>
+      <stop offset="78%"  stop-color="rgba(170,200,220,.09)"/>
       <stop offset="100%" stop-color="rgba(196,226,244,0)"/>
     </linearGradient>
 
@@ -595,7 +607,7 @@
     </filter>
     <filter id="hard" x="-30%" y="-30%" width="160%" height="160%">
       <feDropShadow dx="0" dy="6" stdDeviation="12" flood-color="#000" flood-opacity="0.85"/>
-      <feDropShadow dx="0" dy="0" stdDeviation="26" flood-color="#57d84f" flood-opacity="0.34"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="26" flood-color="#2f8f3a" flood-opacity="0.20"/>
     </filter>
   </defs>
 
@@ -608,7 +620,7 @@
   <g mask="url(#paneMask)" filter="url(#paneGlow)">
     <circle cx="300" cy="300" r="176.91" fill="url(#paneG)"/>
     <g id="paneGlass"></g>
-    <g id="paneTree" stroke="#07160e" fill="none" stroke-linecap="round" opacity="0.92"></g>
+    <g id="paneTree" stroke="#0d2e1a" fill="none" stroke-linecap="round" opacity="0.92"></g>
     <g filter="url(#innerShade)" opacity="0.6" fill="none">
       <circle cx="300" cy="300" r="172.91" stroke="#04120a" stroke-width="30"/>
       <image href="assets/doomsday-a.png" x="95.16" y="36.58" width="306.31" height="437.58"
@@ -623,8 +635,8 @@
     <rect x="0" y="0" width="600" height="600" fill="url(#specG)" mask="url(#markMask)"/>
     <g mask="url(#markMask)">
       <g id="ringEtch" stroke="rgba(10,20,16,.5)" stroke-width="1.6"></g>
-      <circle cx="300" cy="300" r="203.00" fill="none" stroke="rgba(196,226,244,.32)" stroke-width="2"/>
-      <circle cx="300" cy="300" r="174.91" fill="none" stroke="rgba(196,226,244,.26)" stroke-width="2"/>
+      <circle cx="300" cy="300" r="203.00" fill="none" stroke="rgba(150,182,202,.20)" stroke-width="2"/>
+      <circle cx="300" cy="300" r="174.91" fill="none" stroke="rgba(150,182,202,.16)" stroke-width="2"/>
       <circle cx="300" cy="300" r="196.00" fill="none" stroke="rgba(6,14,11,.5)" stroke-width="1.4"/>
       <circle cx="300" cy="300" r="181.91" fill="none" stroke="rgba(6,14,11,.4)" stroke-width="1.2"/>
     </g>
@@ -981,22 +993,27 @@
     function branch(x,y,ang,len,w,depth,trunk){
       var x2=x+Math.cos(ang)*len, y2=y+Math.sin(ang)*len;
       // bow each strand so nothing reads as a straight spoke
-      var mx=(x+x2)/2+Math.cos(ang+Math.PI/2)*len*(rnd()*0.34-0.17);
-      var my=(y+y2)/2+Math.sin(ang+Math.PI/2)*len*(rnd()*0.34-0.17);
+      var bow=rnd()*0.85-0.42, along=0.28+rnd()*0.46;
+      var mx=x+(x2-x)*along+Math.cos(ang+Math.PI/2)*len*bow;
+      var my=y+(y2-y)*along+Math.sin(ang+Math.PI/2)*len*bow;
       var d='M'+x.toFixed(1)+','+y.toFixed(1)+' Q'+mx.toFixed(1)+','+my.toFixed(1)+' '+x2.toFixed(1)+','+y2.toFixed(1);
       out.push('<path d="'+d+'" stroke-width="'+w.toFixed(2)+'"'+
                (opts.stroke?' stroke="'+opts.stroke+'"':'')+
                (opts.fadeByDepth?' opacity="'+(0.30+depth*0.15).toFixed(2)+'"':'')+
                ' fill="none" stroke-linecap="round"/>');
       if(trunk && opts.lit){
-        litOut.push('<path d="'+d+'" stroke="#d9ffb0" stroke-width="'+(w*0.5).toFixed(2)+'" fill="none" '+
+        litOut.push('<path d="'+d+'" stroke="#6fae72" stroke-width="'+(w*0.5).toFixed(2)+'" fill="none" '+
                     'stroke-linecap="round" style="--len:'+Math.round(len*1.25)+';--d:'+(rnd()*9).toFixed(2)+'s"/>');
       }
       if(depth<=0) return;
-      var spread=opts.spread*(0.7+rnd()*0.6);
-      branch(x2,y2,ang+spread,len*(0.62+rnd()*0.18),w*0.58,depth-1,false);
-      branch(x2,y2,ang-spread,len*(0.62+rnd()*0.18),w*0.58,depth-1,false);
-      if(depth>2 && rnd()>0.5) branch(x2,y2,ang+(rnd()-0.5)*0.35,len*0.6,w*0.5,depth-2,false);
+      // deliberately lopsided: each side gets its own angle, length and weight,
+      // limbs are sometimes dropped, and the whole node can kink off-axis
+      var kink=(rnd()-0.5)*0.55;
+      var sprL=opts.spread*(0.45+rnd()*1.25), sprR=opts.spread*(0.45+rnd()*1.25);
+      if(rnd()>0.10) branch(x2,y2,ang+sprL+kink,len*(0.44+rnd()*0.46),w*(0.42+rnd()*0.30),depth-1,false);
+      if(rnd()>0.14) branch(x2,y2,ang-sprR+kink,len*(0.44+rnd()*0.46),w*(0.42+rnd()*0.30),depth-1,false);
+      if(depth>1 && rnd()>0.52) branch(x2,y2,ang+(rnd()-0.5)*1.5,len*(0.3+rnd()*0.4),w*0.4,depth-2,false);
+      if(depth>2 && rnd()>0.80) branch(x2,y2,ang+(rnd()<0.5?-1:1)*(1.0+rnd()*0.7),len*0.34,w*0.32,depth-3,false);
     }
     opts.seeds.forEach(function(s){ branch(s[0],s[1],s[2],s[3],opts.width,opts.depth,true); });
     return [out.join(''),litOut.join('')];
@@ -1113,16 +1130,18 @@
 
     function limb(x,y,ang,len,w,depth){
       var x2=x+Math.cos(ang)*len, y2=y+Math.sin(ang)*len;
-      var mx=(x+x2)/2+Math.cos(ang+Math.PI/2)*len*(rnd()*0.44-0.22);
-      var my=(y+y2)/2+Math.sin(ang+Math.PI/2)*len*(rnd()*0.44-0.22);
+      var bw=rnd()*0.95-0.47, al=0.26+rnd()*0.5;
+      var mx=x+(x2-x)*al+Math.cos(ang+Math.PI/2)*len*bw;
+      var my=y+(y2-y)*al+Math.sin(ang+Math.PI/2)*len*bw;
       parts.push('<path d="M'+x.toFixed(1)+','+y.toFixed(1)+' Q'+mx.toFixed(1)+','+my.toFixed(1)+
                  ' '+x2.toFixed(1)+','+y2.toFixed(1)+'" stroke-width="'+w.toFixed(2)+
                  '" opacity="'+(0.30+depth*0.14).toFixed(2)+'"/>');
       if(depth<=0) return;
-      var sp=0.36+rnd()*0.34;
-      limb(x2,y2,ang+sp,len*(0.62+rnd()*0.18),w*0.60,depth-1);
-      limb(x2,y2,ang-sp,len*(0.62+rnd()*0.18),w*0.60,depth-1);
-      if(depth>1 && rnd()>0.42) limb(x2,y2,ang+(rnd()-0.5)*0.5,len*0.55,w*0.46,depth-2);
+      var kink=(rnd()-0.5)*0.6;
+      var sl=0.26+rnd()*0.85, sr=0.26+rnd()*0.85;
+      if(rnd()>0.10) limb(x2,y2,ang+sl+kink,len*(0.42+rnd()*0.48),w*(0.42+rnd()*0.30),depth-1);
+      if(rnd()>0.16) limb(x2,y2,ang-sr+kink,len*(0.42+rnd()*0.48),w*(0.42+rnd()*0.30),depth-1);
+      if(depth>1 && rnd()>0.45) limb(x2,y2,ang+(rnd()-0.5)*1.7,len*(0.3+rnd()*0.4),w*0.42,depth-2);
     }
 
     // clusters seeded well inside the tile so nothing is clipped at the edge
@@ -1131,8 +1150,8 @@
     seeds.forEach(function(s,i){
       var trunks=5+Math.floor(rnd()*3);
       for(var t=0;t<trunks;t++){
-        var a=(t/trunks)*Math.PI*2+rnd()*1.2;
-        limb(s[0],s[1],a,60+rnd()*40,6.4,5);
+        var a=(t/trunks)*Math.PI*2+rnd()*2.6;
+        limb(s[0]+(rnd()-0.5)*70,s[1]+(rnd()-0.5)*70,a,40+rnd()*70,4.4+rnd()*3.4,5);
       }
     });
 
