@@ -1,0 +1,1960 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Doomsday Protocol — Every Marvel Movie &amp; Show to Watch Before Avengers: Doomsday</title>
+<meta name="description" content="A fan-made, deeply annotated watch order for Avengers: Doomsday (18 December 2026). 90 core entries plus the Marvel One-Shots, Sony's Spider-Man Universe and the Spider-Verse films as extensions. Release order and timeline order, runtimes, stop points, and a per-title reason it matters.">
+<meta name="theme-color" content="#030806">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%2305070a'/%3E%3Ccircle cx='50' cy='50' r='34' fill='none' stroke='%236f8fa0' stroke-width='11' stroke-dasharray='176 21'/%3E%3Cpath d='M29 83 L50 22 L71 83' fill='none' stroke='%236f8fa0' stroke-width='11'/%3E%3Cpath d='M53 30 L82 14' stroke='%236f8fa0' stroke-width='9'/%3E%3Cpath d='M38 62 L62 62' stroke='%236f8fa0' stroke-width='8'/%3E%3Cpath d='M42 74 L50 55 L58 74 Z' fill='%2396e05a'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --bg:#030806;
+    --bg-soft:#06100b;
+    /* surfaces are translucent so the mark reads through the whole page */
+    --card:rgba(8,20,14,.66);
+    --card-2:rgba(13,30,21,.74);
+    --edge:#173026;
+    --edge-hot:#2d5440;
+    --ink:#e8f4ea;
+    --ink-dim:#a6c2b0;
+    /* lifted to clear 4.5:1 — it carries 9-13px text (tags, years, footer) */
+    --ink-faint:#7d9c88;
+    --acc:#8ede4d;
+    --acc-lt:#cdff96;
+    --acc-glow:rgba(142,222,77,.42);
+    --doom:#3f8f5e;
+    --doom-glow:rgba(63,143,94,.38);
+    --crimson:#e2564a;
+    --steel:#7f9aa8;
+    --violet:#a98cf0;
+    --cyan:#5fb8c9;
+    --mono:'Cascadia Code','Consolas',ui-monospace,'SFMono-Regular',monospace;
+    --serif:Georgia,'Times New Roman',serif;
+    --sans:'Segoe UI',system-ui,-apple-system,sans-serif;
+    --r:14px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg);color:var(--ink);font-family:var(--sans);
+    line-height:1.6;min-height:100vh;overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--acc);text-decoration-color:rgba(142,222,77,.35)}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+    clip:rect(0 0 0 0);white-space:nowrap;border:0}
+  .skip{position:absolute;left:-9999px;top:0;z-index:200;background:var(--acc);color:#04120a;
+    padding:10px 18px;border-radius:0 0 10px 0;font-family:var(--mono);font-size:12px}
+  .skip:focus{left:0}
+  :focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+  ::selection{background:rgba(142,222,77,.3)}
+
+  /* ============ BACKGROUND EMBLEM ============ */
+  /* real logo file, when one is present */
+  #logoImg{
+    position:fixed;top:-2vh;left:50%;transform:translateX(-50%);
+    width:min(96vh,104vw);height:auto;z-index:0;pointer-events:none;
+    opacity:var(--eo,.72);
+    -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 54%,rgba(0,0,0,.72) 76%,rgba(0,0,0,.34) 92%,transparent 100%);
+            mask-image:linear-gradient(180deg,#000 0%,#000 54%,rgba(0,0,0,.72) 76%,rgba(0,0,0,.34) 92%,transparent 100%);
+    animation:breathe 14s ease-in-out infinite;
+    transition:opacity .18s linear;
+    filter:drop-shadow(0 0 46px rgba(79,210,79,.28));
+  }
+  #logoImg[hidden]{display:none}
+  #emblemWrap{
+    position:fixed;top:-2vh;left:50%;transform:translateX(-50%);
+    width:min(96vh,104vw);height:auto;z-index:0;pointer-events:none;
+    -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 54%,rgba(0,0,0,.72) 76%,rgba(0,0,0,.34) 92%,transparent 100%);
+            mask-image:linear-gradient(180deg,#000 0%,#000 54%,rgba(0,0,0,.72) 76%,rgba(0,0,0,.34) 92%,transparent 100%);
+    opacity:var(--eo,.72);
+    animation:breathe 14s ease-in-out infinite;
+    transition:opacity .18s linear;
+  }
+  @keyframes breathe{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.018)}}
+  /* light travelling out along the timeline branches, as in the Loki finale */
+  #treeLit path{stroke-dasharray:var(--len) var(--len);animation:flow 9s linear infinite;animation-delay:var(--d)}
+  @keyframes flow{0%{stroke-dashoffset:var(--len);opacity:0}
+                  18%{opacity:1}
+                  70%{stroke-dashoffset:0;opacity:.9}
+                  100%{stroke-dashoffset:calc(var(--len) * -1);opacity:0}}
+  /* the light behind the panes breathes */
+  #emblemWrap g[mask]{animation:paneBreath 7.5s ease-in-out infinite}
+  @keyframes paneBreath{0%,100%{opacity:.88}45%{opacity:1}70%{opacity:.8}}
+  @media (prefers-reduced-motion:reduce){
+    #emblemWrap,#treeLit path,#emblemWrap g[mask]{animation:none}
+    #treeLit path{stroke-dasharray:none}
+  }
+  #glowlayer{
+    position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(ellipse 66% 42% at 50% 6%, rgba(90,190,110,.16), transparent 72%),
+      radial-gradient(ellipse 78% 48% at 50% 24%, rgba(46,86,104,.16), transparent 74%),
+      radial-gradient(ellipse 96% 60% at 50% 104%, rgba(142,222,77,.05), transparent 70%);
+  }
+  #vignette{
+    position:fixed;inset:0;z-index:1;pointer-events:none;
+    background:
+      radial-gradient(ellipse 54% 22% at 50% 30%, rgba(3,8,6,.40), rgba(3,8,6,0) 74%),
+      linear-gradient(180deg, rgba(3,8,6,.26) 0%, rgba(3,8,6,.16) 20%, rgba(3,8,6,.22) 42%, rgba(3,8,6,.36) 64%, rgba(3,8,6,.50) 84%, rgba(3,8,6,.58) 100%);
+  }
+  #grain{
+    position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .page{position:relative;z-index:2}
+
+  /* ============ TOP BAR ============ */
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:18px 24px;max-width:1120px;margin:0 auto;flex-wrap:wrap;
+    font-family:var(--mono);font-size:11.5px;letter-spacing:.26em;
+    color:var(--ink-faint);text-transform:uppercase;
+  }
+  /* sits over the brightest part of the mark — let it recede */
+  .topbar .ver{color:rgba(159,205,175,.30);text-shadow:0 1px 6px rgba(3,8,6,.9)}
+  .topbar .pill{
+    border:1px solid var(--edge);border-radius:99px;padding:7px 16px;
+    color:var(--ink-dim);letter-spacing:.12em;background:rgba(142,222,77,.05);
+  }
+
+  /* ============ HERO ============ */
+  .hero{max-width:900px;margin:0 auto;padding:16px 24px 6px;text-align:center}
+  .mark{width:clamp(78px,12vw,116px);height:auto;display:block;margin:0 auto 20px;
+    filter:drop-shadow(0 0 12px rgba(142,222,77,.5)) drop-shadow(0 0 40px rgba(142,222,77,.26))}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.44em;color:var(--acc);
+    text-transform:uppercase;margin-bottom:16px}
+  h1{font-family:var(--serif);font-weight:700;font-size:clamp(32px,9.4vw,86px);
+    line-height:1.02;letter-spacing:.005em}
+  h1 .w{color:#f4f8fa;text-shadow:0 0 40px rgba(255,255,255,.16),0 4px 30px rgba(3,8,6,.92)}
+  /* knocked out, so the mark behind reads straight through the letterforms */
+  h1 .g{
+    color:rgba(205,255,150,.16);
+    -webkit-text-stroke:2.5px var(--acc);
+    text-shadow:0 0 30px var(--acc-glow),0 0 90px var(--acc-glow);
+    paint-order:stroke fill;
+  }
+  .tagline{margin:22px auto 0;max-width:690px;font-size:18px;color:var(--ink-dim);
+    text-shadow:0 2px 18px rgba(3,8,6,.95),0 0 34px rgba(3,8,6,.85)}
+  .tagline b{color:var(--ink)}
+  .kicker{margin:14px auto 0;max-width:660px;font-size:14.5px;color:var(--ink-faint)}
+
+  /* ============ COUNTDOWN ============ */
+  .cd-switch{display:flex;justify-content:center;gap:8px;margin:32px 0 16px;flex-wrap:wrap}
+  .cd-switch button{
+    font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    background:transparent;border:1px solid var(--edge);color:var(--ink-faint);
+    border-radius:99px;padding:8px 17px;cursor:pointer;transition:.15s;
+  }
+  .cd-switch button:hover{color:var(--ink-dim);border-color:var(--edge-hot)}
+  .cd-switch button.on{border-color:var(--acc);color:var(--acc);background:rgba(142,222,77,.09)}
+  .countdown{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+  .tile{
+    background:linear-gradient(180deg,rgba(142,222,77,.09),rgba(142,222,77,.015));
+    border:1px solid var(--edge);border-radius:var(--r);
+    min-width:92px;padding:15px 10px 11px;backdrop-filter:blur(3px);
+  }
+  .tile b{font-family:var(--serif);font-size:40px;color:var(--acc-lt);display:block;line-height:1;
+    text-shadow:0 0 22px var(--acc-glow)}
+  .tile span{font-family:var(--mono);font-size:9.5px;letter-spacing:.24em;color:var(--ink-faint);
+    text-transform:uppercase;display:block;margin-top:8px}
+  .cd-target{font-family:var(--mono);font-size:11.5px;letter-spacing:.2em;color:var(--ink-faint);
+    text-transform:uppercase;margin-top:16px}
+
+  /* ============ SHELL ============ */
+  /* ===== GLASS BOX PANELS =====
+     Blur is expensive, so only a handful of large containers are real glass.
+     Everything inside them is plain translucent fill and inherits the effect,
+     which looks identical and costs a fraction as much to composite. */
+  .glass{
+    -webkit-backdrop-filter:blur(10px) saturate(125%);
+            backdrop-filter:blur(10px) saturate(125%);
+    background:linear-gradient(160deg,rgba(18,40,28,.50),rgba(6,16,11,.62));
+    border:1px solid rgba(120,190,140,.14);
+    border-radius:20px;
+    box-shadow:0 1px 0 rgba(180,240,190,.07) inset, 0 18px 44px rgba(0,0,0,.45);
+  }
+  /* inner surfaces: no blur of their own */
+  .entry,.detail,.stat,.tile,.card,details.faq,.stop{
+    -webkit-backdrop-filter:none;backdrop-filter:none;
+  }
+
+  /* The movie tiles are the most transparent glass on the page — heavy blur
+     smears the mark into mush, so these get a light blur and a thin tint,
+     and the type carries its own shadow to stay readable over the logo. */
+  /* ===== LIQUID GLASS =====
+     Not just a transparent box: the body of the pane is near-clear, the rim
+     refracts what is behind it like the thick edge of a lens, and a specular
+     sheen runs across the top-left. Thickness comes from stacked inset rims. */
+  .lglass{
+    position:relative;
+    border-radius:26px;
+    background:linear-gradient(160deg,rgba(210,255,225,.006),rgba(4,12,8,.008));
+    -webkit-backdrop-filter:saturate(118%);
+            backdrop-filter:saturate(118%);
+    border:0;
+    box-shadow:
+      inset 0 1.5px 0 rgba(226,255,236,.34),      /* top rim light   */
+      inset 1.5px 0 0 rgba(200,240,214,.14),      /* left rim        */
+      inset -1.5px 0 0 rgba(200,240,214,.11),     /* right rim       */
+      inset 0 -1.5px 0 rgba(160,220,180,.17),     /* bottom rim      */
+      inset 0 22px 30px -26px rgba(236,255,242,.5),
+      0 20px 50px rgba(0,0,0,.30),
+      0 2px 10px rgba(0,0,0,.20);
+  }
+  /* the refracting edge — a rim-only band that bends the backdrop */
+  .lglass::before{
+    content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+    padding:10px;box-sizing:border-box;opacity:.72;
+    -webkit-backdrop-filter:blur(4px) saturate(140%) brightness(1.04);
+            backdrop-filter:blur(4px) saturate(140%) brightness(1.04);
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+            mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;
+            mask-composite:exclude;
+  }
+  /* specular sheen across the face */
+  .lglass::after{
+    content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+    background:linear-gradient(138deg,
+      rgba(255,255,255,.16) 0%,
+      rgba(255,255,255,.04) 18%,
+      rgba(255,255,255,0) 42%,
+      rgba(255,255,255,0) 70%,
+      rgba(190,255,214,.07) 100%);
+    mix-blend-mode:screen;
+  }
+  .lglass > *{position:relative;z-index:1}
+
+  .part-list.glass{border-color:transparent}
+  /* with almost no panel behind it, every glyph carries its own backing */
+  .part-list .e-title{text-shadow:0 1px 3px #030806,0 0 12px rgba(3,8,6,1),0 0 26px rgba(3,8,6,.95)}
+  .part-list .e-no,.part-list .e-year{text-shadow:0 1px 3px #030806,0 0 12px rgba(3,8,6,1)}
+  .part-list .tag{background:rgba(3,9,6,.72);text-shadow:0 1px 3px rgba(3,8,6,.95)}
+  .part-list .e-caret{text-shadow:0 1px 4px #030806}
+  .part-list .cb::before{background:rgba(3,9,6,.8)}
+  .part-list .detail{
+    background:linear-gradient(160deg,rgba(210,255,225,.018),rgba(4,12,8,.03));
+    border:0;border-radius:16px;
+    -webkit-backdrop-filter:blur(1.5px) saturate(140%);
+            backdrop-filter:blur(1.5px) saturate(140%);
+    box-shadow:inset 0 1px 0 rgba(226,255,236,.20), inset 0 -1px 0 rgba(160,220,180,.12),
+               0 8px 22px rgba(0,0,0,.24);
+    text-shadow:0 1px 3px #030806,0 0 12px rgba(3,8,6,.98);
+  }
+  .part-list .detail .why{text-shadow:0 1px 3px #030806,0 0 14px rgba(3,8,6,1)}
+  .part-list .detail .dgrid em,.part-list .detail .dgrid span,
+  .part-list .detail .dsub,.part-list .detail .dnote{text-shadow:0 1px 3px #030806,0 0 12px rgba(3,8,6,1)}
+  .part-list .detail .dgrid div{border-top-color:rgba(160,220,180,.18)}
+  .part-list .detail .dsub{border-top-color:rgba(160,220,180,.18)}
+  .part-list .stop{background:rgba(40,14,11,.72)}
+
+  .wrap{max-width:1060px;margin:0 auto;padding:0 20px}
+  section{margin-top:64px}
+  .sec-head{margin-bottom:20px}
+  .sec-head h2{font-family:var(--serif);font-size:clamp(24px,4.4vw,38px);color:#f4f8fa;line-height:1.15}
+  .sec-head p{color:var(--ink-dim);margin-top:8px;max-width:790px;font-size:15.5px}
+  .rule{height:1px;background:linear-gradient(90deg,transparent,var(--edge-hot),transparent);margin:52px 0}
+
+  /* ============ PROGRESS ============ */
+  .progress-card{padding:26px 24px;margin-top:40px}
+  .pc-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .pc-top .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.26em;color:var(--ink-faint);text-transform:uppercase}
+  .pc-top .pct{font-family:var(--serif);font-size:34px;color:var(--acc-lt)}
+  .bar{height:12px;border-radius:99px;background:rgba(4,12,8,.72);border:1px solid var(--edge);margin:14px 0 6px;overflow:hidden}
+  .bar i{display:block;height:100%;width:0%;border-radius:99px;
+    background:linear-gradient(90deg,var(--doom),var(--acc));
+    box-shadow:0 0 18px var(--acc-glow);transition:width .5s cubic-bezier(.2,.8,.2,1)}
+  .pc-msg{font-size:14.5px;color:var(--ink-dim);margin-top:10px;min-height:22px}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:12px;margin-top:22px}
+  .stat{background:rgba(255,255,255,.018);border:1px solid var(--edge);border-radius:12px;padding:14px 14px}
+  .stat b{display:block;font-family:var(--serif);font-size:25px;color:var(--ink)}
+  .stat span{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;
+    color:var(--ink-faint);text-transform:uppercase;margin-top:6px;line-height:1.5}
+
+  .planner{margin-top:22px;border-top:1px dashed var(--edge);padding-top:18px;
+    display:flex;gap:14px;align-items:center;flex-wrap:wrap;font-size:14.5px;color:var(--ink-dim)}
+  .planner input[type=date]{
+    background:rgba(4,12,8,.72);border:1px solid var(--edge);color:var(--ink);border-radius:9px;
+    padding:8px 10px;font-family:var(--mono);font-size:13px;color-scheme:dark;
+  }
+  .planner .out{color:var(--acc-lt);font-family:var(--mono);font-size:13.5px}
+
+  /* ============ CONTROLS ============ */
+  .controls{position:sticky;top:0;z-index:20;margin-top:34px;padding:14px;border-radius:16px}
+  .ctl-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .ctl-row + .ctl-row{margin-top:10px}
+  /* on small screens the filter rows fold away behind a single button */
+  .ctl-toggle{display:none}
+  @media (max-width:760px){
+    .ctl-toggle{display:inline-flex;align-items:center;gap:7px}
+    .controls.folded .ctl-fold{display:none}
+  }
+  .ctl-lbl{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--ink-faint);
+    text-transform:uppercase;margin-right:2px}
+  .chip{
+    font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+    background:transparent;border:1px solid var(--edge);color:var(--ink-faint);
+    border-radius:99px;padding:7px 14px;cursor:pointer;transition:.15s;
+  }
+  .chip:hover{color:var(--ink-dim);border-color:var(--edge-hot)}
+  .chip.on{border-color:var(--acc);color:var(--acc);background:rgba(142,222,77,.1)}
+  .chip.danger:hover{border-color:var(--crimson);color:var(--crimson)}
+  .search{flex:1;min-width:180px;background:rgba(4,12,8,.72);border:1px solid var(--edge);
+    color:var(--ink);border-radius:99px;padding:8px 15px;font-family:var(--sans);font-size:14px}
+  .search::placeholder{color:var(--ink-faint)}
+  .search:focus{outline:none;border-color:var(--edge-hot)}
+  .count-note{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--ink-faint);
+    text-transform:uppercase;margin-left:auto}
+
+  /* ============ PARTS + ENTRIES ============ */
+  .part{margin-top:52px;scroll-margin-top:150px}
+  .part-head{border-left:3px solid var(--acc);padding-left:16px;margin-bottom:6px}
+  .part-head.ext{border-left-color:var(--cyan)}
+  .part-head .no{font-family:var(--mono);font-size:10.5px;letter-spacing:.3em;color:var(--acc);text-transform:uppercase}
+  .part-head.ext .no{color:var(--cyan)}
+  .part-head h3{font-family:var(--serif);font-size:clamp(21px,3.4vw,30px);color:#f4f8fa;margin-top:4px}
+  .part-head p{color:var(--ink-dim);font-size:14.5px;margin-top:7px;max-width:790px}
+  .part-meta{display:flex;gap:14px;flex-wrap:wrap;margin:12px 0 18px 19px;
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--ink-faint);text-transform:uppercase}
+  .mark-all{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
+    background:transparent;border:1px solid var(--edge);color:var(--ink-faint);border-radius:99px;
+    padding:5px 12px;cursor:pointer;transition:.15s}
+  .mark-all:hover{border-color:var(--acc);color:var(--acc)}
+  .mark-all:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+  .card.empty{margin-top:32px;text-align:center;padding:26px 22px;font-size:15px;color:var(--ink-dim)}
+  .card.empty b{color:var(--acc-lt)}
+  .part-bar{height:4px;background:rgba(4,12,8,.72);border-radius:99px;margin:0 0 18px 19px;overflow:hidden;max-width:280px}
+  .part-bar i{display:block;height:100%;width:0;background:var(--doom);border-radius:99px;transition:width .4s}
+
+  /* entries are rows inside the part's glass box, not boxes of their own */
+  .part-list{padding:10px;margin-bottom:8px}
+  .entry{
+    display:flex;gap:12px;align-items:flex-start;
+    border:0;border-radius:14px;background:transparent;
+    padding:12px 12px;transition:background .14s;position:relative;
+  }
+  .entry + .entry::before{content:'';position:absolute;left:58px;right:12px;top:0;height:1px;
+    background:rgba(140,200,160,.09)}
+  .entry:hover{background:rgba(140,220,160,.055)}
+  .entry:hover::before,.entry:hover + .entry::before{background:transparent}
+  .entry.done{opacity:.5}
+  .entry.done .e-title{text-decoration:line-through;text-decoration-color:var(--ink-faint)}
+  .entry:focus-within{background:rgba(140,220,160,.07)}
+
+  /* 44px tap target; the visible box stays 24px */
+  .cb{
+    flex:none;width:44px;height:44px;margin:-6px 0 0 -10px;cursor:pointer;
+    background:transparent;border:0;position:relative;border-radius:12px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .cb::before{
+    content:'';width:24px;height:24px;border-radius:7px;
+    border:1.5px solid var(--edge-hot);background:rgba(4,12,8,.72);transition:.15s;
+  }
+  .cb:hover::before{border-color:var(--doom)}
+  .cb:focus-visible{outline:2px solid var(--acc);outline-offset:-4px}
+  .cb.on::before{background:var(--doom);border-color:var(--doom);box-shadow:0 0 14px var(--doom-glow)}
+  .cb.on::after{content:'';position:absolute;left:19px;top:14px;width:6px;height:12px;
+    border:solid #06120b;border-width:0 2.5px 2.5px 0;transform:rotate(42deg)}
+  .e-body{flex:1;min-width:0;cursor:pointer;border-radius:8px}
+  .e-body:focus-visible{outline:2px solid var(--acc);outline-offset:3px}
+  .e-line1{display:flex;gap:9px;align-items:baseline;flex-wrap:wrap}
+  .e-no{font-family:var(--mono);font-size:11px;color:var(--ink-faint);flex:none}
+  .e-title{font-size:16.5px;font-weight:600;color:var(--ink)}
+  .e-year{font-family:var(--mono);font-size:12px;color:var(--ink-faint)}
+  .e-line2{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-top:7px}
+  .tag{font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;
+    border-radius:5px;padding:3px 7px;border:1px solid var(--edge-hot);color:var(--ink-faint)}
+  .tag.film{color:#a8c4d6;border-color:#2c3e4c}
+  .tag.series{color:var(--violet);border-color:#3b3055}
+  .tag.special{color:#e0a5c8;border-color:#4a2f42}
+  .tag.short{color:#c9b98a;border-color:#463d24}
+  .tag.ess{color:var(--acc);border-color:#2f4d23;background:rgba(142,222,77,.08)}
+  .tag.rec{color:var(--doom);border-color:#22432f}
+  .tag.opt{color:var(--ink-faint)}
+  .tag.soon{color:var(--crimson);border-color:#4a221f;background:rgba(207,59,50,.08)}
+  .tag.run{color:var(--steel)}
+  .e-caret{flex:none;color:var(--ink-faint);font-size:12px;margin-top:5px;
+    transition:transform .2s;font-family:var(--mono)}
+  .entry.open .e-caret{transform:rotate(90deg)}
+
+  .detail{display:none;margin:12px 0 4px;padding:14px 16px;border-radius:11px;
+    background:rgba(255,255,255,.022);border:1px solid var(--edge);font-size:14.5px;color:var(--ink-dim)}
+  .entry.open .detail{display:block}
+  .detail .why{color:var(--ink);margin-bottom:12px}
+  .detail .why b{color:var(--acc-lt);font-family:var(--mono);font-size:10px;letter-spacing:.22em;
+    text-transform:uppercase;display:block;margin-bottom:4px}
+  .dgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:12px}
+  .dgrid div{border-top:1px solid var(--edge);padding-top:7px}
+  .dgrid span{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.2em;
+    color:var(--ink-faint);text-transform:uppercase}
+  .dgrid em{font-style:normal;color:var(--ink);font-size:14px}
+  .dsub{margin-top:13px;border-top:1px solid var(--edge);padding-top:10px}
+  .dsub span{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--ink-faint);
+    text-transform:uppercase;display:block;margin-bottom:4px}
+  .dnote{margin-top:11px;color:var(--acc-lt);font-size:13.5px}
+
+  .stop{
+    display:flex;gap:11px;align-items:flex-start;
+    border:1px solid #4a2a1f;border-left:3px solid var(--crimson);
+    background:rgba(207,59,50,.07);border-radius:11px;padding:12px 15px;margin:4px 0 13px;
+    font-size:14.5px;color:#f0c9c5;
+  }
+  .stop b{font-family:var(--mono);font-size:10px;letter-spacing:.24em;color:var(--crimson);
+    text-transform:uppercase;display:block;margin-bottom:3px}
+  .stop .ico{flex:none;font-size:15px;line-height:1.4}
+  .stop.info{border-color:#2f4d23;border-left-color:var(--acc);
+    background:rgba(142,222,77,.07);color:var(--acc-lt)}
+  .stop.info b{color:var(--acc)}
+
+  /* ============ GENERIC CARDS ============ */
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(258px,1fr));gap:13px}
+  .card{border-radius:var(--r);padding:17px 18px}
+  .card h4{font-family:var(--serif);font-size:19px;color:var(--ink);margin-bottom:7px}
+  .card p{font-size:14.5px;color:var(--ink-dim)}
+  .card p + p{margin-top:8px}
+  .card .why-not{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--crimson);margin-bottom:8px}
+  .card .when{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--acc);margin-bottom:8px}
+  .card.wide{grid-column:1/-1}
+
+  details.faq{border-radius:var(--r);padding:15px 18px;margin-bottom:9px}
+  details.faq summary{cursor:pointer;font-weight:600;font-size:16px;color:var(--ink);list-style:none}
+  details.faq summary::-webkit-details-marker{display:none}
+  details.faq summary::before{content:'+ ';color:var(--acc);font-family:var(--mono)}
+  details.faq[open] summary::before{content:'– '}
+  details.faq p{margin-top:11px;color:var(--ink-dim);font-size:14.5px}
+  details.faq p + p{margin-top:9px}
+  details.faq ul{margin:10px 0 0 20px;color:var(--ink-dim);font-size:14.5px}
+  details.faq li{margin-bottom:5px}
+
+  .dest{border:1px solid #2f4d23;border-radius:18px;
+    background:linear-gradient(180deg,rgba(142,222,77,.1),rgba(142,222,77,.02));
+    padding:34px 26px;text-align:center}
+  .dest .no{font-family:var(--mono);font-size:11px;letter-spacing:.36em;color:var(--acc);text-transform:uppercase}
+  .dest h3{font-family:var(--serif);font-size:clamp(28px,6.4vw,52px);color:var(--acc-lt);margin:12px 0 8px;
+    text-shadow:0 0 30px var(--acc-glow)}
+  .dest p{color:var(--ink-dim);max-width:580px;margin:0 auto;font-size:15.5px}
+  .dest .date{font-family:var(--mono);font-size:12.5px;letter-spacing:.24em;color:var(--ink);
+    text-transform:uppercase;margin-top:16px}
+  /* Secret Wars — same tile language as Doomsday, its own accent,
+     held back by a deliberate stretch of empty road */
+  .sw-gap{height:52vh;min-height:300px;position:relative}
+  .sw-gap::after{content:'';position:absolute;left:50%;top:12%;bottom:6%;width:1px;
+    background:linear-gradient(180deg,transparent,var(--edge-hot) 30%,rgba(169,140,240,.5));}
+  .sw-card{border:1px solid #33305c;border-radius:18px;
+    background:linear-gradient(180deg,rgba(169,140,240,.11),rgba(63,143,94,.03));
+    padding:34px 26px;text-align:center}
+  .sw-card .no{font-family:var(--mono);font-size:11px;letter-spacing:.36em;color:var(--violet);text-transform:uppercase}
+  .sw-card h3{font-family:var(--serif);font-size:clamp(28px,6.4vw,52px);color:#cdb8ff;margin:12px 0 8px;
+    text-shadow:0 0 30px rgba(169,140,240,.45)}
+  .sw-card > p{color:var(--ink-dim);max-width:600px;margin:0 auto;font-size:15.5px}
+  .sw-card .countdown{margin-top:26px}
+  .countdown.sw .tile{background:linear-gradient(180deg,rgba(169,140,240,.1),rgba(169,140,240,.015));
+    border-color:#2c2a4d}
+  .countdown.sw .tile b{color:#cdb8ff;text-shadow:0 0 22px rgba(169,140,240,.45)}
+  .sw-card .date{font-family:var(--mono);font-size:12.5px;letter-spacing:.24em;color:var(--ink);
+    text-transform:uppercase;margin-top:20px}
+  .sw-card .gap{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;color:var(--ink-faint);
+    text-transform:uppercase;margin-top:10px}
+
+  .scroll-hint{text-align:center;margin-top:26px;font-family:var(--mono);font-size:10.5px;
+    letter-spacing:.28em;color:var(--ink-faint);text-transform:uppercase}
+  .scroll-hint i{display:block;font-style:normal;font-size:18px;color:var(--acc);margin-top:8px;
+    animation:bob 2.4s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0);opacity:.6}50%{transform:translateY(6px);opacity:1}}
+  @media (prefers-reduced-motion:reduce){.scroll-hint i{animation:none}}
+
+  /* after-doomsday timeline */
+  .after{border-left:2px solid var(--edge-hot);margin-left:8px;padding-left:22px}
+  .aitem{position:relative;padding-bottom:26px}
+  .aitem::before{content:'';position:absolute;left:-29px;top:6px;width:12px;height:12px;border-radius:50%;
+    background:var(--bg);border:2px solid var(--acc)}
+  .aitem.unconfirmed::before{border-color:var(--ink-faint)}
+  .aitem .adate{font-family:var(--mono);font-size:10.5px;letter-spacing:.22em;color:var(--acc);text-transform:uppercase}
+  .aitem.unconfirmed .adate{color:var(--ink-faint)}
+  .aitem h4{font-family:var(--serif);font-size:21px;color:var(--ink);margin:4px 0 5px}
+  .aitem p{font-size:14.5px;color:var(--ink-dim);max-width:720px}
+
+  footer{margin:80px 0 60px;padding-top:30px;border-top:1px solid var(--edge);
+    text-align:center;font-size:13.5px;color:var(--ink-faint);line-height:1.9}
+  footer b{color:var(--ink-dim)}
+
+  .toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,20px);z-index:99;
+    background:var(--card-2);border:1px solid var(--acc);color:var(--acc-lt);
+    padding:11px 20px;border-radius:99px;font-family:var(--mono);font-size:12px;letter-spacing:.1em;
+    opacity:0;pointer-events:none;transition:.25s}
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+
+  /* ===== PRINT ===== */
+  @media print{
+    #emblemWrap,#glowlayer,#vignette,#grain,.controls,.toast,.cd-switch,.scroll-hint,.sw-gap{display:none !important}
+    body{background:#fff;color:#000}
+    .page{position:static}
+    .glass{background:#fff !important;border:1px solid #bbb !important;box-shadow:none !important;
+      -webkit-backdrop-filter:none !important;backdrop-filter:none !important}
+    h1 .w,h1 .g,.sec-head h2,.part-head h3,.card h4,.aitem h4,.dest h3,.sw-card h3{
+      color:#000 !important;-webkit-text-stroke:0 !important;text-shadow:none !important}
+    .tagline,.kicker,.card p,.part-head p,.sec-head p,.aitem p,.detail,.e-title,.e-year,footer{color:#111 !important}
+    .tag,.part-meta,.e-no,.stat span{color:#444 !important;border-color:#bbb !important}
+    .detail{display:block !important}
+    .entry{break-inside:avoid;page-break-inside:avoid}
+    .part{break-inside:auto}
+    a{color:#000;text-decoration:underline}
+  }
+
+  @media (max-width:640px){
+    .tile{min-width:74px;padding:12px 8px 9px}
+    .tile b{font-size:31px}
+    .controls{border-radius:12px;padding:11px}
+    .count-note{margin-left:0;width:100%}
+    .entry{padding:12px 13px;gap:11px}
+    .after{padding-left:18px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== BACKGROUND MARK =====
+     The "A" is the real Marvel Studios Avengers: Doomsday wordmark glyph
+     (assets/doomsday-a.png, cropped from the official logo, 1155x1650 alpha).
+     The ring, the metal and the stained glass are built around it. ===== -->
+<svg id="emblemWrap" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs>
+    <linearGradient id="metalG" x1="0.12" y1="0" x2="0.88" y2="1">
+      <stop offset="0%"   stop-color="#b9d0dd"/>
+      <stop offset="13%"  stop-color="#6d8d9d"/>
+      <stop offset="33%"  stop-color="#2a3f48"/>
+      <stop offset="52%"  stop-color="#16262d"/>
+      <stop offset="70%"  stop-color="#31505d"/>
+      <stop offset="86%"  stop-color="#5c8091"/>
+      <stop offset="100%" stop-color="#0b151a"/>
+    </linearGradient>
+    <radialGradient id="paneG" cx="0.5" cy="0.82" r="0.78">
+      <stop offset="0%"   stop-color="#f2ffa8"/>
+      <stop offset="14%"  stop-color="#c6f55c"/>
+      <stop offset="34%"  stop-color="#67c73f"/>
+      <stop offset="62%"  stop-color="#2b8c46"/>
+      <stop offset="100%" stop-color="#0a3a20"/>
+    </radialGradient>
+    <radialGradient id="haloG" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%"   stop-color="rgba(120,230,120,.26)"/>
+      <stop offset="46%"  stop-color="rgba(58,150,80,.10)"/>
+      <stop offset="100%" stop-color="rgba(58,150,80,0)"/>
+    </radialGradient>
+    <linearGradient id="specG" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%"   stop-color="rgba(232,248,255,.60)"/>
+      <stop offset="20%"  stop-color="rgba(232,248,255,.10)"/>
+      <stop offset="48%"  stop-color="rgba(232,248,255,0)"/>
+      <stop offset="78%"  stop-color="rgba(196,226,244,.18)"/>
+      <stop offset="100%" stop-color="rgba(196,226,244,0)"/>
+    </linearGradient>
+
+    <!-- black glyph over a white disc = "disc minus A" in a luminance mask -->
+    <mask id="paneMask">
+      <circle cx="300" cy="300" r="175.91" fill="#fff"/>
+      <image href="assets/doomsday-a.png" x="95.16" y="36.58" width="306.31" height="437.58"
+             preserveAspectRatio="none"/>
+    </mask>
+    <!-- same glyph forced to white = "the A itself", unioned with the ring -->
+    <filter id="toWhite" x="0" y="0" width="100%" height="100%">
+      <feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0"/>
+    </filter>
+    <mask id="markMask">
+      <circle cx="300" cy="300" r="188.96" fill="none" stroke="#fff" stroke-width="32.09"/>
+      <image href="assets/doomsday-a.png" x="95.16" y="36.58" width="306.31" height="437.58"
+             preserveAspectRatio="none" filter="url(#toWhite)"/>
+    </mask>
+
+    <filter id="paneGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="15" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="innerShade" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8"/>
+    </filter>
+    <filter id="treeGlow" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="hard" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="6" stdDeviation="12" flood-color="#000" flood-opacity="0.85"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="26" flood-color="#57d84f" flood-opacity="0.34"/>
+    </filter>
+  </defs>
+
+  <circle cx="300" cy="300" r="300" fill="url(#haloG)"/>
+  <g id="stars"></g>
+  <g id="treeDim" filter="url(#treeGlow)" opacity="0.45"></g>
+  <g id="treeLit" filter="url(#treeGlow)" opacity="0.8"></g>
+
+  <!-- stained glass behind the mark -->
+  <g mask="url(#paneMask)" filter="url(#paneGlow)">
+    <circle cx="300" cy="300" r="176.91" fill="url(#paneG)"/>
+    <g id="paneGlass"></g>
+    <g id="paneTree" stroke="#07160e" fill="none" stroke-linecap="round" opacity="0.92"></g>
+    <g filter="url(#innerShade)" opacity="0.6" fill="none">
+      <circle cx="300" cy="300" r="172.91" stroke="#04120a" stroke-width="30"/>
+      <image href="assets/doomsday-a.png" x="95.16" y="36.58" width="306.31" height="437.58"
+             preserveAspectRatio="none"/>
+    </g>
+    <circle cx="300" cy="300" r="174.91" fill="none" stroke="#e6ffb4" stroke-width="2.5" opacity=".45"/>
+  </g>
+
+  <!-- the mark: official A glyph unioned with the ring, filled with metal -->
+  <g filter="url(#hard)">
+    <rect x="0" y="0" width="600" height="600" fill="url(#metalG)" mask="url(#markMask)"/>
+    <rect x="0" y="0" width="600" height="600" fill="url(#specG)" mask="url(#markMask)"/>
+    <g mask="url(#markMask)">
+      <g id="ringEtch" stroke="rgba(10,20,16,.5)" stroke-width="1.6"></g>
+      <circle cx="300" cy="300" r="203.00" fill="none" stroke="rgba(196,226,244,.32)" stroke-width="2"/>
+      <circle cx="300" cy="300" r="174.91" fill="none" stroke="rgba(196,226,244,.26)" stroke-width="2"/>
+      <circle cx="300" cy="300" r="196.00" fill="none" stroke="rgba(6,14,11,.5)" stroke-width="1.4"/>
+      <circle cx="300" cy="300" r="181.91" fill="none" stroke="rgba(6,14,11,.4)" stroke-width="1.2"/>
+    </g>
+  </g>
+</svg>
+<div id="glowlayer"></div>
+<div id="vignette"></div>
+<div id="grain"></div>
+
+<a class="skip" href="#listZone">Skip to the watch order</a>
+<div class="page">
+
+<div class="topbar">
+  <span>Fan project · Unofficial</span>
+  <span class="pill" id="topTally">—</span>
+  <span class="ver">v2.0 · <span id="stamp">—</span></span>
+</div>
+
+<header class="hero">
+  <div class="eyebrow">The Complete Marvel Watch Order</div>
+  <h1><span class="w">The Doomsday</span><br><span class="g">Protocol</span></h1>
+  <p class="tagline">Every Marvel film and series worth watching before <b>Avengers: Doomsday</b> — the MCU, the whole Fox X-Men catalogue, Blade, Ghost Rider and every live-action Spider-Man — in order, with the stop points and a straight answer for each one on <b>why it's on the list at all</b>.</p>
+  <p class="kicker">Plus the One-Shots, Sony's universe and the Spider-Verse films as optional extensions, and what comes after 18 December at the very bottom. Progress saves in this browser — no account, nothing sent anywhere.</p>
+
+  <div class="cd-switch" id="cdSwitch">
+    <button data-t="2026-12-18T00:00:00" class="on">Avengers: Doomsday</button>
+    <button data-t="2026-09-25T00:00:00">Endgame Encore</button>
+  </div>
+  <div class="countdown">
+    <div class="tile"><b id="cdD">—</b><span>Days</span></div>
+    <div class="tile"><b id="cdH">—</b><span>Hours</span></div>
+    <div class="tile"><b id="cdM">—</b><span>Minutes</span></div>
+    <div class="tile"><b id="cdS">—</b><span>Seconds</span></div>
+  </div>
+  <div class="cd-target" id="cdTarget">18 December 2026</div>
+</header>
+
+<div class="wrap">
+
+  <!-- ============ PROGRESS ============ -->
+  <h2 class="sr-only">Your progress</h2>
+  <div class="progress-card glass">
+    <div class="pc-top">
+      <span class="lbl">Protocol Progress · core road</span>
+      <span class="pct" id="pct">0%</span>
+    </div>
+    <div class="bar"><i id="barFill"></i></div>
+    <div class="pc-msg" id="pcMsg" aria-live="polite">Nothing ticked yet. The road starts in a cave in Afghanistan.</div>
+    <p class="sr-only" id="srProgress" aria-live="polite"></p>
+
+    <div class="stats">
+      <div class="stat"><b id="sDone">0 / 0</b><span>Entries watched</span></div>
+      <div class="stat"><b id="sHoursDone">0h</b><span>Hours behind you</span></div>
+      <div class="stat"><b id="sHoursLeft">0h</b><span>Hours remaining</span></div>
+      <div class="stat"><b id="sWeeks">0</b><span>Weeks until Doomsday</span></div>
+      <div class="stat"><b id="sPace">0h</b><span>Needed per week</span></div>
+      <div class="stat"><b id="sDaily">0m</b><span>Needed per day</span></div>
+    </div>
+
+    <div class="planner">
+      <label for="targetDate">Want to finish earlier? Pick a target date:</label>
+      <input type="date" id="targetDate" aria-label="Target finish date">
+      <span class="out" id="plannerOut" aria-live="polite">—</span>
+    </div>
+  </div>
+
+  <!-- ============ CONTROLS + LIST ============ -->
+  <div id="listZone">
+  <h2 class="sr-only">The watch order</h2>
+  <div class="controls glass folded" id="controls">
+    <div class="ctl-row">
+      <label class="sr-only" for="search">Search the watch order</label>
+      <input class="search" id="search" type="search" placeholder="Search a title…  (press / to jump here)" aria-label="Search the watch order">
+      <button class="chip ctl-toggle" id="btnFold" aria-expanded="false" aria-controls="ctlFold">Filters</button>
+      <span class="count-note" id="countNote" aria-live="polite">—</span>
+    </div>
+    <div class="ctl-fold" id="ctlFold">
+      <div class="ctl-row">
+        <span class="ctl-lbl">Order</span>
+        <button class="chip on" data-order="release">Release order</button>
+        <button class="chip" data-order="timeline">Timeline order</button>
+        <span class="ctl-lbl" style="margin-left:10px">Show</span>
+        <button class="chip on" data-filter="all">Everything</button>
+        <button class="chip" data-filter="films">Films only</button>
+        <button class="chip" data-filter="essential">Essentials only</button>
+        <button class="chip" data-filter="todo">Unwatched</button>
+      </div>
+      <div class="ctl-row">
+        <span class="ctl-lbl">Jump</span>
+        <span id="partNav"></span>
+      </div>
+      <div class="ctl-row">
+        <button class="chip" id="btnShare">Copy progress</button>
+        <button class="chip" id="btnExport">Save to file</button>
+        <button class="chip" id="btnImport">Load from file</button>
+        <button class="chip danger" id="btnReset">Reset all</button>
+        <input type="file" id="fileIn" accept="application/json,.json" hidden>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ THE LIST ============ -->
+  <div id="tlNotice" class="stop info" style="display:none;margin-top:24px">
+    <span class="ico">■</span>
+    <div><b>Timeline order is approximate</b>Entries are sorted by when they happen in-universe. A "~" means the date is genuinely argued over. Loki sits outside time, and the X-Men films, the Fantastic Four, the older Spider-Man films, Blade and Ghost Rider are other universes entirely — those are grouped at the end of their parts rather than forced onto a shared calendar. Stop points are hidden here because they describe release order.</div>
+  </div>
+  <div id="list"></div>
+
+  <!-- ============ EXTENSIONS ============ -->
+  <section id="extensions">
+    <div class="sec-head">
+      <h2>Extensions</h2>
+      <p>Three optional blocks that sit alongside the core road rather than inside it. They are tracked separately and <b>do not count toward your percentage</b> — tick them if you want, ignore them if you don't. Nothing here is required for Doomsday; all of it is worth your time for its own sake. The order and filter controls above apply to these too.</p>
+    </div>
+    <div id="extList"></div>
+  </section>
+  </div><!-- /listZone -->
+
+  <!-- ============ DESTINATION ============ -->
+  <section>
+    <div class="dest glass">
+      <div class="no">The Destination</div>
+      <h3>Avengers: Doomsday</h3>
+      <p>Directed by Anthony and Joe Russo. Robert Downey Jr. returns — not as Tony Stark, but as Victor Von Doom. The Fantastic Four, the Thunderbolts, the surviving Avengers, and a cast of X-Men from a universe that was never supposed to touch this one, all pulled onto the same board.</p>
+      <p class="date">In cinemas · 18 December 2026</p>
+    </div>
+    <div class="scroll-hint">The road does not stop here — keep scrolling<i>&#9662;</i></div>
+  </section>
+
+  <div class="rule"></div>
+
+  <!-- ============ EXCLUSIONS ============ -->
+  <section id="excluded">
+    <div class="sec-head">
+      <h2>What this list still leaves out — and why</h2>
+      <p>A watch order is only honest if it tells you what it dropped. These are deliberate omissions, not oversights.</p>
+    </div>
+    <div class="cards">
+      <div class="card wide glass">
+        <div class="why-not">Deliberately not listed as entries</div>
+        <h4>Agents of S.H.I.E.L.D. — and the rest of the Marvel Television era</h4>
+        <p>This is the big one, so it gets a straight answer rather than a one-liner. <b>Agents of S.H.I.E.L.D.</b> ran seven seasons and 136 episodes — roughly 100 hours. Its first three seasons are tightly interlocked with the films: the S.H.I.E.L.D. collapse in The Winter Soldier lands mid-season and reshapes the show, and the Sokovia Accords ripple through it. After that it drifts into its own thing — Ghost Rider, the Framework, space, time travel — and Marvel Studios has never confirmed or denied whether any of it still counts.</p>
+        <p>It is not on the numbered list because a hundred hours is too large a bet on a payoff that may never come, and because Doomsday does not depend on a single frame of it. But <b>if you want to watch it, watch it</b> — Seasons 1 through 3 are genuinely rewarding alongside Phase 2, and Season 4's Ghost Rider arc (Robbie Reyes, played by Gabriel Luna) is the best live-action Ghost Rider anyone has made. Slot it in after Captain America: The Winter Soldier and run it in parallel.</p>
+        <p>The same reasoning covers the rest of that era: <b>Agent Carter</b> (2 seasons, a lovely period piece continuing Peggy's story), <b>Inhumans</b> (1 season, widely regarded as a misfire), <b>Luke Cage</b>, <b>Iron Fist</b>, <b>The Defenders</b> and <b>Runaways</b>. Of those, The Defenders is the only one the street-level track leans on at all, and Born Again works without it. Watch them because you want to, not because this list told you to.</p>
+      </div>
+      <div class="card glass"><div class="why-not">Not out in time</div><h4>Anything dated after 18 December 2026</h4><p>Projects announced for 2027 and beyond sit past the finish line — they are listed at the bottom of this page instead, under "After Doomsday".</p></div>
+      <div class="card glass"><div class="why-not">No MCU connection</div><h4>Howard the Duck, Elektra, Daredevil (2003), Punisher (2004 &amp; 2008), Man-Thing, Fantastic Four (2005 &amp; 2015)</h4><p>Pre-MCU Marvel adaptations with no thread into anything current. The 2005 and 2015 Fantastic Four films in particular have no bearing on First Steps.</p></div>
+      <div class="card glass"><div class="why-not">Not a story</div><h4>Marvel Studios: Legends</h4><p>Short recap episodes stitched from existing footage, made to catch you up on a character before their next appearance. Useful if you're short on time, but it is clip-show material rather than something to watch.</p></div>
+    </div>
+  </section>
+
+  <div class="rule"></div>
+
+  <!-- ============ BONUS ============ -->
+  <section id="bonus">
+    <div class="sec-head">
+      <h2>Side quests</h2>
+      <p>Not required, not counted. Werewolf by Night, the Guardians Holiday Special, Eyes of Wakanda and Marvel Zombies used to live down here — they are now proper numbered entries on the list above, tagged Optional. What's left is genuinely peripheral.</p>
+    </div>
+    <div class="cards">
+      <div class="card glass"><h4>What If…? Seasons 2 &amp; 3 (2023–24)</h4><p>Season 1 is on the main list because it establishes the Watcher and the multiverse's rules. Seasons 2 and 3 are variations on the theme — enjoyable, optional, and roughly ten hours between them.</p></div>
+      <div class="card glass"><h4>I Am Groot (2022–23) · 10 shorts</h4><p>Five-minute animated shorts about Baby Groot causing problems. No plot consequence whatsoever. Under an hour for the lot.</p></div>
+      <div class="card glass"><h4>Your Friendly Neighborhood Spider-Man (2025)</h4><p>An animated retelling of Peter's early years in its own continuity, deliberately separate from the films. Well received, and unrelated to anything on the list above.</p></div>
+      <div class="card glass"><h4>Blade: The Series (2006) · 12 eps</h4><p>Spike TV's one-season continuation of the film trilogy, with Sticky Fingaz replacing Wesley Snipes. A curiosity, nothing more.</p></div>
+    </div>
+  </section>
+
+  <div class="rule"></div>
+
+  <!-- ============ FAQ ============ -->
+  <section id="faq">
+    <div class="sec-head">
+      <h2>How this list was built</h2>
+      <p>Every judgement call, stated plainly, so you can disagree with a specific one instead of the whole thing.</p>
+    </div>
+
+    <details class="faq glass" open>
+      <summary>Why release order by default?</summary>
+      <p>Because that's the order these stories were written to land in. Reveals are timed to it — Bucky's return, Thanos's arrival, the multiverse cracking open. Chronological order spoils several of them by construction, and a number of entries genuinely have no place on any single calendar.</p>
+      <p>Timeline order is there for a second pass. Use the toggle above the list.</p>
+    </details>
+
+    <details class="faq glass">
+      <summary>Why is the whole Fox X-Men catalogue here now, not just the highlights?</summary>
+      <p>Because Doomsday's announced cast reaches back into it, and once you're watching four of them you may as well know what the others contain. All seventeen are listed — thirteen films, two live-action series and the animated revival — each tiered honestly.</p>
+      <p>If you only want the ones that carry weight into Doomsday, hit "Essentials only" or read the tier on each row. Dark Phoenix and The New Mutants are on the list for completeness, and both are tagged Optional for a reason.</p>
+    </details>
+
+    <details class="faq glass">
+      <summary>Why are Blade, Ghost Rider and the old Spider-Man films in the core list?</summary>
+      <p>Spider-Man: No Way Home made the Raimi and Webb films canonical universes on screen, so they earn their place — and watching them makes that film land completely differently. They are tagged Recommended.</p>
+      <p>Blade and Ghost Rider are a softer call, tagged Optional. Blade is on the list because Marvel has an MCU Blade in development and because the 1998 film is the reason modern comic-book cinema exists at all. Ghost Rider is there because a new Ghost Rider film with Ryan Gosling has been announced for 2028. Neither is homework for Doomsday — they're context, and both blocks are short.</p>
+    </details>
+
+    <details class="faq glass">
+      <summary>What is "Avengers: Endgame Encore"?</summary>
+      <p>A theatrical re-release of Avengers: Endgame on <b>25 September 2026</b>, recut with several minutes of new footage that lead directly into Doomsday. It is the last entry on the core list on purpose — it is designed to be the final thing you watch before the cinema.</p>
+      <p>If you cannot get to a screening, the original Endgame at entry 23 still covers everything the plot requires. The new footage is a bridge, not a prerequisite.</p>
+    </details>
+
+    <details class="faq glass">
+      <summary>Why are Sony's films and the Spider-Verse an "extension" instead of entries?</summary>
+      <p>Because they aren't the same universe and never have been. Venom brushed the MCU twice in post-credits gags and that is the entire connection; Morbius, Madame Web and Kraven have none at all. The animated Spider-Verse films are a separate continuity again — brilliant, award-winning, and completely unrelated to Doomsday's mechanics.</p>
+      <p>They are listed in full with their own progress tracking because plenty of people want to watch them, and pretending they don't exist would be its own kind of dishonest. They just don't dilute the core percentage.</p>
+    </details>
+
+    <details class="faq glass">
+      <summary>What about the Marvel One-Shots?</summary>
+      <p>Five short films, four to fifteen minutes each, released on Phase 1 and 2 home media. They're in the extensions block with a note on exactly where each one slots into the main list. Total runtime is under an hour for all five, and "All Hail the King" in particular is the one that Shang-Chi later picked up.</p>
+    </details>
+
+    <details class="faq glass">
+      <summary>What is a "stop point"?</summary>
+      <p>Some entries have to be interrupted. Black Widow's post-credits scene happens years after its film. Hawkeye's finale spoils No Way Home. When an entry needs splitting, there's a red box telling you exactly where to pause and what to come back for.</p>
+    </details>
+
+    <details class="faq glass">
+      <summary>What do Essential, Recommended and Optional mean?</summary>
+      <p><b>Essential</b> — Doomsday is likely to be actively confusing without it. <b>Recommended</b> — a character or thread from it is expected to appear. <b>Optional</b> — it fills in texture and connective tissue, and you'd miss a reference or two without it, nothing more.</p>
+      <p>These are my judgement, not Marvel's. "Essentials only" cuts the list to the shortest defensible version.</p>
+    </details>
+
+    <details class="faq glass">
+      <summary>Are the runtimes exact?</summary>
+      <p>Film runtimes are theatrical cuts and accurate to the minute. Series totals are episode count multiplied by a typical episode length, so they're approximate — usually within a few percent. Titles not yet released carry estimated runtimes and are marked "Not out yet".</p>
+    </details>
+
+    <details class="faq glass">
+      <summary>Where is my progress stored?</summary>
+      <p>In this browser's local storage, under a single key, tracked per title rather than by position — so adding new entries to this list will never scramble what you've already ticked. It never leaves your device.</p>
+      <p>Clearing site data, using private browsing, or switching browser or device will lose it. "Copy progress" puts a plain-text summary on your clipboard if you want to move it or share it.</p>
+    </details>
+
+    <details class="faq glass">
+      <summary>Put it on your phone's home screen</summary>
+      <p><b>iPhone / iPad (Safari):</b> tap the Share button, scroll down, tap "Add to Home Screen".</p>
+      <p><b>Android (Chrome):</b> tap the three-dot menu, then "Add to Home screen" or "Install app".</p>
+      <p>It opens full-screen and your ticks stay put.</p>
+    </details>
+  </section>
+
+  <div class="rule"></div>
+
+  <!-- ============ AFTER DOOMSDAY ============ -->
+  <section id="after">
+    <div class="sec-head">
+      <h2>After Doomsday</h2>
+      <p>What Marvel has actually announced for the other side of 18 December 2026, in the order it is currently expected to arrive. <b>Brass dots are dates the studio has confirmed.</b> Grey dots are either reported-but-not-official, or announced with no date at all — and anything undated sits below the dated films for the same year, because that is genuinely where it might land. Marvel has moved all of this before and will again.</p>
+    </div>
+
+    <div class="after">
+      <div class="aitem">
+        <div class="adate">4 June 2027 · Sony · not MCU</div>
+        <h4>Spider-Man: Beyond the Spider-Verse</h4>
+        <p>The third and final Miles Morales film, closing the animated trilogy. Dated, but outside MCU continuity entirely — it has no bearing on Secret Wars. If you tick the Spider-Verse extension above, this is where it finishes.</p>
+      </div>
+      <div class="aitem">
+        <div class="adate">17 December 2027 · Cinemas</div>
+        <h4>Avengers: Secret Wars</h4>
+        <p>Anthony and Joe Russo again, exactly one year after Doomsday, closing the Multiverse Saga. Widely expected to reset the MCU — and, by most reporting, to recast several Infinity Saga leads on the way out. Whatever Doomsday breaks, this is where it gets rebuilt.</p>
+      </div>
+      <div class="aitem unconfirmed">
+        <div class="adate">Reported 5 May 2028 · not yet official</div>
+        <h4>Untitled X-Men film</h4>
+        <p>Directed by Jake Schreier, who made Thunderbolts*. The first film after Secret Wars, with a recast X-Men team native to the rebuilt universe — not the Fox cast from Part V. This is the payoff the entire X-Men homework block is pointing at.</p>
+        <p>The 5 May 2028 date comes from trade reporting and has not been confirmed by Marvel or Disney. If it holds, it lands twenty years almost to the day after Iron Man.</p>
+      </div>
+      <div class="aitem">
+        <div class="adate">15 December 2028 · Cinemas</div>
+        <h4>Black Panther III</h4>
+        <p>Announced at Comic-Con in July 2026 with a firm date. Ryan Coogler returns to direct a third and final time, and David Jonsson plays T'Challa's son taking up the mantle.</p>
+      </div>
+      <div class="aitem unconfirmed">
+        <div class="adate">2028 · no date set</div>
+        <h4>Ghost Rider</h4>
+        <p>Announced at the same Comic-Con panel: Ryan Gosling as Johnny Blaze, directed by Shawn Levy. Marvel has slated it for 2028 but has not picked a date, which is why it sits below the December film rather than above it.</p>
+        <p>The first MCU Ghost Rider, arriving two decades after the Nicolas Cage films in Part IV.</p>
+      </div>
+      <div class="aitem unconfirmed">
+        <div class="adate">Announced · no date</div>
+        <h4>Blade</h4>
+        <p>In development for years, through multiple writers and directors, without a release date. Mahershala Ali remains attached. Treat it as intended rather than imminent.</p>
+      </div>
+      <div class="aitem unconfirmed">
+        <div class="adate">Announced · no date</div>
+        <h4>Deadpool 4</h4>
+        <p>Ryan Reynolds has confirmed he and Marvel Studios are working on it — his second Deadpool film inside the MCU. Nothing dated, nothing cast beyond the obvious.</p>
+      </div>
+      <div class="aitem unconfirmed">
+        <div class="adate">Announced · no date</div>
+        <h4>Armor Wars, Nova, and a Shang-Chi sequel</h4>
+        <p>All three sit in Marvel's announced-but-undated pile. Armor Wars was originally a Disney+ series and was upgraded to a film; the Nova project has been in development since Phase 4; Shang-Chi's sequel was confirmed by Destin Daniel Cretton, who is now directing Spider-Man: Brand New Day first.</p>
+      </div>
+      <div class="aitem unconfirmed">
+        <div class="adate">Beyond</div>
+        <h4>Phase 7, whatever it turns out to be</h4>
+        <p>Marvel has said the slate past Secret Wars is deliberately smaller and slower than the Phase 4 flood. Expect the map to be redrawn once Secret Wars has actually landed — which is the point of a film called Secret Wars.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SECRET WARS TIMER ============ -->
+  <div class="scroll-hint" style="margin-top:56px">One more countdown below<i>&#9662;</i></div>
+  <div class="sw-gap"></div>
+
+  <section id="secretwars">
+    <div class="sw-card glass">
+      <div class="no">One year further down the road</div>
+      <h3>Avengers: Secret Wars</h3>
+      <p>Doomsday is the halfway point, not the end. Exactly 364 days after it, the Russos close the Multiverse Saga — and by most reporting, reset the MCU on the way out. Here is how far away that is.</p>
+      <div class="countdown sw">
+        <div class="tile"><b id="swD">—</b><span>Days</span></div>
+        <div class="tile"><b id="swH">—</b><span>Hours</span></div>
+        <div class="tile"><b id="swM">—</b><span>Minutes</span></div>
+        <div class="tile"><b id="swS">—</b><span>Seconds</span></div>
+      </div>
+      <p class="date">In cinemas · 17 December 2027</p>
+      <p class="gap" id="swGap">—</p>
+    </div>
+  </section>
+
+  <footer>
+    <b>The Doomsday Protocol</b> — a fan-made watch order. Not affiliated with, endorsed by, or connected to Marvel Studios, The Walt Disney Company, Sony Pictures, or 20th Century Studios.<br>
+    All film and series titles belong to their respective owners. The emblem above is an original vector illustration, not a studio asset.<br>
+    Release dates for unreleased titles are as publicly announced and may change. Nothing on this page is a leak, and nothing rumoured is presented as confirmed.<br>
+    Built for the road to <b>18 December 2026</b>.
+  </footer>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* ============================================================
+   YGGDRASIL BRANCH FIELD
+   Timeline strands converging at the core and splaying wide at the
+   ends — the shape Loki leaves behind at the end of Season 2.
+   Seeded so the tree is identical on every load.
+   ============================================================ */
+(function growTree(){
+  var dim=document.getElementById('treeDim'),
+      lit=document.getElementById('treeLit'),
+      pane=document.getElementById('paneTree');
+  if(!dim||!lit||!pane) return;
+  var seed=20261218;
+  function rnd(){ seed=(seed*1664525+1013904223)%4294967296; return seed/4294967296; }
+
+  function grow(opts){
+    var out=[], litOut=[];
+    function branch(x,y,ang,len,w,depth,trunk){
+      var x2=x+Math.cos(ang)*len, y2=y+Math.sin(ang)*len;
+      // bow each strand so nothing reads as a straight spoke
+      var mx=(x+x2)/2+Math.cos(ang+Math.PI/2)*len*(rnd()*0.34-0.17);
+      var my=(y+y2)/2+Math.sin(ang+Math.PI/2)*len*(rnd()*0.34-0.17);
+      var d='M'+x.toFixed(1)+','+y.toFixed(1)+' Q'+mx.toFixed(1)+','+my.toFixed(1)+' '+x2.toFixed(1)+','+y2.toFixed(1);
+      out.push('<path d="'+d+'" stroke-width="'+w.toFixed(2)+'"'+
+               (opts.stroke?' stroke="'+opts.stroke+'"':'')+
+               (opts.fadeByDepth?' opacity="'+(0.30+depth*0.15).toFixed(2)+'"':'')+
+               ' fill="none" stroke-linecap="round"/>');
+      if(trunk && opts.lit){
+        litOut.push('<path d="'+d+'" stroke="#d9ffb0" stroke-width="'+(w*0.5).toFixed(2)+'" fill="none" '+
+                    'stroke-linecap="round" style="--len:'+Math.round(len*1.25)+';--d:'+(rnd()*9).toFixed(2)+'s"/>');
+      }
+      if(depth<=0) return;
+      var spread=opts.spread*(0.7+rnd()*0.6);
+      branch(x2,y2,ang+spread,len*(0.64+rnd()*0.18),w*0.62,depth-1,false);
+      branch(x2,y2,ang-spread,len*(0.64+rnd()*0.18),w*0.62,depth-1,false);
+      if(depth>2 && rnd()>0.5) branch(x2,y2,ang+(rnd()-0.5)*0.35,len*0.6,w*0.5,depth-2,false);
+    }
+    opts.seeds.forEach(function(s){ branch(s[0],s[1],s[2],s[3],opts.width,opts.depth,true); });
+    return [out.join(''),litOut.join('')];
+  }
+
+  // --- leaded stained glass: irregular panes with bright cores, as in the art
+  var glass=document.getElementById('paneGlass'), gp=[];
+  if(glass){
+    // curved mullions running top to bottom, bowed away from centre
+    for(var m=0;m<16;m++){
+      var x=135+m*22.0, bow=(x-300)*0.16;
+      gp.push('<path d="M'+x.toFixed(1)+',128 C'+(x+bow).toFixed(1)+',220 '+(x+bow).toFixed(1)+',380 '+(x+bow*0.4).toFixed(1)+',472" '+
+              'stroke="#06170f" stroke-width="'+(3.4+rnd()*2.6).toFixed(1)+'" fill="none" opacity="'+(0.42+rnd()*0.34).toFixed(2)+'"/>');
+    }
+    // transoms
+    for(var t2=0;t2<7;t2++){
+      var y=150+t2*44+rnd()*10;
+      gp.push('<path d="M128,'+y.toFixed(1)+' C220,'+(y-7).toFixed(1)+' 380,'+(y+7).toFixed(1)+' 472,'+y.toFixed(1)+'" '+
+              'stroke="#06170f" stroke-width="'+(2.4+rnd()*2).toFixed(1)+'" fill="none" opacity="'+(0.34+rnd()*0.3).toFixed(2)+'"/>');
+    }
+    // hot cores glowing through the glass
+    for(var c=0;c<22;c++){
+      var ca=rnd()*Math.PI*2, cr=rnd()*150;
+      gp.push('<ellipse cx="'+(300+Math.cos(ca)*cr).toFixed(1)+'" cy="'+(320+Math.sin(ca)*cr*0.86).toFixed(1)+'" '+
+              'rx="'+(9+rnd()*26).toFixed(1)+'" ry="'+(14+rnd()*34).toFixed(1)+'" '+
+              'transform="rotate('+(rnd()*180).toFixed(0)+' '+(300+Math.cos(ca)*cr).toFixed(1)+' '+(320+Math.sin(ca)*cr*0.86).toFixed(1)+')" '+
+              'fill="#dcff8a" opacity="'+(0.05+rnd()*0.16).toFixed(2)+'"/>');
+    }
+    glass.innerHTML=gp.join('');
+  }
+
+  // --- etched detailing around the ring band
+  var etch=document.getElementById('ringEtch'), ep=[];
+  if(etch){
+    for(var e2=0;e2<96;e2++){
+      var ea=(e2/96)*Math.PI*2, long=(e2%8===0);
+      var r1=long?175:182, r2=long?201:194;
+      ep.push('<path d="M'+(300+Math.cos(ea)*r1).toFixed(1)+','+(300+Math.sin(ea)*r1).toFixed(1)+
+              ' L'+(300+Math.cos(ea)*r2).toFixed(1)+','+(300+Math.sin(ea)*r2).toFixed(1)+
+              '" opacity="'+(long?0.55:0.26)+'"/>');
+    }
+    etch.innerHTML=ep.join('');
+  }
+
+  // --- the world tree inside the mark: growing up from the base, into the light
+  var paneSeeds=[];
+  for(var p=0;p<9;p++){
+    var a=-Math.PI/2 + (p-4)*0.30 + (rnd()-0.5)*0.16;
+    paneSeeds.push([300+(p-4)*13, 470, a, 62+rnd()*30]);
+  }
+  pane.innerHTML=grow({seeds:paneSeeds,width:11,depth:5,spread:0.40})[0];
+
+  // --- the faint field beyond the mark
+  var outerSeeds=[], TRUNKS=15;
+  for(var i=0;i<TRUNKS;i++){
+    var ang=(i/TRUNKS)*Math.PI*2 + (rnd()-0.5)*0.28;
+    // horizontal strands run longer, so the field reads wide rather than round
+    outerSeeds.push([300,300,ang,86*(0.72+Math.abs(Math.cos(ang))*0.55)]);
+  }
+  var outer=grow({seeds:outerSeeds,width:7.5,depth:4,spread:0.42,
+                  stroke:'url(#treeG)',fadeByDepth:true,lit:true});
+  dim.innerHTML=outer[0];
+  lit.innerHTML=outer[1];
+
+  // --- engraved ticks around the band
+  var ticks=document.getElementById('ringTicks'), tp=[];
+  if(!ticks){ tp=null; }
+  for(var t=0;ticks&&t<72;t++){
+    var ta=(t/72)*Math.PI*2;
+    // skip the break in the upper right
+    var deg=(ta*180/Math.PI+360)%360;
+    if(deg>296 && deg<336) continue;
+    var long=(t%6===0);
+    var r1=long?185:190, r2=200;
+    tp.push('<path d="M'+(300+Math.cos(ta)*r1).toFixed(1)+','+(300+Math.sin(ta)*r1).toFixed(1)+
+            ' L'+(300+Math.cos(ta)*r2).toFixed(1)+','+(300+Math.sin(ta)*r2).toFixed(1)+
+            '" opacity="'+(long?0.6:0.32)+'"/>');
+  }
+  if(ticks && tp) ticks.innerHTML=tp.join('');
+
+  // --- particle field, as in the reference art
+  var stars=document.getElementById('stars'), sp=[];
+  for(var s=0;s<130;s++){
+    var sa=rnd()*Math.PI*2, sr=180+rnd()*280;
+    sp.push('<circle cx="'+(300+Math.cos(sa)*sr).toFixed(1)+'" cy="'+(300+Math.sin(sa)*sr).toFixed(1)+
+            '" r="'+(0.6+rnd()*1.8).toFixed(2)+'" fill="#cdeccd" opacity="'+(0.10+rnd()*0.42).toFixed(2)+'"/>');
+  }
+  if(stars) stars.innerHTML=sp.join('');
+
+  // if a real logo file is present, use it and drop the vector
+  var img=document.getElementById('logoImg'), vec=document.getElementById('emblemWrap');
+  if(img){
+    img.addEventListener('load',function(){
+      if(img.naturalWidth>1){ img.hidden=false; vec.style.display='none'; }
+    });
+    img.addEventListener('error',function(){ img.remove(); });
+  }
+
+  // the emblem belongs to the hero — fade it back once the list takes over
+  var wrap=vec, pending=false;
+  function fade(){
+    pending=false;
+    var t=Math.min(1,(window.pageYOffset||0)/760);
+    // never fully out — the mark stays readable behind the page
+    var v=(0.95-t*0.30).toFixed(3);
+    wrap.style.setProperty('--eo',v);
+    if(img) img.style.setProperty('--eo',v);
+  }
+  addEventListener('scroll',function(){ if(!pending){ pending=true; requestAnimationFrame(fade); } },{passive:true});
+  fade();
+})();
+
+/* ============================================================
+   DATA
+   id     stable key for saved progress — never reuse or rename
+   type   film | series | special | short
+   run    minutes (films exact; series ≈ eps × typical length)
+   tier   essential | recommended | optional
+   tl     timeline sort key (9xxx = off-calendar / another universe)
+   tlt    optional override label for the timeline column
+   soon   true = not released yet
+   ============================================================ */
+
+var PARTS = [
+{
+  no:'Part I', title:'The Infinity Saga', sub:'Films only, 2008–2019',
+  blurb:'Twenty-four films, one continuous arc, and the reason any of the rest works. There are no series in this part on purpose — the Marvel Television of that era is either excluded or optional, and folding it in here would double the runtime for almost no return.',
+  items:[
+  {id:'ironman',t:'Iron Man',y:2008,type:'film',run:126,tier:'essential',tl:2010,dir:'Jon Favreau',where:'Disney+ / JioHotstar (IN)',pc:1,
+   why:'The founding text. Tony Stark is the absence Doomsday is built around — Robert Downey Jr. returns as Victor Von Doom, and that casting only lands if you have the original in your head.',
+   intro:'Tony Stark, Pepper Potts, James Rhodes, Nick Fury, S.H.I.E.L.D.',
+   note:'The post-credits scene is where the entire shared universe is announced. Do not skip it.'},
+  {id:'hulk',t:'The Incredible Hulk',y:2008,type:'film',run:112,tier:'optional',tl:2011,dir:'Louis Leterrier',where:'Disney+ / JioHotstar (IN)',pc:1,
+   why:'The odd one out, and the least loved. It matters now only because Samuel Sterns returned as The Leader in Brave New World, and because Emil Blonsky reappears in She-Hulk.',
+   intro:'Bruce Banner (Edward Norton), Emil Blonsky / Abomination, Samuel Sterns, Thaddeus Ross',
+   note:'Edward Norton plays Banner here and nowhere else. Mark Ruffalo takes over from The Avengers onward.'},
+  {id:'ironman2',t:'Iron Man 2',y:2010,type:'film',run:124,tier:'optional',tl:2011.1,dir:'Jon Favreau',where:'Disney+ / JioHotstar (IN)',pc:1,
+   why:'Mostly setup for The Avengers. Introduces Natasha Romanoff and Justin Hammer, and sows the Vanko grudge that Armor Wars may still pick up.',
+   intro:'Natasha Romanoff / Black Widow, Justin Hammer, Ivan Vanko'},
+  {id:'thor',t:'Thor',y:2011,type:'film',run:115,tier:'recommended',tl:2011.2,dir:'Kenneth Branagh',where:'Disney+ / JioHotstar (IN)',pc:1,
+   why:'Establishes Asgard, the Nine Realms, and Loki — the character whose fate in his own series eventually decides how the multiverse is even shaped.',
+   intro:'Thor, Loki, Odin, Heimdall, Jane Foster, Erik Selvig'},
+  {id:'firstavenger',t:'Captain America: The First Avenger',y:2011,type:'film',run:124,tier:'essential',tl:1943,dir:'Joe Johnston',where:'Disney+ / JioHotstar (IN)',pc:1,
+   why:'Steve Rogers, Bucky Barnes, HYDRA and the Tesseract all start here. Sam Wilson carries the shield into Doomsday, and the weight of that only exists because of this film.',
+   intro:'Steve Rogers, Bucky Barnes, Peggy Carter, Red Skull, the Tesseract'},
+  {id:'avengers',t:'The Avengers',y:2012,type:'film',run:143,tier:'essential',tl:2012,dir:'Joss Whedon',where:'Disney+ / JioHotstar (IN)',pc:2,
+   why:'The template Doomsday is deliberately echoing — the impossible roster assembled against a threat none of them can take alone. Also the first appearance of Thanos.',
+   intro:'The Avengers as a team, Thanos, the Chitauri, the Battle of New York'},
+  {id:'ironman3',t:'Iron Man 3',y:2013,type:'film',run:130,tier:'optional',tl:2012.9,dir:'Shane Black',where:'Disney+ / JioHotstar (IN)',pc:1,
+   why:'Tony after New York. Its lasting contribution is the Mandarin misdirection, which Shang-Chi later corrected and expanded.',
+   intro:'Aldrich Killian, Trevor Slattery, Extremis'},
+  {id:'darkworld',t:'Thor: The Dark World',y:2013,type:'film',run:112,tier:'optional',tl:2013,dir:'Alan Taylor',where:'Disney+ / JioHotstar (IN)',pc:2,
+   why:'Weakest link in the saga, but it puts the Aether — the Reality Stone — on the board, and it is where Loki fakes his death and takes Asgard’s throne.',
+   intro:'The Aether / Reality Stone, the Collector'},
+  {id:'wintersoldier',t:'Captain America: The Winter Soldier',y:2014,type:'film',run:136,tier:'essential',tl:2014,dir:'Anthony and Joe Russo',where:'Disney+ / JioHotstar (IN)',pc:2,
+   why:'The Russo brothers’ first Marvel film and still their best. HYDRA hollows out S.H.I.E.L.D., Bucky comes back, and Sam Wilson arrives. Directors of Doomsday, characters in Doomsday.',
+   intro:'Sam Wilson / Falcon, the Winter Soldier, Sharon Carter, Alexander Pierce'},
+  {id:'gotg',t:'Guardians of the Galaxy',y:2014,type:'film',run:121,tier:'recommended',tl:2014.1,dir:'James Gunn',where:'Disney+ / JioHotstar (IN)',pc:1,
+   why:'Opens the cosmic side of the map and introduces the Nova Corps, the Kree, and Thanos’s daughters.',
+   intro:'Star-Lord, Gamora, Drax, Rocket, Groot, Nebula, Ronan, the Power Stone'},
+  {id:'gotg2',t:'Guardians of the Galaxy Vol. 2',y:2017,type:'film',run:136,tier:'optional',tl:2014.2,dir:'James Gunn',where:'Disney+ / JioHotstar (IN)',pc:5,
+   why:'Placed here because it happens only months after the first film. Introduces Mantis and Adam Warlock’s creation, and gives Rocket and Nebula the groundwork Vol. 3 pays off.',
+   intro:'Mantis, Ego, Ayesha, the Sovereign',
+   note:'Watched out of release order on purpose — it sits between the first film and Age of Ultron chronologically.'},
+  {id:'ultron',t:'Avengers: Age of Ultron',y:2015,type:'film',run:141,tier:'essential',tl:2015,dir:'Joss Whedon',where:'Disney+ / JioHotstar (IN)',pc:1,
+   why:'Vision and Wanda both begin here, and Vision’s creation is the thread VisionQuest pulls on directly. The team fracture that becomes Civil War starts in this film too.',
+   intro:'Vision, Wanda Maximoff, Pietro Maximoff, Ultron, Ulysses Klaue'},
+  {id:'antman',t:'Ant-Man',y:2015,type:'film',run:117,tier:'recommended',tl:2015.1,dir:'Peyton Reed',where:'Disney+ / JioHotstar (IN)',pc:2,
+   why:'The Quantum Realm is introduced here, and it becomes the mechanism for Endgame’s time heist and Kang’s arrival.',
+   intro:'Scott Lang, Hope van Dyne, Hank Pym, the Quantum Realm'},
+  {id:'civilwar',t:'Captain America: Civil War',y:2016,type:'film',run:147,tier:'essential',tl:2016,dir:'Anthony and Joe Russo',where:'Disney+ / JioHotstar (IN)',pc:2,
+   why:'The Avengers break, and they never fully mend. Also the debut of both T’Challa and Tom Holland’s Peter Parker, and the first appearance of Helmut Zemo.',
+   intro:'Black Panther, Spider-Man (Holland), Zemo, the Sokovia Accords'},
+  {id:'blackwidow',t:'Black Widow',y:2021,type:'film',run:134,tier:'recommended',tl:2016.1,dir:'Cate Shortland',where:'Disney+ / JioHotstar (IN)',pc:1,
+   why:'Set immediately after Civil War. Introduces Yelena Belova and Alexei Shostakov, both now core Thunderbolts, and Valentina Allegra de Fontaine, who is assembling that team.',
+   intro:'Yelena Belova, Red Guardian, Melina, Taskmaster, Valentina',
+   stop:'Stop before the post-credits scene. It takes place years later, after Endgame, and it sets up Hawkeye. Come back to it when you reach Hawkeye in Part III.'},
+  {id:'drstrange',t:'Doctor Strange',y:2016,type:'film',run:115,tier:'essential',tl:2016.5,dir:'Scott Derrickson',where:'Disney+ / JioHotstar (IN)',pc:2,
+   why:'Magic, the Time Stone, and the multiverse’s first proper description. Every rule Doomsday will bend was written down in this film.',
+   intro:'Stephen Strange, Wong, Mordo, the Ancient One, the Time Stone, the Dark Dimension'},
+  {id:'homecoming',t:'Spider-Man: Homecoming',y:2017,type:'film',run:133,tier:'recommended',tl:2016.4,dir:'Jon Watts',where:'Disney+ / JioHotstar (IN)',pc:2,
+   why:'Peter’s own film, and the source of the Vulture and the Damage Control angle that Marvel keeps returning to.',
+   intro:'Adrian Toomes / Vulture, Ned, MJ, Happy as handler'},
+  {id:'ragnarok',t:'Thor: Ragnarok',y:2017,type:'film',run:130,tier:'recommended',tl:2017,dir:'Taika Waititi',where:'Disney+ / JioHotstar (IN)',pc:2,
+   why:'Asgard falls, Valkyrie and Korg arrive, and the film ends on the shot Infinity War opens with. Watching them apart is the wrong choice.',
+   intro:'Valkyrie, Korg, Hela, the Grandmaster, Sakaar'},
+  {id:'blackpanther',t:'Black Panther',y:2018,type:'film',run:134,tier:'recommended',tl:2017.1,dir:'Ryan Coogler',where:'Disney+ / JioHotstar (IN)',pc:2,
+   why:'Wakanda in full, Shuri’s mind, and the vibranium that half the franchise now runs on.',
+   intro:'Shuri, Okoye, Nakia, Killmonger, M’Baku, Everett Ross in Wakanda'},
+  {id:'infinitywar',t:'Avengers: Infinity War',y:2018,type:'film',run:149,tier:'essential',tl:2018,dir:'Anthony and Joe Russo',where:'Disney+ / JioHotstar (IN)',pc:1,
+   why:'The Russos’ first half of the endgame, and the proof they can hold thirty characters in one film — exactly the problem Doomsday sets them again.',
+   intro:'Thanos in full, the Black Order, the Snap'},
+  {id:'antman2',t:'Ant-Man and the Wasp',y:2018,type:'film',run:118,tier:'optional',tl:2018.1,dir:'Peyton Reed',where:'Disney+ / JioHotstar (IN)',pc:2,
+   why:'Runs parallel to Infinity War. Its only load-bearing moment is the post-credits scene, which strands Scott in the Quantum Realm and directly causes Endgame.',
+   intro:'Janet van Dyne, Ghost, Bill Foster',
+   note:'Placed after Infinity War deliberately — its post-credits scene only makes sense once you know the Snap happened.'},
+  {id:'captainmarvel',t:'Captain Marvel',y:2019,type:'film',run:123,tier:'recommended',tl:1995,dir:'Anna Boden and Ryan Fleck',where:'Disney+ / JioHotstar (IN)',pc:2,
+   why:'A 1995 flashback dropped here on purpose, to explain Fury’s pager the moment before Endgame answers it. Also the Skrulls, which Secret Invasion later escalates.',
+   intro:'Carol Danvers, Talos and the Skrulls, Goose, young Fury and Coulson'},
+  {id:'endgame',t:'Avengers: Endgame',y:2019,type:'film',run:181,tier:'essential',tl:2018.5,dir:'Anthony and Joe Russo',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'The five-year gap, the branched timelines, and the death of Tony Stark. Everything about the multiverse’s current mess traces back to the time heist in this film.',
+   intro:'The Blip, branched realities, Sam receiving the shield',
+   note:'A recut theatrical version, Endgame Encore, is the final entry on this list. This is still the version the plot depends on.'},
+  {id:'farfromhome',t:'Spider-Man: Far From Home',y:2019,type:'film',run:129,tier:'recommended',tl:2024,dir:'Jon Watts',where:'Disney+ / JioHotstar (IN)',pc:2,
+   why:'The world immediately after Endgame, and the mid-credits reveal that upends Peter’s life and starts No Way Home.',
+   intro:'Mysterio, Nick Fury’s absence explained, Peter’s identity exposed'}
+]},
+
+{
+  no:'Part II', title:'The Street-Level Track', sub:'Required before Born Again',
+  blurb:'The single biggest time investment on this list — roughly seventy hours of New York crime drama, made for Netflix between 2015 and 2019 and quietly folded back into canon. Daredevil: Born Again is a continuation of this, not a reboot, and Born Again matters to Doomsday. If you are short on time, Daredevil Seasons 1 and 3 plus The Punisher Season 1 carry most of the weight.',
+  items:[
+  {id:'dd1',t:'Daredevil — Season 1',y:2015,type:'series',eps:13,run:702,tier:'recommended',tl:2015.05,dir:'Drew Goddard (creator)',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'Matt Murdock, Foggy, Karen and Wilson Fisk, all from zero. Born Again assumes every relationship established here.',
+   intro:'Matt Murdock, Foggy Nelson, Karen Page, Wilson Fisk, Claire Temple'},
+  {id:'jj1',t:'Jessica Jones — Season 1',y:2015,type:'series',eps:13,run:728,tier:'optional',tl:2015.15,dir:'Melissa Rosenberg (creator)',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'The best-written season of the Netflix run, and the reason Jessica’s return would carry weight. Not strictly required for Born Again.',
+   intro:'Jessica Jones, Trish Walker, Kilgrave, Luke Cage'},
+  {id:'dd2',t:'Daredevil — Season 2',y:2016,type:'series',eps:13,run:715,tier:'recommended',tl:2016.05,dir:'Doug Petrie and Marco Ramirez',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'Introduces Frank Castle and Elektra. Frank is on the Doomsday-adjacent board via his own 2026 special.',
+   intro:'Frank Castle / The Punisher, Elektra Natchios, The Hand'},
+  {id:'pun1',t:'The Punisher — Season 1',y:2017,type:'series',eps:13,run:715,tier:'optional',tl:2016.15,dir:'Steve Lightfoot (creator)',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'Frank’s origin filled in, and Billy Russo’s turn. Useful before The Punisher: One Last Kill.',
+   intro:'Billy Russo, Micro, Dinah Madani'},
+  {id:'dd3',t:'Daredevil — Season 3',y:2018,type:'series',eps:13,run:715,tier:'recommended',tl:2018.05,dir:'Erik Oleson',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'Fisk’s ascent to legitimacy — the exact position he occupies when Born Again begins. The most directly load-bearing season of the six.',
+   intro:'Bullseye / Benjamin Poindexter, Fisk’s political turn'},
+  {id:'pun2',t:'The Punisher — Season 2',y:2019,type:'series',eps:13,run:676,tier:'optional',tl:2018.15,dir:'Steve Lightfoot',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'Closes Frank’s Netflix arc. Least essential of the six, and the easiest to cut if time is tight.',
+   intro:'Jigsaw, Amy Bendix'}
+]},
+
+{
+  no:'Part III', title:'The Multiverse Saga', sub:'Phases 4 and 5, 2021–2024',
+  blurb:'Where the shared universe stops being one road and becomes a junction. This is also where the ordering stops being obvious: three entries here have to be interrupted mid-run, and two of them would spoil a film if you did not.',
+  items:[
+  {id:'wandavision',t:'WandaVision',y:2021,type:'series',eps:9,run:350,tier:'essential',tl:2024.1,dir:'Matt Shakman',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'Wanda becomes the Scarlet Witch, Vision is rebuilt as White Vision, and Agatha Harkness arrives. VisionQuest is a direct sequel to this show’s final scenes.',
+   intro:'Agatha Harkness, White Vision, Monica Rambeau, Darcy, the Darkhold’s pull'},
+  {id:'tfatws',t:'The Falcon and the Winter Soldier',y:2021,type:'series',eps:6,run:300,tier:'recommended',tl:2024.2,dir:'Malcolm Spellman (creator)',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'Sam earns the shield for real, John Walker becomes US Agent, and Zemo returns. Three Doomsday-relevant characters repositioned in six episodes.',
+   intro:'John Walker / US Agent, Isaiah Bradley, Sharon as the Power Broker, Sam as Captain America'},
+  {id:'loki1',t:'Loki — Season 1',y:2021,type:'series',eps:6,run:290,tier:'essential',tl:9000,dir:'Michael Waldron (creator)',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'The Sacred Timeline, the TVA, and the branching that makes the multiverse a live problem instead of a theory. The single most important piece of homework on this list.',
+   intro:'The TVA, Mobius, Sylvie, He Who Remains, Ravonna Renslayer',
+   stop:'Stop at the end of Season 1. Season 2 comes much later, after Quantumania — watching it now removes the ground under several films in between.'},
+  {id:'whatif1',t:'What If…? — Season 1',y:2021,type:'series',eps:9,run:300,tier:'recommended',tl:9100,dir:'Bryan Andrews',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'Establishes the Watcher and shows what a divergent universe actually looks like — useful vocabulary before a film built entirely from them.',
+   intro:'Uatu the Watcher, Captain Carter, Infinity Ultron, the Guardians of the Multiverse'},
+  {id:'shangchi',t:'Shang-Chi and the Legend of the Ten Rings',y:2021,type:'film',run:132,tier:'recommended',tl:2024.3,dir:'Destin Daniel Cretton',where:'Disney+ / JioHotstar (IN)',pc:2,
+   why:'The Ten Rings are still an unexplained signal at the end of this film, and Marvel has never closed that thread. Also corrects the Mandarin misdirection from Iron Man 3.',
+   intro:'Shang-Chi, Katy, Xu Wenwu, the real Ten Rings'},
+  {id:'eternals',t:'Eternals',y:2021,type:'film',run:156,tier:'optional',tl:2024.4,dir:'Chloé Zhao',where:'Disney+ / JioHotstar (IN)',pc:2,
+   why:'The most self-contained MCU film. It stays on the list because the Celestials establish the scale at which the multiverse operates, and because Eros is a loose thread.',
+   intro:'The Eternals, the Celestials, Arishem, Eros, Dane Whitman'},
+  {id:'hawkeye15',t:'Hawkeye — Episodes 1–5',y:2021,type:'series',eps:5,run:210,tier:'recommended',tl:2024.5,dir:'Jonathan Igla (creator)',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'Kate Bishop, Yelena in the present day, and the return of Kingpin to the film side of the universe.',
+   intro:'Kate Bishop, Maya Lopez / Echo, Kingpin in the MCU proper',
+   stop:'Watch Black Widow’s post-credits scene now, before episode 1 — it is what sends Yelena after Clint. Then stop after episode 5.'},
+  {id:'nowayhome',t:'Spider-Man: No Way Home',y:2021,type:'film',run:148,tier:'essential',tl:2024.6,dir:'Jon Watts',where:'Disney+ / JioHotstar (IN)',pc:2,
+   why:'The first time the MCU physically pulls people out of other universes. The mechanism Doomsday uses at scale is demonstrated here at small scale.',
+   intro:'The Raimi and Webb Spider-Men, five returning villains, the world forgetting Peter Parker',
+   note:'This film hits hardest if you have watched Part IV first. Hawkeye’s finale spoils its ending in passing, which is why the series is split around it.'},
+  {id:'hawkeye6',t:'Hawkeye — Episode 6',y:2021,type:'series',eps:1,run:47,tier:'recommended',tl:2024.7,dir:'Rhys Thomas',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'The finale, now safe to watch. Closes Kate and Clint’s arc and sets up Echo.',
+   intro:'Kingpin and Maya’s confrontation'},
+  {id:'moonknight',t:'Moon Knight',y:2022,type:'series',eps:6,run:290,tier:'optional',tl:2025,dir:'Jeremy Slater (creator)',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'Almost entirely disconnected — Egyptian gods, dissociative identity, no Avengers. It is here because Marc Spector exists and Marvel has not forgotten him.',
+   intro:'Marc Spector, Steven Grant, Jake Lockley, Khonshu, Layla / Scarlet Scarab'},
+  {id:'mom',t:'Doctor Strange in the Multiverse of Madness',y:2022,type:'film',run:126,tier:'essential',tl:2025.1,dir:'Sam Raimi',where:'Disney+ / JioHotstar (IN)',pc:2,
+   why:'Incursions. The rule that two universes colliding destroys both is stated here, and it is the most likely engine of Doomsday’s plot.',
+   intro:'America Chavez, the Illuminati, Earth-838, incursions, the Darkhold’s cost',
+   note:'Watch WandaVision first without exception. This film is unreadable as a Wanda story otherwise.'},
+  {id:'msmarvel',t:'Ms. Marvel',y:2022,type:'series',eps:6,run:290,tier:'optional',tl:2025.2,dir:'Bisha K. Ali (creator)',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'Kamala Khan’s origin, and the reveal about her powers’ source — the MCU’s first on-screen use of the word mutant. Required if you intend to watch The Marvels.',
+   intro:'Kamala Khan, the Clandestines, the Noor Dimension, the mutant reference'},
+  {id:'lovethunder',t:'Thor: Love and Thunder',y:2022,type:'film',run:118,tier:'optional',tl:2025.3,dir:'Taika Waititi',where:'Disney+ / JioHotstar (IN)',pc:2,
+   why:'Divisive and largely self-contained. Leaves Hercules on the board and gives Thor a daughter, neither of which has been followed up.',
+   intro:'Gorr, Mighty Thor, Zeus, Hercules, Love'},
+  {id:'shehulk',t:'She-Hulk: Attorney at Law',y:2022,type:'series',eps:9,run:300,tier:'optional',tl:2025.4,dir:'Jessica Gao (creator)',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'A comedy that quietly parks several characters — Blonsky, Wong, Skaar and the Intelligencia — where later projects can collect them.',
+   intro:'Jennifer Walters, Skaar, Titania, Daredevil in yellow'},
+  {id:'werewolf',t:'Werewolf by Night',y:2022,type:'special',eps:1,run:52,tier:'optional',tl:2025.45,dir:'Michael Giacchino',where:'Disney+ / JioHotstar (IN)',pc:1,
+   why:'A fifty-two-minute black-and-white monster movie, and the MCU’s first proper horror. It opens a corner of the universe — the monster-hunting world — that nothing else has followed up on, which is exactly why it costs you so little to watch.',
+   intro:'Jack Russell / Werewolf by Night, Elsa Bloodstone, Man-Thing, the Bloodstone',
+   note:'Shot in black and white with period film grain, and scored by its own director. There is a colour version on Disney+ too — watch the black-and-white one.'},
+  {id:'wakandaforever',t:'Black Panther: Wakanda Forever',y:2022,type:'film',run:161,tier:'recommended',tl:2025.5,dir:'Ryan Coogler',where:'Disney+ / JioHotstar (IN)',pc:1,
+   why:'Shuri takes the mantle, and Namor and Talokan enter the map as a power that answers to nobody.',
+   intro:'Namor, Talokan, Riri Williams, Shuri as Black Panther'},
+  {id:'holidayspecial',t:'The Guardians of the Galaxy Holiday Special',y:2022,type:'special',eps:1,run:44,tier:'optional',tl:2025.55,dir:'James Gunn',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'Forty-four minutes, and it does real work: it explains how the Guardians came to own Knowhere, which Vol. 3 opens by assuming you already know. Also the funniest thing in the MCU.',
+   intro:'Kevin Bacon, Cosmo the Spacedog speaking, the Guardians’ new home',
+   note:'Watch it before Vol. 3, not after. Vol. 3 gives you no recap at all.'},
+  {id:'quantumania',t:'Ant-Man and the Wasp: Quantumania',y:2023,type:'film',run:124,tier:'recommended',tl:2026,dir:'Peyton Reed',where:'Disney+ / JioHotstar (IN)',pc:2,
+   why:'Kang the Conqueror in full, and the Council of Kangs. Marvel has since pivoted away from Kang toward Doom — this film is the clearest record of the road not taken.',
+   intro:'Kang the Conqueror, MODOK, the Council of Kangs, Cassie as Stature'},
+  {id:'loki2',t:'Loki — Season 2',y:2023,type:'series',eps:6,run:300,tier:'essential',tl:9001,dir:'Justin Benson and Aaron Moorhead',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'The finale changes the physical shape of the multiverse. If you understand only one thing before Doomsday, make it what Loki does in the last fifteen minutes of this season.',
+   intro:'Victor Timely, the Temporal Loom, Yggdrasil, Loki’s throne'},
+  {id:'gotg3',t:'Guardians of the Galaxy Vol. 3',y:2023,type:'film',run:150,tier:'recommended',tl:2026.1,dir:'James Gunn',where:'Disney+ / JioHotstar (IN)',pc:2,
+   why:'The end of that team as you knew it, and a genuinely great film. Doomsday relevance is modest — mainly which Guardians are still alive and where.',
+   intro:'The High Evolutionary, Adam Warlock, Rocket’s past, the new Guardians roster'},
+  {id:'secretinvasion',t:'Secret Invasion',y:2023,type:'series',eps:6,run:290,tier:'optional',tl:2026.2,dir:'Kyle Bradstreet (creator)',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'Poorly received, but it changes Rhodey’s status in a way no other project has undone, and it hands Fury a rebuilt position off-world.',
+   intro:'Gravik, G’iah, the Skrull colony, the Rhodey revelation'},
+  {id:'marvels',t:'The Marvels',y:2023,type:'film',run:105,tier:'recommended',tl:2026.3,dir:'Nia DaCosta',where:'Disney+ / JioHotstar (IN)',pc:1,
+   why:'The post-credits scene is the point: Monica wakes up in another universe, greeted by a Fox X-Men character. That is the connective tissue the X-Men homework exists for.',
+   intro:'Dar-Benn, Monica stranded in another reality, Beast (Kelsey Grammer)'},
+  {id:'echo',t:'Echo',y:2024,type:'series',eps:5,run:220,tier:'optional',tl:2025.6,dir:'Sydney Freeland',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'Maya’s solo run, and the bridge between Hawkeye’s Kingpin and Born Again’s. Its post-credits scene points straight at Born Again.',
+   intro:'Maya’s ancestry and powers, Fisk’s mayoral ambition'}
+]},
+
+{
+  no:'Part IV', title:'The Older Universes', sub:'Blade, Ghost Rider, and every live-action Spider-Man before Holland',
+  blurb:'Marvel films from before there was an MCU. The two Spider-Man runs earn their place outright — No Way Home put both on screen and made them canonical universes, and that film lands completely differently if you have actually met these people. Blade and Ghost Rider are softer calls, kept short and tagged Optional: Blade because the 1998 film is the reason modern comic-book cinema exists and an MCU Blade is still in development, Ghost Rider because a new one with Ryan Gosling is announced for 2028.',
+  items:[
+  {id:'blade1',t:'Blade',y:1998,type:'film',run:120,tier:'optional',tl:9500,tlt:'Unassigned universe',dir:'Stephen Norrington',where:'Disney+ / JioHotstar, or rental',pc:0,
+   why:'The film that proved a Marvel property could work on screen, two years before X-Men and a decade before Iron Man. Wesley Snipes’ Blade is still the benchmark the delayed MCU version is measured against.',
+   intro:'Blade, Whistler, Deacon Frost, the vampire underworld'},
+  {id:'blade2',t:'Blade II',y:2002,type:'film',run:117,tier:'optional',tl:9501,tlt:'Unassigned universe',dir:'Guillermo del Toro',where:'Disney+ / JioHotstar, or rental',pc:0,
+   why:'The best of the three, and the one most often cited as an influence on how Marvel horror should look. Optional, but if you watch one Blade film, consider making it this one.',
+   intro:'The Bloodpack, the Reapers, Nomak'},
+  {id:'blade3',t:'Blade: Trinity',y:2004,type:'film',run:113,tier:'optional',tl:9502,tlt:'Unassigned universe',dir:'David S. Goyer',where:'Disney+ / JioHotstar, or rental',pc:0,
+   why:'The weakest by a distance, and famously troubled behind the camera. On the list for completeness — it introduces Hannibal King and Abigail Whistler, and it is where the trilogy stops.',
+   intro:'Hannibal King, Abigail Whistler, Dracula / Drake'},
+  {id:'ghostrider1',t:'Ghost Rider',y:2007,type:'film',run:114,tier:'optional',tl:9510,tlt:'Unassigned universe',dir:'Mark Steven Johnson',where:'Rent or buy (Prime Video, YouTube, Apple TV)',pc:0,
+   why:'Nicolas Cage as Johnny Blaze. Not good, and not connected to anything — but it is the character’s only live-action feature run before Shawn Levy’s 2028 film.',
+   intro:'Johnny Blaze, Mephistopheles, Blackheart, Carter Slade'},
+  {id:'ghostrider2',t:'Ghost Rider: Spirit of Vengeance',y:2011,type:'film',run:95,tier:'optional',tl:9511,tlt:'Unassigned universe',dir:'Neveldine and Taylor',where:'Rent or buy (Prime Video, YouTube, Apple TV)',pc:0,
+   why:'A stranger, cheaper, more unhinged sequel. Included only so the Ghost Rider block is complete. Skipping it costs you nothing.',
+   intro:'A harder-edged Blaze, Danny Ketch as a boy',
+   note:'If you want a genuinely good live-action Ghost Rider, it is Robbie Reyes in Agents of S.H.I.E.L.D. Season 4 — see the exclusions section below.'},
+  {id:'spidey1',t:'Spider-Man',y:2002,type:'film',run:121,tier:'recommended',tl:9520,tlt:'Earth-96283',dir:'Sam Raimi',where:'Rent or buy (Prime Video, YouTube, Apple TV)',pc:0,
+   why:'Tobey Maguire’s Peter, and the film that started the modern superhero boom. No Way Home confirmed this universe as real, and Raimi went on to direct Multiverse of Madness.',
+   intro:'Tobey Maguire’s Peter Parker, Norman Osborn / Green Goblin, Uncle Ben, MJ Watson'},
+  {id:'spidey2',t:'Spider-Man 2',y:2004,type:'film',run:127,tier:'recommended',tl:9521,tlt:'Earth-96283',dir:'Sam Raimi',where:'Rent or buy (Prime Video, YouTube, Apple TV)',pc:0,
+   why:'Widely held to be the best Spider-Man film ever made, and the source of Doc Ock — who returns in No Way Home with this exact history intact.',
+   intro:'Otto Octavius / Doctor Octopus, the fusion reactor, Peter quitting'},
+  {id:'spidey3',t:'Spider-Man 3',y:2007,type:'film',run:139,tier:'optional',tl:9522,tlt:'Earth-96283',dir:'Sam Raimi',where:'Rent or buy (Prime Video, YouTube, Apple TV)',pc:0,
+   why:'Overstuffed and much mocked, but it closes the trilogy and introduces Sandman, who also returns in No Way Home. The symbiote here is unrelated to Sony’s Venom films.',
+   intro:'Flint Marko / Sandman, Eddie Brock, the symbiote, Harry as the New Goblin'},
+  {id:'tasm1',t:'The Amazing Spider-Man',y:2012,type:'film',run:136,tier:'recommended',tl:9530,tlt:'Earth-120703',dir:'Marc Webb',where:'Rent or buy (Prime Video, YouTube, Apple TV)',pc:1,
+   why:'Andrew Garfield’s Peter and Gwen Stacy. His return in No Way Home is the emotional centre of that film, and it only works if you know what happened to Gwen.',
+   intro:'Andrew Garfield’s Peter Parker, Gwen Stacy, Curt Connors / The Lizard'},
+  {id:'tasm2',t:'The Amazing Spider-Man 2',y:2014,type:'film',run:142,tier:'recommended',tl:9531,tlt:'Earth-120703',dir:'Marc Webb',where:'Rent or buy (Prime Video, YouTube, Apple TV)',pc:1,
+   why:'The film No Way Home directly reaches back into. Whatever you think of the rest of it, its ending is the reason Garfield’s scenes in that film land the way they do.',
+   intro:'Max Dillon / Electro, Harry Osborn / Green Goblin, Gwen’s fate',
+   note:'Watch this before No Way Home in Part III, not after. The order matters more here than almost anywhere else on this list.'}
+]},
+
+{
+  no:'Part V', title:'The X-Men', sub:'The complete Fox catalogue, 2000–2024',
+  blurb:'Every X-Men project Fox made, plus the animated revival Marvel Studios produced. Doomsday’s announced cast reaches back into this universe, so the whole catalogue is listed rather than a curated handful — tiered honestly, so you can see at a glance which four actually carry weight and which are here for completeness. The order below is a watch order, not release order: the original trilogy first, then the prequel branch, then the endpoints.',
+  items:[
+  {id:'xmen1',t:'X-Men',y:2000,type:'film',run:104,tier:'recommended',tl:9200,tlt:'Earth-10005',dir:'Bryan Singer',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'The foundation of the Fox universe. Establishes Xavier, Magneto, and the mutant-persecution premise Doomsday is expected to import wholesale.',
+   intro:'Professor X, Magneto, Wolverine, Storm, Cyclops, Jean Grey, Rogue, Mystique'},
+  {id:'x2',t:'X2: X-Men United',y:2003,type:'film',run:134,tier:'recommended',tl:9201,tlt:'Earth-10005',dir:'Bryan Singer',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'The best of the original trilogy, and the film that turns Jean Grey into the Phoenix problem.',
+   intro:'William Stryker, Nightcrawler, Jean’s sacrifice'},
+  {id:'x3',t:'X-Men: The Last Stand',y:2006,type:'film',run:104,tier:'optional',tl:9202,tlt:'Earth-10005',dir:'Brett Ratner',where:'Disney+ / JioHotstar (IN)',pc:1,
+   why:'Weak, but Days of Future Past spends its running time undoing it, and you cannot feel that undoing without having seen this.',
+   intro:'Dark Phoenix, the mutant cure, Beast in the cabinet'},
+  {id:'origins',t:'X-Men Origins: Wolverine',y:2009,type:'film',run:107,tier:'optional',tl:9203,tlt:'Earth-10005',dir:'Gavin Hood',where:'Disney+ / JioHotstar (IN)',pc:1,
+   why:'The worst-regarded film in the franchise, and Deadpool &amp; Wolverine spends a running gag on saying so. Its only lasting contribution is Logan’s backstory and the Weapon X programme.',
+   intro:'Victor Creed / Sabretooth, Weapon X, the version of Wade Wilson everyone pretends did not happen'},
+  {id:'firstclass',t:'X-Men: First Class',y:2011,type:'film',run:132,tier:'recommended',tl:9204,tlt:'Earth-10005',dir:'Matthew Vaughn',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'The 1962 reboot-within-a-franchise, and a genuinely excellent film. Recasts Xavier and Magneto as McAvoy and Fassbender, which is the version the later films run on.',
+   intro:'Young Charles and Erik, Sebastian Shaw, Emma Frost, the Cuban Missile Crisis'},
+  {id:'wolverine2013',t:'The Wolverine',y:2013,type:'film',run:126,tier:'optional',tl:9205,tlt:'Earth-10005',dir:'James Mangold',where:'Disney+ / JioHotstar (IN)',pc:1,
+   why:'Logan in Japan, after The Last Stand. Mangold’s first pass at the character before he made Logan, and its post-credits scene leads straight into Days of Future Past.',
+   intro:'Yukio, Mariko, the Silver Samurai, Logan grieving Jean'},
+  {id:'dofp',t:'X-Men: Days of Future Past',y:2014,type:'film',run:132,tier:'recommended',tl:9206,tlt:'Earth-10005',dir:'Bryan Singer',where:'Disney+ / JioHotstar (IN)',pc:1,
+   why:'A time-travel reset that proves the Fox timeline can be rewritten — precedent that matters in a film about universes being rearranged. Also the only film with both casts together.',
+   intro:'Sentinels, Quicksilver (Evan Peters), the rewritten timeline'},
+  {id:'apocalypse',t:'X-Men: Apocalypse',y:2016,type:'film',run:144,tier:'optional',tl:9207,tlt:'Earth-10005',dir:'Bryan Singer',where:'Disney+ / JioHotstar (IN)',pc:1,
+   why:'The 1980s instalment. Introduces the younger Cyclops, Jean and Storm, and Apocalypse himself. Little of it carries forward.',
+   intro:'En Sabah Nur / Apocalypse, young Jean Grey, young Scott Summers, Psylocke'},
+  {id:'darkphoenix',t:'Dark Phoenix',y:2019,type:'film',run:113,tier:'optional',tl:9208,tlt:'Earth-10005',dir:'Simon Kinberg',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'The final Fox X-Men ensemble film, released as the Disney acquisition closed. A second attempt at the Phoenix story that landed no better than the first. On the list for completeness only.',
+   intro:'Jean as Phoenix, the D’Bari, the end of the Fox mainline'},
+  {id:'newmutants',t:'The New Mutants',y:2020,type:'film',run:94,tier:'optional',tl:9209,tlt:'Earth-10005',dir:'Josh Boone',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'Shot in 2017, released in 2020 after years of delays. A haunted-house film with mutants. Genuinely disconnected from everything, and the true end of the Fox era.',
+   intro:'Dani Moonstar, Wolfsbane, Magik, Cannonball, Sunspot'},
+  {id:'logan',t:'Logan',y:2017,type:'film',run:137,tier:'essential',tl:9215,tlt:'Earth-10005 · 2029',dir:'James Mangold',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'Hugh Jackman’s ending, and Deadpool &amp; Wolverine builds its entire premise on respecting it. Also introduces Laura, who Marvel has openly kept in play.',
+   intro:'Laura / X-23, the death of Logan, Charles’s decline',
+   note:'Placed here rather than in release order because it is set in 2029 — the far end of the Fox timeline, after everything above it.'},
+  {id:'deadpool1',t:'Deadpool',y:2016,type:'film',run:108,tier:'recommended',tl:9220,tlt:'Earth-10005',dir:'Tim Miller',where:'Disney+ / JioHotstar (IN)',pc:1,
+   why:'Wade Wilson’s origin, done properly this time. Deadpool &amp; Wolverine assumes all of it, and Doomsday assumes Deadpool &amp; Wolverine.',
+   intro:'Deadpool, Vanessa, Colossus, Negasonic Teenage Warhead, Ajax'},
+  {id:'deadpool2',t:'Deadpool 2',y:2018,type:'film',run:119,tier:'optional',tl:9221,tlt:'Earth-10005',dir:'David Leitch',where:'Disney+ / JioHotstar (IN)',pc:1,
+   why:'Cable and Domino arrive, and the time-travel post-credits gag becomes retroactively relevant. Optional, but short and painless.',
+   intro:'Cable, Domino, X-Force, Russell / Firefist'},
+  {id:'dpw',t:'Deadpool &amp; Wolverine',y:2024,type:'film',run:128,tier:'essential',tl:9222,tlt:'Earth-10005 → MCU',dir:'Shawn Levy',where:'Disney+ / JioHotstar (IN)',pc:1,
+   why:'The hinge. It formally connects the Fox universe to the MCU, brings the TVA back into the film side, and establishes the Void and anchor beings. Do not skip this one.',
+   intro:'Cassandra Nova, the Void, anchor beings, the Fox universe’s canonical status'},
+  {id:'legion',t:'Legion',y:2017,type:'series',eps:27,run:1350,tier:'optional',tl:9240,tlt:'Earth-10005 (loosely)',dir:'Noah Hawley (creator)',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'Three seasons of genuinely experimental television about David Haller, Charles Xavier’s son. Its connection to the films was always deliberately vague. Nothing about Doomsday depends on it — it is on the list because it is the best thing anyone made with these characters on television.',
+   intro:'David Haller / Legion, the Shadow King, Syd Barrett'},
+  {id:'gifted',t:'The Gifted',y:2017,type:'series',eps:29,run:1247,tier:'optional',tl:9245,tlt:'Earth-10005 (loosely)',dir:'Matt Nix (creator)',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'Two seasons set in a world where the X-Men have vanished. Solid, conventional, and completely optional. Included so the Fox catalogue is actually complete.',
+   intro:'The Mutant Underground, Polaris, Blink, the Strucker family'},
+  {id:'xmen97',t:'X-Men ’97',y:2024,type:'series',eps:10,run:330,tier:'recommended',tl:9280,tlt:'Earth-92131',dir:'Beau DeMayo (creator)',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'A direct continuation of the 1992 animated series, made by Marvel Studios Animation, and the best-received X-Men project in years. Another universe again — but it is the version of these characters most people carry in their heads.',
+   intro:'The animated roster continued, Bastion, Genosha',
+   note:'A second season has been announced. This entry covers Season 1 only.'}
+]},
+
+{
+  no:'Part VI', title:'The Final Run', sub:'Phase 6, 2024–2026',
+  blurb:'The last stretch. Everything here was made with Doomsday already on the calendar, and every entry is either directly setting it up or introducing someone confirmed to be in it. Entries marked "Not out yet" carry announced dates that can still move.',
+  items:[
+  {id:'agatha',t:'Agatha All Along',y:2024,type:'series',eps:9,run:320,tier:'recommended',tl:2026.4,dir:'Jac Schaeffer (creator)',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'Continues WandaVision and, more importantly, reveals who Billy Maximoff is and where he has been. The Young Avengers assembly is clearly in progress.',
+   intro:'Billy Maximoff / Wiccan, Rio Vidal / Death, the Witches’ Road'},
+  {id:'bravenewworld',t:'Captain America: Brave New World',y:2025,type:'film',run:118,tier:'recommended',tl:2027,dir:'Julius Onah',where:'Disney+ / JioHotstar (IN)',pc:1,
+   why:'Sam’s first film as Captain America, Ross in the presidency, and adamantium introduced to the MCU — a metal that only matters if mutants are coming.',
+   intro:'Red Hulk, The Leader, Joaquin Torres / Falcon, Ruth Bat-Seraph, adamantium'},
+  {id:'bornagain1',t:'Daredevil: Born Again — Season 1',y:2025,type:'series',eps:9,run:430,tier:'recommended',tl:2027.1,dir:'Dario Scardapane (showrunner)',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'Fisk as Mayor of New York. The street-level board being reset for whatever comes after Doomsday, with Matt, Frank and Karen all back.',
+   intro:'Mayor Fisk, Muse, White Tiger, the anti-vigilante task force'},
+  {id:'thunderbolts',t:'Thunderbolts*',y:2025,type:'film',run:127,tier:'essential',tl:2027.2,dir:'Jake Schreier',where:'Disney+ / JioHotstar (IN)',pc:2,
+   why:'Introduces the team most likely to be standing in Doomsday’s front row, and its ending renames them in a way that changes what "the Avengers" even means going in. Its director is also making the 2028 X-Men film.',
+   intro:'The Thunderbolts roster, Bob / Sentry, The Void, Valentina in charge'},
+  {id:'ironheart',t:'Ironheart',y:2025,type:'series',eps:6,run:290,tier:'optional',tl:2027.3,dir:'Chinaka Hodge (creator)',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'Riri’s solo run. Its real contribution is putting magic and technology in the same room and introducing Mephisto to the MCU.',
+   intro:'Riri Williams, Parker Robbins / The Hood, Mephisto'},
+  {id:'ff4',t:'The Fantastic Four: First Steps',y:2025,type:'film',run:115,tier:'essential',tl:9300,tlt:'Earth-828',dir:'Matt Shakman',where:'Disney+ / JioHotstar (IN)',pc:2,
+   why:'Marvel’s First Family, from a separate retro-futurist universe. They are central to Doomsday, and Doom’s history with them is the whole reason he is the villain.',
+   intro:'Reed, Sue, Johnny, Ben, Franklin Richards, Galactus, Silver Surfer, Earth-828'},
+  {id:'eyesofwakanda',t:'Eyes of Wakanda',y:2025,type:'series',eps:4,run:114,tier:'optional',tl:-3000,tlt:'Ancient Wakanda → 1896',dir:'Todd Harris (creator)',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'Four animated stories about the Hatut Zaraze, Wakanda’s war dogs, hunting stolen vibranium across centuries of history. It is the deepest look at Wakanda’s past anyone has made, and it costs you under two hours.',
+   intro:'The Hatut Zaraze across Wakandan history, vibranium recovered from the wider world',
+   note:'All four episodes dropped together on 1 August 2025. The earliest-set entry on this entire list — it opens roughly three thousand years before Iron Man.'},
+  {id:'marvelzombies',t:'Marvel Zombies',y:2025,type:'series',eps:4,run:128,tier:'optional',tl:9150,tlt:'Another universe',dir:'Bryan Andrews',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'A spin-off of the What If…? zombie episode, and Marvel Studios Animation’s first TV-MA project. Another universe entirely, so nothing here touches Doomsday — but it is a genuine demonstration of how far a divergent reality can drift, which is the whole idea Doomsday is built on.',
+   intro:'The zombie universe expanded, an adult-rated corner of the multiverse',
+   note:'All four episodes dropped together on 24 September 2025, and it is roughly two hours end to end. Genuinely violent — the TV-MA rating is not decorative.'},
+  {id:'wonderman',t:'Wonder Man',y:2026,type:'series',eps:8,run:225,tier:'optional',tl:2027.4,dir:'Destin Daniel Cretton',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'A Hollywood satire that also brings back Trevor Slattery and introduces Simon Williams — a character with a long comics history alongside Vision.',
+   intro:'Simon Williams / Wonder Man, Trevor Slattery returning',
+   note:'Released on Disney+ on 27 January 2026, all eight episodes at once. Episodes run 23–34 minutes, the shortest of any MCU series — the whole thing is under four hours.'},
+  {id:'bornagain2',t:'Daredevil: Born Again — Season 2',y:2026,type:'series',eps:8,run:389,tier:'optional',tl:2027.5,dir:'Dario Scardapane',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'Continues the Fisk arc into 2026. Doomsday relevance stayed modest; included for completeness rather than necessity.',
+   intro:'The Fisk arc continued out of Season 1',
+   note:'Premiered 24 March 2026 with a two-episode drop, then weekly. Eight episodes averaging just under 49 minutes.'},
+  {id:'punisherspecial',t:'The Punisher: One Last Kill',y:2026,type:'special',eps:1,run:51,tier:'optional',tl:2027.6,dir:'Reinaldo Marcus Green',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'A one-off special continuing Frank’s story out of Born Again. Self-contained by design — Frank trying to leave the Punisher behind, and failing.',
+   intro:'Frank Castle, post-Born Again',
+   note:'Released on Disney+ on 12 May 2026. Jon Bernthal co-wrote it with the director. 51 minutes — the shortest entry on the core list.'},
+  {id:'brandnewday',t:'Spider-Man: Brand New Day',y:2026,type:'film',run:145,tier:'essential',tl:2027.7,dir:'Destin Daniel Cretton',where:'Cinemas',pc:1,
+   why:'Peter’s first film since the world forgot him, and the last MCU film before Doomsday. Its single post-credits scene points directly at where he turns up next — which makes this the closest thing to a formal prologue Doomsday has.',
+   intro:'Peter post-No Way Home, Ned’s Spider-Tracker, Mark Ruffalo’s Hulk',
+   note:'Released 31 July 2026 to strong reviews — widely called the best of the MCU Spider-Man films. One post-credits scene, right at the very end of the credits, so stay in your seat. Upgraded from Recommended to Essential now that it has actually landed.'},
+  {id:'visionquest',t:'VisionQuest',y:2026,type:'series',eps:8,run:320,tier:'recommended',tl:2027.8,dir:'Terry Matalas (showrunner)',where:'Disney+ / JioHotstar (IN)',pc:0,soon:true,
+   why:'White Vision’s story, picking up from WandaVision, and the last announced series before Doomsday. Positioned as a direct lead-in.',
+   intro:'White Vision, announced returning cast from WandaVision',
+   note:'Announced for Disney+ in late 2026. Episode count and runtime estimated.'},
+  {id:'endgameencore',t:'Avengers: Endgame Encore',y:2026,type:'special',eps:1,run:188,tier:'recommended',tl:2027.9,dir:'Anthony and Joe Russo',where:'Cinemas',pc:0,soon:true,
+   why:'A theatrical re-release of Endgame recut with several minutes of new footage that lead directly into Doomsday. Deliberately the last thing on this list — it is built to be the final thing you watch before the cinema.',
+   intro:'New opening and bonus scenes bridging Endgame to Doomsday',
+   note:'Announced for 25 September 2026. If you cannot get to a screening, the original Endgame at the top of this list still covers everything the plot requires — the new footage is a bridge, not a prerequisite. Runtime estimated.'}
+]}
+];
+
+/* ============ EXTENSIONS — tracked separately, excluded from the core percentage ============ */
+var EXTENSIONS = [
+{
+  no:'Extension A', title:'The Marvel One-Shots', sub:'Five shorts, 2011–2014 · under an hour in total',
+  blurb:'Short films released on Phase 1 and 2 Blu-rays, each four to fifteen minutes long. They fill gaps between films rather than advancing anything, but two of them were later picked up by full projects. Where each one slots into the core list is noted on the row.',
+  items:[
+  {id:'os-consultant',t:'The Consultant',y:2011,type:'short',run:4,tier:'optional',tl:2012.5,dir:'Leythum',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'Coulson and Sitwell explain why the World Security Council wanted Emil Blonsky on the Avengers, and how S.H.I.E.L.D. sabotaged it. A footnote to The Incredible Hulk.',
+   intro:'The World Security Council’s reach',
+   note:'Slots in after The Avengers.'},
+  {id:'os-thorshammer',t:'A Funny Thing Happened on the Way to Thor’s Hammer',y:2011,type:'short',run:4,tier:'optional',tl:2011.25,dir:'Leythum',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'Coulson stops at a petrol station on his way to New Mexico. Pure charm, zero consequence.',
+   intro:'Coulson being Coulson',
+   note:'Slots in immediately after Thor.'},
+  {id:'os-item47',t:'Item 47',y:2012,type:'short',run:12,tier:'optional',tl:2012.6,dir:'Louis D’Esposito',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'A couple find a leftover Chitauri weapon after the Battle of New York and rob banks with it. The best of the five as a short film in its own right.',
+   intro:'Sitwell and Blake, the cleanup after New York',
+   note:'Slots in after The Avengers.'},
+  {id:'os-agentcarter',t:'Agent Carter',y:2013,type:'short',run:15,tier:'optional',tl:1946,dir:'Louis D’Esposito',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'Peggy in 1946, sidelined by the SSR and proving them wrong. This short is what got the Agent Carter series commissioned.',
+   intro:'Post-war Peggy, the founding of S.H.I.E.L.D.',
+   note:'Slots in after Captain America: The First Avenger.'},
+  {id:'os-allhailtheking',t:'All Hail the King',y:2014,type:'short',run:14,tier:'optional',tl:2013.5,dir:'Drew Pearce',where:'Disney+ / JioHotstar (IN)',pc:0,
+   why:'The most consequential of the five. Trevor Slattery in prison, and the reveal that a real Mandarin exists and is not happy — a thread Shang-Chi picked up seven years later.',
+   intro:'The real Ten Rings organisation acknowledged',
+   note:'Slots in after Iron Man 3. Watch this one if you watch none of the others.'}
+]},
+{
+  no:'Extension B', title:'Sony’s Spider-Man Universe', sub:'Six films, 2018–2024 · not the MCU',
+  blurb:'Sony’s own live-action universe built from Spider-Man’s supporting cast, without Spider-Man in it. Venom brushed the MCU twice in post-credits gags and that is the entire connection — Morbius, Madame Web and Kraven have none at all. Listed in full because plenty of people want to watch them, tracked separately because none of it is homework for Doomsday.',
+  items:[
+  {id:'venom1',t:'Venom',y:2018,type:'film',run:112,tier:'optional',tl:9600,tlt:'Sony universe',dir:'Ruben Fleischer',where:'Rent or buy (Prime Video, YouTube, Apple TV)',pc:2,
+   why:'Tom Hardy’s Eddie Brock, and the film that launched the whole Sony experiment. Broadly enjoyed despite the reviews.',
+   intro:'Eddie Brock, the Venom symbiote, Riot'},
+  {id:'venom2',t:'Venom: Let There Be Carnage',y:2021,type:'film',run:97,tier:'optional',tl:9601,tlt:'Sony universe',dir:'Andy Serkis',where:'Rent or buy (Prime Video, YouTube, Apple TV)',pc:1,
+   why:'Its mid-credits scene briefly drops Eddie into the MCU, and No Way Home’s own post-credits scene sends him back. That two-minute round trip is the closest these worlds have come.',
+   intro:'Cletus Kasady / Carnage, Shriek'},
+  {id:'morbius',t:'Morbius',y:2022,type:'film',run:104,tier:'optional',tl:9602,tlt:'Sony universe',dir:'Daniel Espinosa',where:'Rent or buy (Prime Video, YouTube, Apple TV)',pc:2,
+   why:'Notorious rather than good. Its post-credits scenes tried to connect to the MCU through Michael Keaton’s Vulture and never went anywhere.',
+   intro:'Michael Morbius, Milo, an unexplained Vulture'},
+  {id:'madameweb',t:'Madame Web',y:2024,type:'film',run:116,tier:'optional',tl:9603,tlt:'Sony universe',dir:'S. J. Clarkson',where:'Rent or buy (Prime Video, YouTube, Apple TV)',pc:0,
+   why:'A 2003-set prequel about three future Spider-Women who never become them on screen. Included for completeness.',
+   intro:'Cassandra Webb, Julia Cornwall, Mattie Franklin, Anya Corazon'},
+  {id:'venom3',t:'Venom: The Last Dance',y:2024,type:'film',run:109,tier:'optional',tl:9604,tlt:'Sony universe',dir:'Kelly Marcel',where:'Rent or buy (Prime Video, YouTube, Apple TV)',pc:2,
+   why:'Closes the Venom trilogy and picks up directly from where No Way Home left Eddie. The most MCU-adjacent film Sony has made.',
+   intro:'Knull referenced, the symbiote endgame'},
+  {id:'kraven',t:'Kraven the Hunter',y:2024,type:'film',run:127,tier:'optional',tl:9605,tlt:'Sony universe',dir:'J. C. Chandor',where:'Rent or buy (Prime Video, YouTube, Apple TV)',pc:0,
+   why:'The last film Sony released in this universe. No MCU connection at all.',
+   intro:'Sergei Kravinoff, the Rhino, the Foreigner'}
+]},
+{
+  no:'Extension C', title:'The Spider-Verse — Miles Morales', sub:'Animated, 2018–2027 · a third continuity again',
+  blurb:'Sony Pictures Animation’s trilogy, and by most measures the best Spider-Man films anyone has made. A separate continuity from both the MCU and Sony’s live-action universe, with its own multiverse rules that have nothing to do with Doomsday’s. Watch them because they are extraordinary, not because this list requires it.',
+  items:[
+  {id:'itsv',t:'Spider-Man: Into the Spider-Verse',y:2018,type:'film',run:117,tier:'optional',tl:9700,tlt:'Earth-1610',dir:'Persichetti, Ramsey and Rothman',where:'Rent or buy (Prime Video, YouTube, Apple TV)',pc:1,
+   why:'Miles Morales’ origin, and the film that reset what animated features could look like. Won the Academy Award for Best Animated Feature.',
+   intro:'Miles Morales, Gwen Stacy / Spider-Woman, Peter B. Parker, the Prowler, Kingpin'},
+  {id:'atsv',t:'Spider-Man: Across the Spider-Verse',y:2023,type:'film',run:140,tier:'optional',tl:9701,tlt:'Earth-1610',dir:'Dos Santos, Powers and Thompson',where:'Rent or buy (Prime Video, YouTube, Apple TV)',pc:0,
+   why:'The middle chapter, and the one that turns the multiverse into a question about who gets to break the rules. Ends on a hard cliffhanger.',
+   intro:'Miguel O’Hara / Spider-Man 2099, the Spider Society, canon events, Spot'},
+  {id:'btsv',t:'Spider-Man: Beyond the Spider-Verse',y:2027,type:'film',run:130,tier:'optional',tl:9702,tlt:'Earth-1610',dir:'Sony Pictures Animation',where:'Cinemas',pc:0,soon:true,
+   why:'The finale, and the resolution of Across’s cliffhanger. Dated for after Doomsday, so it sits past the finish line — it also appears in the After Doomsday section below.',
+   intro:'Announced as the trilogy’s conclusion',
+   note:'Announced for 4 June 2027. Runtime estimated. Outside MCU continuity entirely.'}
+]}
+];
+
+/* ============================================================
+   BUILD
+   ============================================================ */
+var KEY='doomsdayProtocol.v2';
+var CORE=[], EXT=[];
+PARTS.forEach(function(p){ p.items.forEach(function(it){ it._core=true; CORE.push(it); }); });
+EXTENSIONS.forEach(function(p){ p.items.forEach(function(it){ it._core=false; EXT.push(it); }); });
+CORE.forEach(function(it,i){ it.n=i+1; });
+EXT.forEach(function(it,i){ it.n=i+1; });
+
+var watched={};
+try{ watched=JSON.parse(localStorage.getItem(KEY)||'{}')||{}; }catch(e){ watched={}; }
+
+var state={order:'release',filter:'all',q:''};
+
+function hrs(m){return Math.round(m/60);}
+function fmtRun(it){
+  if(it.type==='film'||it.type==='special'||it.type==='short') return it.run+' min';
+  return it.eps+' eps · ~'+hrs(it.run)+'h';
+}
+function typeLabel(t){return t==='film'?'Film':t==='series'?'Series':t==='special'?'Special':'Short';}
+function tierLabel(t){return t==='essential'?'Essential':t==='recommended'?'Recommended':'Optional';}
+
+var listEl=document.getElementById('list');
+var extEl=document.getElementById('extList');
+
+/* entries the reader has expanded — survives re-render */
+var openIds={};
+/* rendered parts, so counters can be updated without rebuilding the list */
+var rendered=[];
+
+function render(){
+  rendered=[];
+  var shown=renderGroups(PARTS,listEl,false);
+  renderGroups(EXTENSIONS,extEl,true);
+  document.getElementById('tlNotice').style.display = state.order==='timeline' ? 'flex' : 'none';
+  document.getElementById('countNote').textContent='Showing '+shown+' of '+CORE.length+' core';
+  indexRendered();
+  updateStats();
+}
+
+function renderGroups(groups,target,isExt){
+  var html='',shown=0,gi=0;
+  groups.forEach(function(part){
+    var items=part.items.slice();
+    if(state.order==='timeline') items.sort(function(a,b){return a.tl-b.tl;});
+
+    var visible=items.filter(passFilter);
+    if(!visible.length){ gi++; return; }
+    shown+=visible.length;
+
+    var totalRun=items.reduce(function(s,i){return s+i.run;},0);
+    var doneCount=items.filter(function(i){return watched[i.id];}).length;
+    var pctPart=Math.round(doneCount/items.length*100);
+    var key=(isExt?'x':'p')+(gi++);
+
+    html+='<div class="part" data-part="'+key+'" id="part-'+key+'">';
+    html+='<div class="part-head'+(isExt?' ext':'')+'"><div class="no">'+part.no+'</div><h3>'+part.title+'</h3><p>'+part.blurb+'</p></div>';
+    html+='<div class="part-meta"><span>'+part.sub+'</span><span>'+items.length+' entries</span><span>~'+(totalRun<120?totalRun+' min':hrs(totalRun)+' hours')+'</span>'+
+          '<span class="pm-done">'+doneCount+'/'+items.length+' done</span>'+
+          '<button class="mark-all" data-markpart="'+key+'">'+(doneCount===items.length?'Clear this part':'Mark all watched')+'</button></div>';
+    html+='<div class="part-bar"><i style="width:'+pctPart+'%"></i></div>';
+    html+='<div class="part-list lglass">';
+
+    visible.forEach(function(it){
+      if(it.stop && state.order==='release'){
+        html+='<div class="stop"><span class="ico">■</span><div><b>Stop point</b>'+it.stop+'</div></div>';
+      }
+      html+=entryHTML(it);
+    });
+    html+='</div></div>';
+  });
+
+  if(!shown) html='<div class="card empty glass">'+emptyMessage(isExt)+'</div>';
+  target.innerHTML=html;
+  return shown;
+}
+
+/* the empty state depends on WHY it is empty */
+function emptyMessage(isExt){
+  var pool=isExt?EXT:CORE;
+  if(state.q) return 'No title matches <b>“'+state.q.replace(/</g,'&lt;')+'”</b>. Try a shorter search, or clear it.';
+  if(state.filter==='todo'){
+    var left=pool.filter(function(i){return !watched[i.id];}).length;
+    if(!left) return isExt
+      ? 'Every extension entry is ticked. Nothing left down here either.'
+      : '<b>Everything is ticked.</b> The whole road is behind you — there is nothing left unwatched. Switch back to Everything to see the full list.';
+  }
+  if(state.filter==='essential' && isExt) return 'Nothing in the extensions is rated Essential — that is the point of them being extensions.';
+  if(state.filter==='films' && isExt) return 'No films in the extensions match. Some extension entries are shorts rather than features.';
+  return 'Nothing matches the current filter. Switch back to Everything to see the full list.';
+}
+
+function passFilter(it){
+  if(state.q && it.t.toLowerCase().replace(/&amp;/g,'&').indexOf(state.q)===-1) return false;
+  // "Films only" means things you watch as a film — including cinema specials
+  if(state.filter==='films' && !(it.type==='film' || (it.type==='special' && it.where==='Cinemas'))) return false;
+  if(state.filter==='essential' && it.tier!=='essential') return false;
+  if(state.filter==='todo' && watched[it.id]) return false;
+  return true;
+}
+
+function entryHTML(it){
+  var on=!!watched[it.id];
+  var open=!!openIds[it.id];
+  var h='';
+  h+='<div class="entry'+(on?' done':'')+(open?' open':'')+'" data-id="'+it.id+'">';
+  h+= '<button class="cb'+(on?' on':'')+'" data-cb="'+it.id+'" role="checkbox" aria-checked="'+on+'"'+
+      ' aria-label="Mark '+it.t.replace(/&amp;/g,'and').replace(/"/g,'')+' as watched"></button>';
+  h+= '<div class="e-body" role="button" tabindex="0" aria-expanded="'+open+'">';
+  h+=  '<div class="e-line1"><span class="e-no">'+String(it.n).padStart(2,'0')+'</span>';
+  h+=   '<span class="e-title">'+it.t+'</span>';
+  h+=   '<span class="e-year">'+it.y+'</span></div>';
+  h+=  '<div class="e-line2">';
+  h+=   '<span class="tag '+it.type+'">'+typeLabel(it.type)+'</span>';
+  h+=   '<span class="tag '+(it.tier==='essential'?'ess':it.tier==='recommended'?'rec':'opt')+'">'+tierLabel(it.tier)+'</span>';
+  h+=   '<span class="tag run">'+fmtRun(it)+'</span>';
+  if(it.soon) h+='<span class="tag soon">Not out yet</span>';
+  if(state.order==='timeline') h+='<span class="tag">'+tlLabel(it)+'</span>';
+  h+=  '</div>';
+  h+=  '<div class="detail">';
+  h+=   '<div class="why"><b>Why it is on the list</b>'+it.why+'</div>';
+  h+=   '<div class="dgrid">';
+  h+=    '<div><span>Director</span><em>'+it.dir+'</em></div>';
+  h+=    '<div><span>Where to watch</span><em>'+it.where+'</em></div>';
+  h+=    '<div><span>Runtime</span><em>'+fmtRun(it)+'</em></div>';
+  h+=    '<div><span>Timeline placing</span><em>'+tlLabel(it)+'</em></div>';
+  h+=    '<div><span>Post-credits scenes</span><em>'+(it.soon?'Unknown':it.pc)+'</em></div>';
+  h+=    '<div><span>Priority</span><em>'+tierLabel(it.tier)+'</em></div>';
+  h+=   '</div>';
+  if(it.intro) h+='<div class="dsub"><span>First appearances &amp; key beats</span>'+it.intro+'</div>';
+  if(it.note) h+='<div class="dnote">Note: '+it.note+'</div>';
+  h+=  '</div>';
+  h+= '</div>';
+  h+= '<div class="e-caret">&#9656;</div>';
+  h+='</div>';
+  return h;
+}
+
+function tlLabel(it){
+  if(it.tlt) return it.tlt;
+  if(it.tl>=9100 && it.tl<9200) return 'Multiverse';
+  if(it.tl>=9000 && it.tl<9100) return 'Outside time';
+  var y=Math.floor(it.tl);
+  var disputed=[2016,2024,2025,2026,2027];
+  return (disputed.indexOf(y)>-1?'~':'')+y;
+}
+
+/* One delegated listener per container, bound once — nothing to rebind on render */
+function delegate(root){
+  root.addEventListener('click',function(e){
+    var cb=e.target.closest('.cb');
+    if(cb){ e.preventDefault(); e.stopPropagation(); toggle(cb.dataset.cb); return; }
+    var mark=e.target.closest('[data-markpart]');
+    if(mark){ markPart(mark.dataset.markpart); return; }
+    var body=e.target.closest('.e-body');
+    if(body) setOpen(body.parentNode, !body.parentNode.classList.contains('open'));
+  });
+  root.addEventListener('keydown',function(e){
+    if(e.key!==' ' && e.key!=='Enter') return;
+    var cb=e.target.closest('.cb');
+    if(cb){ e.preventDefault(); toggle(cb.dataset.cb); return; }
+    var body=e.target.closest('.e-body');
+    if(body){ e.preventDefault(); setOpen(body.parentNode, !body.parentNode.classList.contains('open')); }
+  });
+}
+delegate(listEl); delegate(extEl);
+
+function setOpen(entry,open){
+  entry.classList.toggle('open',open);
+  entry.querySelector('.e-body').setAttribute('aria-expanded',open);
+  if(open) openIds[entry.dataset.id]=1; else delete openIds[entry.dataset.id];
+}
+
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(watched)); }catch(e){} }
+
+/* Surgical: touch only the affected rows and counters. No full re-render,
+   so expanded panels stay open and a tick costs ~1ms instead of ~32ms. */
+function toggle(id){
+  if(watched[id]) delete watched[id]; else watched[id]=1;
+  save(); paintEntry(id); refreshCounters(); updateStats();
+  if(state.filter==='todo') render();   // the row must leave the list
+}
+
+function paintEntry(id){
+  var on=!!watched[id];
+  document.querySelectorAll('.entry[data-id="'+id+'"]').forEach(function(e){
+    e.classList.toggle('done',on);
+    var cb=e.querySelector('.cb');
+    cb.classList.toggle('on',on);
+    cb.setAttribute('aria-checked',on);
+  });
+}
+
+function indexRendered(){
+  rendered=[];
+  PARTS.concat(EXTENSIONS).forEach(function(part){
+    var el=null;
+    document.querySelectorAll('.part').forEach(function(p){
+      if(p.querySelector('.part-head h3') && p.querySelector('.part-head h3').textContent===part.title) el=p;
+    });
+    if(el) rendered.push({part:part,el:el});
+  });
+}
+
+function refreshCounters(){
+  rendered.forEach(function(r){
+    var items=r.part.items;
+    var done=items.filter(function(i){return watched[i.id];}).length;
+    var pct=Math.round(done/items.length*100);
+    var lbl=r.el.querySelector('.pm-done'), bar=r.el.querySelector('.part-bar i'),
+        btn=r.el.querySelector('[data-markpart]');
+    if(lbl) lbl.textContent=done+'/'+items.length+' done';
+    if(bar) bar.style.width=pct+'%';
+    if(btn) btn.textContent=(done===items.length?'Clear this part':'Mark all watched');
+  });
+}
+
+function markPart(key){
+  var el=document.querySelector('.part[data-part="'+key+'"]'); if(!el) return;
+  var r=null; rendered.forEach(function(x){ if(x.el===el) r=x; });
+  if(!r) return;
+  var items=r.part.items;
+  var allDone=items.every(function(i){return watched[i.id];});
+  items.forEach(function(i){ if(allDone) delete watched[i.id]; else watched[i.id]=1; });
+  save();
+  items.forEach(function(i){ paintEntry(i.id); });
+  refreshCounters(); updateStats();
+  if(state.filter==='todo') render();
+  toast(allDone?'Part cleared':'Part marked as watched');
+}
+
+/* ============================================================
+   STATS — core road only
+   ============================================================ */
+var DOOMSDAY=new Date('2026-12-18T00:00:00');
+
+function updateStats(){
+  var done=CORE.filter(function(i){return watched[i.id];});
+  var totalMin=CORE.reduce(function(s,i){return s+i.run;},0);
+  var doneMin=done.reduce(function(s,i){return s+i.run;},0);
+  var leftMin=totalMin-doneMin;
+  var pct=Math.round(done.length/CORE.length*100);
+
+  document.getElementById('pct').textContent=pct+'%';
+  document.getElementById('barFill').style.width=pct+'%';
+  document.getElementById('sDone').textContent=done.length+' / '+CORE.length;
+  document.getElementById('sHoursDone').textContent=hrs(doneMin)+'h';
+  document.getElementById('sHoursLeft').textContent=hrs(leftMin)+'h';
+
+  var daysLeft=Math.max(0,Math.ceil((DOOMSDAY-new Date())/86400000));
+  var weeksLeft=Math.max(1,Math.ceil(daysLeft/7));
+  document.getElementById('sWeeks').textContent=Math.ceil(daysLeft/7);
+  document.getElementById('sPace').textContent=(leftMin/60/weeksLeft).toFixed(1)+'h';
+  document.getElementById('sDaily').textContent=Math.round(leftMin/Math.max(1,daysLeft))+'m';
+
+  var msgs=[
+    'Nothing ticked yet. The road starts in a cave in Afghanistan.',
+    'Started. The Infinity Saga is the longest unbroken stretch — after that it gets easier.',
+    'A quarter of the road behind you. Keep going.',
+    'Halfway. From here the multiverse stops being a rumour.',
+    'Three quarters done. The hard part is finished.',
+    'Almost there. Only the final run left.',
+    'Protocol complete. You are ready for Doomsday.'
+  ];
+  var mi = pct>=100?6 : pct>=90?5 : pct>=75?4 : pct>=50?3 : pct>=25?2 : pct>0?1 : 0;
+  document.getElementById('pcMsg').textContent=msgs[mi];
+  document.getElementById('srProgress').textContent=
+    pct+' per cent complete. '+done.length+' of '+CORE.length+' entries watched, '+hrs(leftMin)+' hours remaining.';
+
+  updatePlanner(leftMin);
+}
+
+function updatePlanner(leftMin){
+  var el=document.getElementById('targetDate');
+  var out=document.getElementById('plannerOut');
+  if(!el.value){ out.textContent='—'; return; }
+  var d=new Date(el.value+'T00:00:00');
+  var days=Math.ceil((d-new Date())/86400000);
+  if(isNaN(days)){ out.textContent='—'; return; }
+  if(days<=0){ out.textContent='That date has passed.'; return; }
+  if(leftMin<=0){ out.textContent='Nothing left to watch.'; return; }
+  var perDay=leftMin/days;
+  out.textContent=Math.round(perDay)+' min/day for '+days+' days ('+(perDay/60).toFixed(1)+'h daily)';
+}
+document.getElementById('targetDate').addEventListener('change',function(){ updateStats(); });
+
+/* ============================================================
+   COUNTDOWN
+   ============================================================ */
+var SECRETWARS=new Date('2027-12-17T00:00:00');
+var cdTarget=DOOMSDAY;
+var LABELS={
+  '2026-09-25T00:00:00':'25 September 2026 · Endgame Encore in cinemas',
+  '2026-12-18T00:00:00':'18 December 2026'
+};
+
+document.getElementById('cdSwitch').addEventListener('click',function(e){
+  var b=e.target.closest('button'); if(!b) return;
+  document.querySelectorAll('#cdSwitch button').forEach(function(x){x.classList.remove('on');});
+  b.classList.add('on');
+  cdTarget=new Date(b.dataset.t);
+  document.getElementById('cdTarget').textContent=LABELS[b.dataset.t];
+  tick();
+});
+
+function paint(prefix,target){
+  var diff=target-new Date();
+  if(diff<0) diff=0;
+  var s=Math.floor(diff/1000);
+  document.getElementById(prefix+'D').textContent=Math.floor(s/86400);
+  document.getElementById(prefix+'H').textContent=String(Math.floor(s%86400/3600)).padStart(2,'0');
+  document.getElementById(prefix+'M').textContent=String(Math.floor(s%3600/60)).padStart(2,'0');
+  document.getElementById(prefix+'S').textContent=String(s%60).padStart(2,'0');
+}
+function tick(){
+  paint('cd',cdTarget);
+  paint('sw',SECRETWARS);
+}
+tick(); setInterval(tick,1000);
+
+document.getElementById('swGap').textContent=
+  Math.round((SECRETWARS-DOOMSDAY)/86400000)+' days after Doomsday';
+
+/* ============================================================
+   CONTROLS
+   ============================================================ */
+document.querySelectorAll('[data-order]').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('[data-order]').forEach(function(x){x.classList.remove('on');});
+    b.classList.add('on'); state.order=b.dataset.order; render();
+  });
+});
+document.querySelectorAll('[data-filter]').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('[data-filter]').forEach(function(x){x.classList.remove('on');});
+    b.classList.add('on'); state.filter=b.dataset.filter; render();
+  });
+});
+var searchEl=document.getElementById('search');
+searchEl.addEventListener('input',function(){ state.q=searchEl.value.trim().toLowerCase(); render(); });
+document.addEventListener('keydown',function(e){
+  if(e.key==='/' && document.activeElement!==searchEl){ e.preventDefault(); searchEl.focus(); }
+});
+
+function toast(msg){
+  var t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); },2200);
+}
+
+document.getElementById('btnReset').addEventListener('click',function(){
+  if(!confirm('Clear every tick, including the extensions, and start the protocol from zero?')) return;
+  watched={};
+  try{ localStorage.removeItem(KEY); }catch(e){}
+  render(); toast('Progress cleared');
+});
+
+/* fold the filter rows away on small screens */
+var ctlEl=document.getElementById('controls'), foldBtn=document.getElementById('btnFold');
+foldBtn.addEventListener('click',function(){
+  var folded=ctlEl.classList.toggle('folded');
+  foldBtn.setAttribute('aria-expanded',String(!folded));
+  foldBtn.textContent=folded?'Filters':'Hide filters';
+});
+if(window.innerWidth>760) ctlEl.classList.remove('folded');
+
+/* jump-to-part navigation */
+function buildNav(){
+  var nav=document.getElementById('partNav');
+  nav.innerHTML=PARTS.map(function(p,i){
+    return '<button class="chip nav" data-jump="p'+i+'">'+p.no.replace('Part ','')+'. '+p.title+'</button>';
+  }).join('')+'<button class="chip nav" data-jump="ext">Extensions</button>';
+}
+buildNav();
+document.getElementById('partNav').addEventListener('click',function(e){
+  var b=e.target.closest('[data-jump]'); if(!b) return;
+  var target = b.dataset.jump==='ext'
+    ? document.getElementById('extensions')
+    : document.getElementById('part-'+b.dataset.jump);
+  if(target) target.scrollIntoView({behavior:'smooth',block:'start'});
+});
+
+/* save / load progress as a file, so it can move between devices */
+document.getElementById('btnExport').addEventListener('click',function(){
+  var payload={app:'doomsday-protocol',version:2,saved:new Date().toISOString(),watched:watched};
+  var blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='doomsday-protocol-progress.json';
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },0);
+  toast('Progress saved to a file');
+});
+document.getElementById('btnImport').addEventListener('click',function(){ document.getElementById('fileIn').click(); });
+document.getElementById('fileIn').addEventListener('change',function(e){
+  var f=e.target.files && e.target.files[0]; if(!f) return;
+  var fr=new FileReader();
+  fr.onload=function(){
+    try{
+      var data=JSON.parse(fr.result);
+      var w=(data && data.watched) ? data.watched : data;
+      if(!w || typeof w!=='object') throw new Error('shape');
+      var valid={},known={},n=0;
+      CORE.concat(EXT).forEach(function(i){ known[i.id]=1; });
+      Object.keys(w).forEach(function(k){ if(known[k]){ valid[k]=1; n++; } });
+      watched=valid; save(); render();
+      toast(n+' entries restored');
+    }catch(err){ toast('That file could not be read'); }
+    e.target.value='';
+  };
+  fr.onerror=function(){ toast('That file could not be read'); e.target.value=''; };
+  fr.readAsText(f);
+});
+
+document.getElementById('btnShare').addEventListener('click',function(){
+  var done=CORE.filter(function(i){return watched[i.id];});
+  var extDone=EXT.filter(function(i){return watched[i.id];});
+  var pct=Math.round(done.length/CORE.length*100);
+  var daysLeft=Math.max(0,Math.ceil((DOOMSDAY-new Date())/86400000));
+  var clean=function(i){return '  '+String(i.n).padStart(2,'0')+'. '+i.t.replace(/&amp;/g,'&');};
+  var txt='The Doomsday Protocol — '+pct+'% of the core road ('+done.length+'/'+CORE.length+' entries). '
+        +daysLeft+' days until Avengers: Doomsday.\n\nCore road watched:\n'
+        +(done.length?done.map(clean).join('\n'):'  (nothing yet)')
+        +'\n\nExtensions watched ('+extDone.length+'/'+EXT.length+'):\n'
+        +(extDone.length?extDone.map(clean).join('\n'):'  (nothing yet)');
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(function(){ toast('Progress copied to clipboard'); },
+                                           function(){ toast('Could not copy — clipboard blocked'); });
+  } else { toast('Clipboard not available in this browser'); }
+});
+
+document.getElementById('stamp').textContent=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+document.getElementById('topTally').textContent=
+  CORE.length+' core · '+EXT.length+' extension · ~'+hrs(CORE.reduce(function(s,i){return s+i.run;},0))+'h';
+
+render();
+})();
+</script>
+</body>
+</html>
