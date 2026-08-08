@@ -69,22 +69,11 @@
     width:min(96vh,104vw);height:auto;z-index:0;pointer-events:none;
     -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 56%,rgba(0,0,0,.7) 78%,rgba(0,0,0,.3) 93%,transparent 100%);
             mask-image:linear-gradient(180deg,#000 0%,#000 56%,rgba(0,0,0,.7) 78%,rgba(0,0,0,.3) 93%,transparent 100%);
-    opacity:.52;
+    opacity:.44;
     animation:breathe 16s ease-in-out infinite;
   }
   @keyframes breathe{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.016)}}
 
-  /* The branches from inside the mark, carried across the whole document.
-     This is what gives every panel something to refract instead of flat black. */
-  #branchField{
-    position:absolute;top:0;left:0;right:0;height:100%;
-    z-index:0;pointer-events:none;
-    background-repeat:repeat;
-    background-position:50% 0;
-    background-size:760px 760px;
-    opacity:.62;
-  }
-  @media (max-width:760px){ #branchField{background-size:520px 520px;opacity:.56} }
   /* light travelling out along the timeline branches, as in the Loki finale */
   #treeLit path{stroke-dasharray:var(--len) var(--len);animation:flow 9s linear infinite;animation-delay:var(--d)}
   @keyframes flow{0%{stroke-dashoffset:var(--len);opacity:0}
@@ -360,7 +349,7 @@
     border:0;border-radius:14px;background:transparent;
     padding:12px 12px;transition:background .14s;position:relative;
   }
-  .entry + .entry::before{content:'';position:absolute;left:58px;right:12px;top:0;height:1px;
+  .entry + .entry::before{content:'';position:absolute;left:106px;right:12px;top:0;height:1px;
     background:rgba(140,200,160,.09)}
   .entry:hover{background:rgba(140,220,160,.055)}
   .entry:hover::before,.entry:hover + .entry::before{background:transparent}
@@ -383,6 +372,35 @@
   .cb.on::before{background:var(--doom);border-color:var(--doom);box-shadow:0 0 14px var(--doom-glow)}
   .cb.on::after{content:'';position:absolute;left:19px;top:14px;width:6px;height:12px;
     border:solid #06120b;border-width:0 2.5px 2.5px 0;transform:rotate(42deg)}
+  /* ===== POSTERS ===== */
+  .e-poster{
+    flex:none;position:relative;width:46px;height:69px;border-radius:7px;overflow:hidden;
+    margin-top:1px;background:#0a1a12;
+    box-shadow:0 0 0 1px rgba(160,220,180,.16), 0 6px 14px rgba(0,0,0,.5);
+  }
+  .e-poster img{
+    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;
+    z-index:1;background:#0a1a12;
+  }
+  /* the fan-made card, uncovered when no poster loads */
+  .pfall{
+    position:absolute;inset:0;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;text-align:center;padding:4px 3px;
+    background:
+      radial-gradient(120% 70% at 50% 0%, rgba(142,222,77,.20), rgba(0,0,0,0) 70%),
+      linear-gradient(165deg,#16341f 0%,#0a1a12 55%,#050d09 100%);
+    border-top:2px solid rgba(142,222,77,.5);
+  }
+  .pfall b{font-family:var(--serif);font-size:17px;line-height:1;color:var(--acc-lt);
+    letter-spacing:.02em;text-shadow:0 0 10px rgba(142,222,77,.5)}
+  .pfall i{font-style:normal;font-family:var(--sans);font-size:5.6px;line-height:1.25;
+    color:var(--ink-dim);margin-top:3px;max-height:22px;overflow:hidden;
+    display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+  .pfall u{text-decoration:none;font-family:var(--mono);font-size:6px;letter-spacing:.1em;
+    color:var(--ink-faint);margin-top:3px}
+  .entry.done .e-poster{filter:grayscale(.75) brightness(.72)}
+  @media (max-width:640px){ .e-poster{width:40px;height:60px} .pfall b{font-size:15px} }
+
   .e-body{flex:1;min-width:0;cursor:pointer;border-radius:8px}
   .e-body:focus-visible{outline:2px solid var(--acc);outline-offset:3px}
   .e-line1{display:flex;gap:9px;align-items:baseline;flex-wrap:wrap}
@@ -550,13 +568,13 @@
 <svg id="emblemWrap" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
   <defs>
     <linearGradient id="metalG" x1="0.12" y1="0" x2="0.88" y2="1">
-      <stop offset="0%"   stop-color="#718895"/>
-      <stop offset="13%"  stop-color="#3d5461"/>
-      <stop offset="33%"  stop-color="#152128"/>
-      <stop offset="52%"  stop-color="#0a1216"/>
-      <stop offset="70%"  stop-color="#182c35"/>
-      <stop offset="86%"  stop-color="#314c58"/>
-      <stop offset="100%" stop-color="#04090c"/>
+      <stop offset="0%"   stop-color="#4c6270"/>
+      <stop offset="13%"  stop-color="#25373f"/>
+      <stop offset="33%"  stop-color="#0c1418"/>
+      <stop offset="52%"  stop-color="#050a0d"/>
+      <stop offset="70%"  stop-color="#0e1a20"/>
+      <stop offset="86%"  stop-color="#1d2f38"/>
+      <stop offset="100%" stop-color="#020506"/>
     </linearGradient>
     <radialGradient id="paneG" cx="0.5" cy="0.82" r="0.78">
       <stop offset="0%"   stop-color="#f2ffa8"/>
@@ -571,7 +589,7 @@
       <stop offset="100%" stop-color="rgba(58,150,80,0)"/>
     </radialGradient>
     <linearGradient id="specG" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%"   stop-color="rgba(206,228,242,.30)"/>
+      <stop offset="0%"   stop-color="rgba(190,214,230,.18)"/>
       <stop offset="20%"  stop-color="rgba(206,228,242,.05)"/>
       <stop offset="48%"  stop-color="rgba(232,248,255,0)"/>
       <stop offset="78%"  stop-color="rgba(170,200,220,.09)"/>
@@ -607,7 +625,7 @@
     </filter>
     <filter id="hard" x="-30%" y="-30%" width="160%" height="160%">
       <feDropShadow dx="0" dy="6" stdDeviation="12" flood-color="#000" flood-opacity="0.85"/>
-      <feDropShadow dx="0" dy="0" stdDeviation="26" flood-color="#2f8f3a" flood-opacity="0.20"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="26" flood-color="#2f8f3a" flood-opacity="0.13"/>
     </filter>
   </defs>
 
@@ -642,7 +660,6 @@
     </g>
   </g>
 </svg>
-<div id="branchField"></div>
 <div id="glowlayer"></div>
 <div id="vignette"></div>
 <div id="grain"></div>
@@ -1118,56 +1135,6 @@
     img.addEventListener('error',function(){ img.remove(); });
   }
 
-  /* ============================================================
-     BRANCH FIELD — the same growth that lives inside the mark, carried
-     across the whole document as a seamless tile. Every branch starts and
-     ends inside the tile and the whole thing fades at the edges, so the
-     repeat has no visible seam.
-     ============================================================ */
-  (function paintBranchField(){
-    var field=document.getElementById('branchField'); if(!field) return;
-    var T=760, parts=[];
-
-    function limb(x,y,ang,len,w,depth){
-      var x2=x+Math.cos(ang)*len, y2=y+Math.sin(ang)*len;
-      var bw=rnd()*0.95-0.47, al=0.26+rnd()*0.5;
-      var mx=x+(x2-x)*al+Math.cos(ang+Math.PI/2)*len*bw;
-      var my=y+(y2-y)*al+Math.sin(ang+Math.PI/2)*len*bw;
-      parts.push('<path d="M'+x.toFixed(1)+','+y.toFixed(1)+' Q'+mx.toFixed(1)+','+my.toFixed(1)+
-                 ' '+x2.toFixed(1)+','+y2.toFixed(1)+'" stroke-width="'+w.toFixed(2)+
-                 '" opacity="'+(0.30+depth*0.14).toFixed(2)+'"/>');
-      if(depth<=0) return;
-      var kink=(rnd()-0.5)*0.6;
-      var sl=0.26+rnd()*0.85, sr=0.26+rnd()*0.85;
-      if(rnd()>0.10) limb(x2,y2,ang+sl+kink,len*(0.42+rnd()*0.48),w*(0.42+rnd()*0.30),depth-1);
-      if(rnd()>0.16) limb(x2,y2,ang-sr+kink,len*(0.42+rnd()*0.48),w*(0.42+rnd()*0.30),depth-1);
-      if(depth>1 && rnd()>0.45) limb(x2,y2,ang+(rnd()-0.5)*1.7,len*(0.3+rnd()*0.4),w*0.42,depth-2);
-    }
-
-    // clusters seeded well inside the tile so nothing is clipped at the edge
-    var seeds=[[190,215],[560,180],[130,560],[600,590],[380,380],[300,90],[470,700],
-               [90,370],[660,380],[380,660],[250,470],[520,470],[640,110],[110,110]];
-    seeds.forEach(function(s,i){
-      var trunks=5+Math.floor(rnd()*3);
-      for(var t=0;t<trunks;t++){
-        var a=(t/trunks)*Math.PI*2+rnd()*2.6;
-        limb(s[0]+(rnd()-0.5)*70,s[1]+(rnd()-0.5)*70,a,40+rnd()*70,4.4+rnd()*3.4,5);
-      }
-    });
-
-    var svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+T+'" height="'+T+'" viewBox="0 0 '+T+' '+T+'">'
-      +'<defs><radialGradient id="fade" cx="0.5" cy="0.5" r="0.70">'
-      +'<stop offset="0%" stop-color="#fff"/><stop offset="72%" stop-color="#fff" stop-opacity="0.85"/>'
-      +'<stop offset="100%" stop-color="#fff" stop-opacity="0"/></radialGradient>'
-      +'<mask id="m"><rect width="'+T+'" height="'+T+'" fill="url(#fade)"/></mask>'
-      +'<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">'
-      +'<stop offset="0%" stop-color="#9fe07a"/><stop offset="45%" stop-color="#4f9d5c"/>'
-      +'<stop offset="100%" stop-color="#1d5230"/></linearGradient></defs>'
-      +'<g mask="url(#m)" stroke="url(#bg)" fill="none" stroke-linecap="round">'+parts.join('')+'</g></svg>';
-
-    field.style.backgroundImage='url("data:image/svg+xml;charset=utf-8,'+
-      encodeURIComponent(svg).replace(/"/g,'%22')+'")';
-  })();
 })();
 
 /* ============================================================
@@ -1592,6 +1559,120 @@ var EXTENSIONS = [
 ]}
 ];
 
+
+/* Poster art, hotlinked from the Wikipedia article for each title.
+   Every URL was verified to serve a real image at build time. A title
+   whose image fails to load falls back to a generated card. */
+var POSTERS={
+  'agatha':'https://upload.wikimedia.org/wikipedia/en/7/70/Agatha_All_Along_logo.jpg',
+  'antman':'https://upload.wikimedia.org/wikipedia/en/1/12/Ant-Man_%28film%29_poster.jpg',
+  'antman2':'https://upload.wikimedia.org/wikipedia/en/2/2c/Ant-Man_and_the_Wasp_poster.jpg',
+  'apocalypse':'https://upload.wikimedia.org/wikipedia/en/0/04/X-Men_-_Apocalypse.jpg',
+  'atsv':'https://upload.wikimedia.org/wikipedia/en/b/b4/Spider-Man-_Across_the_Spider-Verse_poster.jpg',
+  'avengers':'https://upload.wikimedia.org/wikipedia/en/8/8a/The_Avengers_%282012_film%29_poster.jpg',
+  'blackpanther':'https://upload.wikimedia.org/wikipedia/en/d/d6/Black_Panther_%28film%29_poster.jpg',
+  'blackwidow':'https://upload.wikimedia.org/wikipedia/en/e/e9/Black_Widow_%282021_film%29_poster.jpg',
+  'blade1':'https://upload.wikimedia.org/wikipedia/en/1/19/Blade_movie.jpg',
+  'blade2':'https://upload.wikimedia.org/wikipedia/en/6/6d/Blade_II_movie.jpg',
+  'blade3':'https://upload.wikimedia.org/wikipedia/en/8/86/Blade_Trinity_poster.JPG',
+  'bornagain1':'https://upload.wikimedia.org/wikipedia/en/d/d9/Daredevil_Born_Again_logo.jpeg',
+  'bornagain2':'https://upload.wikimedia.org/wikipedia/en/d/d9/Daredevil_Born_Again_logo.jpeg',
+  'brandnewday':'https://upload.wikimedia.org/wikipedia/en/9/9a/Spider-Man_Brand_New_Day_poster.jpg',
+  'bravenewworld':'https://upload.wikimedia.org/wikipedia/en/a/a4/Captain_America_Brave_New_World_poster.jpg',
+  'btsv':'https://upload.wikimedia.org/wikipedia/en/a/a0/Spider-Man_Beyond_the_Spider-Verse_logo.jpg',
+  'captainmarvel':'https://upload.wikimedia.org/wikipedia/en/4/4e/Captain_Marvel_%28film%29_poster.jpg',
+  'civilwar':'https://upload.wikimedia.org/wikipedia/en/5/53/Captain_America_Civil_War_poster.jpg',
+  'darkphoenix':'https://upload.wikimedia.org/wikipedia/en/9/9e/Dark_Phoenix_%28film%29.png',
+  'darkworld':'https://upload.wikimedia.org/wikipedia/en/7/7f/Thor_The_Dark_World_poster.jpg',
+  'dd1':'https://upload.wikimedia.org/wikipedia/en/8/8a/Daredevil_%28TV_series%29_logo.jpg',
+  'dd2':'https://upload.wikimedia.org/wikipedia/en/8/8a/Daredevil_%28TV_series%29_logo.jpg',
+  'dd3':'https://upload.wikimedia.org/wikipedia/en/8/8a/Daredevil_%28TV_series%29_logo.jpg',
+  'deadpool1':'https://upload.wikimedia.org/wikipedia/en/2/23/Deadpool_%282016_poster%29.png',
+  'deadpool2':'https://upload.wikimedia.org/wikipedia/en/c/cf/Deadpool_2_poster.jpg',
+  'dofp':'https://upload.wikimedia.org/wikipedia/en/0/0c/X-Men_Days_of_Future_Past_poster.jpg',
+  'dpw':'https://upload.wikimedia.org/wikipedia/en/4/4c/Deadpool_%26_Wolverine_poster.jpg',
+  'drstrange':'https://upload.wikimedia.org/wikipedia/en/a/a1/Doctor_Strange_%282016_film%29_poster.jpg',
+  'echo':'https://upload.wikimedia.org/wikipedia/en/9/99/Echo_%28miniseries%29_logo.jpg',
+  'endgame':'https://upload.wikimedia.org/wikipedia/en/0/0d/Avengers_Endgame_poster.jpg',
+  'endgameencore':'https://upload.wikimedia.org/wikipedia/en/0/0d/Avengers_Endgame_poster.jpg',
+  'eternals':'https://upload.wikimedia.org/wikipedia/en/9/9b/Eternals_%28film%29_poster.jpeg',
+  'eyesofwakanda':'https://upload.wikimedia.org/wikipedia/en/f/fd/Eyes_of_Wakanda_logo.jpg',
+  'farfromhome':'https://upload.wikimedia.org/wikipedia/en/b/bd/Spider-Man_Far_From_Home_poster.jpg',
+  'ff4':'https://upload.wikimedia.org/wikipedia/en/1/13/The_Fantastic_Four_First_Steps_poster.jpg',
+  'firstavenger':'https://upload.wikimedia.org/wikipedia/en/3/37/Captain_America_The_First_Avenger_poster.jpg',
+  'firstclass':'https://upload.wikimedia.org/wikipedia/en/5/55/X-MenFirstClassMoviePoster.jpg',
+  'ghostrider1':'https://upload.wikimedia.org/wikipedia/en/7/71/GhostRiderBigPoster.jpg',
+  'ghostrider2':'https://upload.wikimedia.org/wikipedia/en/2/2f/Ghost_Rider_2_Poster.jpg',
+  'gifted':'https://upload.wikimedia.org/wikipedia/en/3/3f/The_Gifted_Movie_Poster.png',
+  'gotg':'https://upload.wikimedia.org/wikipedia/en/3/33/Guardians_of_the_Galaxy_%28film%29_poster.jpg',
+  'gotg2':'https://upload.wikimedia.org/wikipedia/en/3/32/Guardians_of_the_Galaxy_Vol._2_poster.jpg',
+  'gotg3':'https://upload.wikimedia.org/wikipedia/en/7/74/Guardians_of_the_Galaxy_Vol._3_poster.jpg',
+  'hawkeye15':'https://upload.wikimedia.org/wikipedia/en/7/7a/Hawkeye_%28miniseries%29_logo.png',
+  'hawkeye6':'https://upload.wikimedia.org/wikipedia/en/7/7a/Hawkeye_%28miniseries%29_logo.png',
+  'holidayspecial':'https://upload.wikimedia.org/wikipedia/en/e/e3/The_Guardians_of_the_Galaxy_Holiday_Special_poster.jpg',
+  'homecoming':'https://upload.wikimedia.org/wikipedia/en/f/f9/Spider-Man_Homecoming_poster.jpg',
+  'hulk':'https://upload.wikimedia.org/wikipedia/en/a/aa/Hulk_%28circa_2019%29.png',
+  'infinitywar':'https://upload.wikimedia.org/wikipedia/en/4/4d/Avengers_Infinity_War_poster.jpg',
+  'ironheart':'https://upload.wikimedia.org/wikipedia/en/e/e9/Ironheart_%28miniseries%29_logo.png',
+  'ironman':'https://upload.wikimedia.org/wikipedia/en/0/02/Iron_Man_%282008_film%29_poster.jpg',
+  'ironman2':'https://upload.wikimedia.org/wikipedia/en/e/ed/Iron_Man_2_poster.jpg',
+  'ironman3':'https://upload.wikimedia.org/wikipedia/en/1/19/Iron_Man_3_poster.jpg',
+  'itsv':'https://upload.wikimedia.org/wikipedia/en/f/fa/Spider-Man_Into_the_Spider-Verse_poster.png',
+  'jj1':'https://upload.wikimedia.org/wikipedia/en/2/22/Jessica_Jones_%28TV_series%29_logo.jpg',
+  'kraven':'https://upload.wikimedia.org/wikipedia/en/e/ec/Kraven_the_Hunter_%28film%29_poster.jpg',
+  'legion':'https://upload.wikimedia.org/wikipedia/commons/9/97/Legion_TV_series_logo.jpg',
+  'logan':'https://upload.wikimedia.org/wikipedia/en/3/37/Logan_2017_poster.jpg',
+  'loki1':'https://upload.wikimedia.org/wikipedia/en/4/4e/Loki_%28TV_series%29_logo.png',
+  'loki2':'https://upload.wikimedia.org/wikipedia/en/4/4e/Loki_%28TV_series%29_logo.png',
+  'lovethunder':'https://upload.wikimedia.org/wikipedia/en/8/88/Thor_Love_and_Thunder_poster.jpeg',
+  'madameweb':'https://upload.wikimedia.org/wikipedia/en/f/f0/Madame_Web_%28film%29_poster.jpg',
+  'marvels':'https://upload.wikimedia.org/wikipedia/en/7/7a/The_Marvels_poster.jpg',
+  'marvelzombies':'https://upload.wikimedia.org/wikipedia/en/1/1a/Marvel_Zombies_%28TV_series%29_logo.png',
+  'mom':'https://upload.wikimedia.org/wikipedia/en/1/17/Doctor_Strange_in_the_Multiverse_of_Madness_poster.jpg',
+  'moonknight':'https://upload.wikimedia.org/wikipedia/en/a/a8/Moon_Knight_%28miniseries%29_logo.jpg',
+  'morbius':'https://upload.wikimedia.org/wikipedia/en/2/2f/Morbius_%28film%29_poster.jpg',
+  'msmarvel':'https://upload.wikimedia.org/wikipedia/en/a/ac/Ms._Marvel_%28miniseries%29_logo.jpg',
+  'newmutants':'https://upload.wikimedia.org/wikipedia/en/1/1a/TheNewMutantsPoster.jpeg',
+  'nowayhome':'https://upload.wikimedia.org/wikipedia/en/0/00/Spider-Man_No_Way_Home_poster.jpg',
+  'origins':'https://upload.wikimedia.org/wikipedia/en/0/08/X-Men_Origins_Wolverine_theatrical_poster.jpg',
+  'os-agentcarter':'https://upload.wikimedia.org/wikipedia/en/a/a7/Agent_Carter_%28film%29_poster.jpg',
+  'os-allhailtheking':'https://upload.wikimedia.org/wikipedia/en/9/95/All_Hail_the_King_poster.jpg',
+  'os-consultant':'https://upload.wikimedia.org/wikipedia/commons/1/18/Marvel_Studios_One-Shot_logo.png',
+  'os-item47':'https://upload.wikimedia.org/wikipedia/en/9/9e/Item_47_poster.jpg',
+  'os-thorshammer':'https://upload.wikimedia.org/wikipedia/commons/1/18/Marvel_Studios_One-Shot_logo.png',
+  'pun1':'https://upload.wikimedia.org/wikipedia/en/f/fc/Punisher_%28TV_series%29_logo.jpg',
+  'pun2':'https://upload.wikimedia.org/wikipedia/en/f/fc/Punisher_%28TV_series%29_logo.jpg',
+  'punisherspecial':'https://upload.wikimedia.org/wikipedia/en/a/a0/The_Punisher_One_Last_Kill_poster.jpg',
+  'quantumania':'https://upload.wikimedia.org/wikipedia/en/3/30/Ant-Man_and_the_Wasp_Quantumania_poster.jpg',
+  'ragnarok':'https://upload.wikimedia.org/wikipedia/en/7/7d/Thor_Ragnarok_poster.jpg',
+  'secretinvasion':'https://upload.wikimedia.org/wikipedia/en/9/91/Secret_Invasion_%28miniseries%29_logo.jpg',
+  'shangchi':'https://upload.wikimedia.org/wikipedia/en/7/74/Shang-Chi_and_the_Legend_of_the_Ten_Rings_poster.jpeg',
+  'shehulk':'https://upload.wikimedia.org/wikipedia/en/3/32/She-Hulk_Attorney_at_Law_logo.jpg',
+  'spidey1':'https://upload.wikimedia.org/wikipedia/en/6/6c/Spider-Man_%282002_film%29_poster.jpg',
+  'spidey2':'https://upload.wikimedia.org/wikipedia/en/4/4e/Spider-Man_2_USA_poster.jpg',
+  'spidey3':'https://upload.wikimedia.org/wikipedia/en/7/7a/Spider-Man_3%2C_International_Poster.jpg',
+  'tasm1':'https://upload.wikimedia.org/wikipedia/en/e/e0/The_Amazing_Spider-Man_%28film%29_poster.jpg',
+  'tasm2':'https://upload.wikimedia.org/wikipedia/en/2/24/The_Amazing_Spider-Man_2_poster.jpg',
+  'tfatws':'https://upload.wikimedia.org/wikipedia/en/9/9a/The_Falcon_and_the_Winter_Soldier_logo.png',
+  'thor':'https://upload.wikimedia.org/wikipedia/en/9/95/Thor_%28film%29_poster.jpg',
+  'thunderbolts':'https://upload.wikimedia.org/wikipedia/en/9/90/Thunderbolts%2A_poster.jpg',
+  'ultron':'https://upload.wikimedia.org/wikipedia/en/f/ff/Avengers_Age_of_Ultron_poster.jpg',
+  'venom1':'https://upload.wikimedia.org/wikipedia/en/1/10/Venom_%282018_film%29_poster.png',
+  'venom2':'https://upload.wikimedia.org/wikipedia/en/a/a7/Venom_Let_There_Be_Carnage_poster.jpg',
+  'venom3':'https://upload.wikimedia.org/wikipedia/en/a/a3/Venom_The_Last_Dance_Poster.jpg',
+  'visionquest':'https://upload.wikimedia.org/wikipedia/en/d/d5/VisionQuest_logo.jpg',
+  'wakandaforever':'https://upload.wikimedia.org/wikipedia/en/3/3b/Black_Panther_Wakanda_Forever_poster.jpg',
+  'wandavision':'https://upload.wikimedia.org/wikipedia/en/2/20/WandaVision_logo.png',
+  'werewolf':'https://upload.wikimedia.org/wikipedia/en/0/06/Werewolf_by_Night_%28TV_special%29_poster.jpg',
+  'whatif1':'https://upload.wikimedia.org/wikipedia/en/b/b6/What_If...%3F_%28TV_series%29_logo.png',
+  'wintersoldier':'https://upload.wikimedia.org/wikipedia/en/9/9e/Captain_America_The_Winter_Soldier_poster.jpg',
+  'wolverine2013':'https://upload.wikimedia.org/wikipedia/en/7/74/The_Wolverine_posterUS.jpg',
+  'wonderman':'https://upload.wikimedia.org/wikipedia/en/4/44/Wonder_Man_%28Simon_Williams%29.png',
+  'x2':'https://upload.wikimedia.org/wikipedia/en/3/3e/X2_poster.jpg',
+  'x3':'https://upload.wikimedia.org/wikipedia/en/5/5b/X-Men_The_Last_Stand_theatrical_poster.jpg',
+  'xmen1':'https://upload.wikimedia.org/wikipedia/en/8/81/X-MenfilmPoster.jpg',
+  'xmen97':'https://upload.wikimedia.org/wikipedia/commons/6/6a/X-Men_%2797_logo.png'
+};
 /* ============================================================
    BUILD
    ============================================================ */
@@ -1698,9 +1779,11 @@ function entryHTML(it){
   var on=!!watched[it.id];
   var open=!!openIds[it.id];
   var h='';
+  var plain=it.t.replace(/&amp;/g,'and').replace(/"/g,'');
   h+='<div class="entry'+(on?' done':'')+(open?' open':'')+'" data-id="'+it.id+'">';
   h+= '<button class="cb'+(on?' on':'')+'" data-cb="'+it.id+'" role="checkbox" aria-checked="'+on+'"'+
-      ' aria-label="Mark '+it.t.replace(/&amp;/g,'and').replace(/"/g,'')+' as watched"></button>';
+      ' aria-label="Mark '+plain+' as watched"></button>';
+  h+= posterHTML(it,plain);
   h+= '<div class="e-body" role="button" tabindex="0" aria-expanded="'+open+'">';
   h+=  '<div class="e-line1"><span class="e-no">'+String(it.n).padStart(2,'0')+'</span>';
   h+=   '<span class="e-title">'+it.t+'</span>';
@@ -1727,6 +1810,21 @@ function entryHTML(it){
   h+=  '</div>';
   h+= '</div>';
   h+= '<div class="e-caret">&#9656;</div>';
+  h+='</div>';
+  return h;
+}
+
+/* A poster if one exists, otherwise a generated card carrying the title.
+   The card sits underneath; a failed image simply uncovers it. */
+function posterHTML(it,plain){
+  var words=plain.replace(/^The\s+/,'').split(/[:\u2014-]/)[0].trim().split(/\s+/);
+  var initials=words.slice(0,3).map(function(w){return w[0];}).join('');
+  var h='<div class="e-poster" aria-hidden="true">';
+  h+= '<span class="pfall"><b>'+initials.toUpperCase()+'</b><i>'+plain+'</i><u>'+it.y+'</u></span>';
+  if(POSTERS[it.id]){
+    h+= '<img src="'+POSTERS[it.id]+'" alt="" loading="lazy" decoding="async" '+
+        'referrerpolicy="no-referrer" onerror="this.remove()">';
+  }
   h+='</div>';
   return h;
 }

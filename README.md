@@ -46,3 +46,11 @@ identification in a non-commercial fan guide.
 published on Wikimedia Commons. `assets/doomsday-a.png` is the "A" glyph cropped
 from it. Release dates for unreleased titles are as publicly announced and may
 change; nothing here is a leak, and nothing rumoured is presented as confirmed.
+
+## Poster art
+
+Each entry shows its poster, hotlinked from the Wikipedia article for that
+title (`upload.wikimedia.org`). The URLs live in the `POSTERS` map in
+`index.html` and `_posters.json`; each was verified to serve a real image at
+build time. A title whose image ever fails to load falls back to a generated
+card carrying its initials, name and year, so no row is ever left blank.
