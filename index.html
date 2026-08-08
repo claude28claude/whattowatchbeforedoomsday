@@ -63,19 +63,28 @@
     filter:drop-shadow(0 0 46px rgba(79,210,79,.28));
   }
   #logoImg[hidden]{display:none}
-  /* The inline SVG is the SOURCE only. It is serialised once at load and
-     painted as a repeating field that scrolls with the page, so every panel
-     has something behind it instead of going flat black past the hero. */
-  #emblemWrap{position:absolute;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none}
-  #markField{
+  /* ONE mark. Pinned to the viewport — it does not travel with the page. */
+  #emblemWrap{
+    position:fixed;top:-2vh;left:50%;transform:translateX(-50%);
+    width:min(96vh,104vw);height:auto;z-index:0;pointer-events:none;
+    -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 56%,rgba(0,0,0,.7) 78%,rgba(0,0,0,.3) 93%,transparent 100%);
+            mask-image:linear-gradient(180deg,#000 0%,#000 56%,rgba(0,0,0,.7) 78%,rgba(0,0,0,.3) 93%,transparent 100%);
+    opacity:.52;
+    animation:breathe 16s ease-in-out infinite;
+  }
+  @keyframes breathe{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.016)}}
+
+  /* The branches from inside the mark, carried across the whole document.
+     This is what gives every panel something to refract instead of flat black. */
+  #branchField{
     position:absolute;top:0;left:0;right:0;height:100%;
     z-index:0;pointer-events:none;
-    background-repeat:repeat-y;
+    background-repeat:repeat;
     background-position:50% 0;
-    background-size:min(104vh,116vw) auto;
-    opacity:.46;
+    background-size:760px 760px;
+    opacity:.62;
   }
-  @media (max-width:760px){ #markField{background-size:150vw auto;opacity:.40} }
+  @media (max-width:760px){ #branchField{background-size:520px 520px;opacity:.56} }
   /* light travelling out along the timeline branches, as in the Loki finale */
   #treeLit path{stroke-dasharray:var(--len) var(--len);animation:flow 9s linear infinite;animation-delay:var(--d)}
   @keyframes flow{0%{stroke-dashoffset:var(--len);opacity:0}
@@ -621,7 +630,7 @@
     </g>
   </g>
 </svg>
-<div id="markField"></div>
+<div id="branchField"></div>
 <div id="glowlayer"></div>
 <div id="vignette"></div>
 <div id="grain"></div>
@@ -985,8 +994,8 @@
       }
       if(depth<=0) return;
       var spread=opts.spread*(0.7+rnd()*0.6);
-      branch(x2,y2,ang+spread,len*(0.64+rnd()*0.18),w*0.62,depth-1,false);
-      branch(x2,y2,ang-spread,len*(0.64+rnd()*0.18),w*0.62,depth-1,false);
+      branch(x2,y2,ang+spread,len*(0.62+rnd()*0.18),w*0.58,depth-1,false);
+      branch(x2,y2,ang-spread,len*(0.62+rnd()*0.18),w*0.58,depth-1,false);
       if(depth>2 && rnd()>0.5) branch(x2,y2,ang+(rnd()-0.5)*0.35,len*0.6,w*0.5,depth-2,false);
     }
     opts.seeds.forEach(function(s){ branch(s[0],s[1],s[2],s[3],opts.width,opts.depth,true); });
@@ -1034,20 +1043,26 @@
 
   // --- the world tree inside the mark: growing up from the base, into the light
   var paneSeeds=[];
-  for(var p=0;p<9;p++){
-    var a=-Math.PI/2 + (p-4)*0.30 + (rnd()-0.5)*0.16;
-    paneSeeds.push([300+(p-4)*13, 470, a, 62+rnd()*30]);
+  // main trunks rising from the base of the mark
+  for(var p=0;p<15;p++){
+    var a=-Math.PI/2 + (p-7)*0.185 + (rnd()-0.5)*0.14;
+    paneSeeds.push([300+(p-7)*9, 476, a, 58+rnd()*34]);
   }
-  pane.innerHTML=grow({seeds:paneSeeds,width:11,depth:5,spread:0.40})[0];
+  // secondary growth creeping in from the sides of the disc
+  for(var q=0;q<8;q++){
+    var side=q%2?1:-1, yy=250+ (q>>1)*58 + rnd()*20;
+    paneSeeds.push([300+side*152, yy, side>0? Math.PI+ (rnd()-0.5)*0.8 : (rnd()-0.5)*0.8, 40+rnd()*26]);
+  }
+  pane.innerHTML=grow({seeds:paneSeeds,width:9.5,depth:6,spread:0.36})[0];
 
   // --- the faint field beyond the mark
-  var outerSeeds=[], TRUNKS=15;
+  var outerSeeds=[], TRUNKS=22;
   for(var i=0;i<TRUNKS;i++){
     var ang=(i/TRUNKS)*Math.PI*2 + (rnd()-0.5)*0.28;
     // horizontal strands run longer, so the field reads wide rather than round
     outerSeeds.push([300,300,ang,86*(0.72+Math.abs(Math.cos(ang))*0.55)]);
   }
-  var outer=grow({seeds:outerSeeds,width:7.5,depth:4,spread:0.42,
+  var outer=grow({seeds:outerSeeds,width:7,depth:5,spread:0.44,
                   stroke:'url(#treeG)',fadeByDepth:true,lit:true});
   dim.innerHTML=outer[0];
   lit.innerHTML=outer[1];
@@ -1086,25 +1101,53 @@
     img.addEventListener('error',function(){ img.remove(); });
   }
 
-  // paint the mark as a repeating field behind the whole document
-  (function paintField(){
-    var field=document.getElementById('markField'); if(!field||!vec) return;
-    fetch('assets/doomsday-a.png').then(function(r){return r.blob();}).then(function(b){
-      var fr=new FileReader();
-      fr.onload=function(){
-        var clone=vec.cloneNode(true);
-        clone.removeAttribute('id'); clone.removeAttribute('style');
-        // breathing room above and below so the repeats do not touch
-        clone.setAttribute('viewBox','0 -120 600 840');
-        clone.setAttribute('width','600'); clone.setAttribute('height','840');
-        clone.querySelectorAll('image').forEach(function(im){ im.setAttribute('href',fr.result); });
-        var xml=new XMLSerializer().serializeToString(clone);
-        field.style.backgroundImage='url("data:image/svg+xml;charset=utf-8,'+
-          encodeURIComponent(xml).replace(/"/g,'%22')+'")';
+  /* ============================================================
+     BRANCH FIELD — the same growth that lives inside the mark, carried
+     across the whole document as a seamless tile. Every branch starts and
+     ends inside the tile and the whole thing fades at the edges, so the
+     repeat has no visible seam.
+     ============================================================ */
+  (function paintBranchField(){
+    var field=document.getElementById('branchField'); if(!field) return;
+    var T=760, parts=[];
 
-      };
-      fr.readAsDataURL(b);
-    }).catch(function(){});
+    function limb(x,y,ang,len,w,depth){
+      var x2=x+Math.cos(ang)*len, y2=y+Math.sin(ang)*len;
+      var mx=(x+x2)/2+Math.cos(ang+Math.PI/2)*len*(rnd()*0.44-0.22);
+      var my=(y+y2)/2+Math.sin(ang+Math.PI/2)*len*(rnd()*0.44-0.22);
+      parts.push('<path d="M'+x.toFixed(1)+','+y.toFixed(1)+' Q'+mx.toFixed(1)+','+my.toFixed(1)+
+                 ' '+x2.toFixed(1)+','+y2.toFixed(1)+'" stroke-width="'+w.toFixed(2)+
+                 '" opacity="'+(0.30+depth*0.14).toFixed(2)+'"/>');
+      if(depth<=0) return;
+      var sp=0.36+rnd()*0.34;
+      limb(x2,y2,ang+sp,len*(0.62+rnd()*0.18),w*0.60,depth-1);
+      limb(x2,y2,ang-sp,len*(0.62+rnd()*0.18),w*0.60,depth-1);
+      if(depth>1 && rnd()>0.42) limb(x2,y2,ang+(rnd()-0.5)*0.5,len*0.55,w*0.46,depth-2);
+    }
+
+    // clusters seeded well inside the tile so nothing is clipped at the edge
+    var seeds=[[190,215],[560,180],[130,560],[600,590],[380,380],[300,90],[470,700],
+               [90,370],[660,380],[380,660],[250,470],[520,470],[640,110],[110,110]];
+    seeds.forEach(function(s,i){
+      var trunks=5+Math.floor(rnd()*3);
+      for(var t=0;t<trunks;t++){
+        var a=(t/trunks)*Math.PI*2+rnd()*1.2;
+        limb(s[0],s[1],a,60+rnd()*40,6.4,5);
+      }
+    });
+
+    var svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+T+'" height="'+T+'" viewBox="0 0 '+T+' '+T+'">'
+      +'<defs><radialGradient id="fade" cx="0.5" cy="0.5" r="0.70">'
+      +'<stop offset="0%" stop-color="#fff"/><stop offset="72%" stop-color="#fff" stop-opacity="0.85"/>'
+      +'<stop offset="100%" stop-color="#fff" stop-opacity="0"/></radialGradient>'
+      +'<mask id="m"><rect width="'+T+'" height="'+T+'" fill="url(#fade)"/></mask>'
+      +'<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">'
+      +'<stop offset="0%" stop-color="#9fe07a"/><stop offset="45%" stop-color="#4f9d5c"/>'
+      +'<stop offset="100%" stop-color="#1d5230"/></linearGradient></defs>'
+      +'<g mask="url(#m)" stroke="url(#bg)" fill="none" stroke-linecap="round">'+parts.join('')+'</g></svg>';
+
+    field.style.backgroundImage='url("data:image/svg+xml;charset=utf-8,'+
+      encodeURIComponent(svg).replace(/"/g,'%22')+'")';
   })();
 })();
 
