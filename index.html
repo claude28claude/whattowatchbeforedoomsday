@@ -63,16 +63,19 @@
     filter:drop-shadow(0 0 46px rgba(79,210,79,.28));
   }
   #logoImg[hidden]{display:none}
-  #emblemWrap{
-    position:fixed;top:-2vh;left:50%;transform:translateX(-50%);
-    width:min(96vh,104vw);height:auto;z-index:0;pointer-events:none;
-    -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 54%,rgba(0,0,0,.72) 76%,rgba(0,0,0,.34) 92%,transparent 100%);
-            mask-image:linear-gradient(180deg,#000 0%,#000 54%,rgba(0,0,0,.72) 76%,rgba(0,0,0,.34) 92%,transparent 100%);
-    opacity:var(--eo,.72);
-    animation:breathe 14s ease-in-out infinite;
-    transition:opacity .18s linear;
+  /* The inline SVG is the SOURCE only. It is serialised once at load and
+     painted as a repeating field that scrolls with the page, so every panel
+     has something behind it instead of going flat black past the hero. */
+  #emblemWrap{position:absolute;width:0;height:0;overflow:hidden;opacity:0;pointer-events:none}
+  #markField{
+    position:absolute;top:0;left:0;right:0;height:100%;
+    z-index:0;pointer-events:none;
+    background-repeat:repeat-y;
+    background-position:50% 0;
+    background-size:min(104vh,116vw) auto;
+    opacity:.46;
   }
-  @keyframes breathe{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.018)}}
+  @media (max-width:760px){ #markField{background-size:150vw auto;opacity:.40} }
   /* light travelling out along the timeline branches, as in the Loki finale */
   #treeLit path{stroke-dasharray:var(--len) var(--len);animation:flow 9s linear infinite;animation-delay:var(--d)}
   @keyframes flow{0%{stroke-dashoffset:var(--len);opacity:0}
@@ -87,23 +90,24 @@
     #treeLit path{stroke-dasharray:none}
   }
   #glowlayer{
-    position:fixed;inset:0;z-index:0;pointer-events:none;
+    position:absolute;inset:0;height:100%;z-index:0;pointer-events:none;
     background:
       radial-gradient(ellipse 66% 42% at 50% 6%, rgba(90,190,110,.16), transparent 72%),
       radial-gradient(ellipse 78% 48% at 50% 24%, rgba(46,86,104,.16), transparent 74%),
       radial-gradient(ellipse 96% 60% at 50% 104%, rgba(142,222,77,.05), transparent 70%);
   }
   #vignette{
-    position:fixed;inset:0;z-index:1;pointer-events:none;
+    position:absolute;inset:0;height:100%;z-index:1;pointer-events:none;
     background:
-      radial-gradient(ellipse 54% 22% at 50% 30%, rgba(3,8,6,.40), rgba(3,8,6,0) 74%),
-      linear-gradient(180deg, rgba(3,8,6,.26) 0%, rgba(3,8,6,.16) 20%, rgba(3,8,6,.22) 42%, rgba(3,8,6,.36) 64%, rgba(3,8,6,.50) 84%, rgba(3,8,6,.58) 100%);
+      radial-gradient(ellipse 54% 20% at 50% 28%, rgba(3,8,6,.34), rgba(3,8,6,0) 72%),
+      linear-gradient(180deg, rgba(3,8,6,.30) 0%, rgba(3,8,6,.18) 22%, rgba(3,8,6,.20) 100%);
   }
   #grain{
     position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.05;
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
   }
   .page{position:relative;z-index:2}
+  body{position:relative}
 
   /* ============ TOP BAR ============ */
   .topbar{
@@ -617,6 +621,7 @@
     </g>
   </g>
 </svg>
+<div id="markField"></div>
 <div id="glowlayer"></div>
 <div id="vignette"></div>
 <div id="grain"></div>
@@ -1081,18 +1086,26 @@
     img.addEventListener('error',function(){ img.remove(); });
   }
 
-  // the emblem belongs to the hero — fade it back once the list takes over
-  var wrap=vec, pending=false;
-  function fade(){
-    pending=false;
-    var t=Math.min(1,(window.pageYOffset||0)/760);
-    // never fully out — the mark stays readable behind the page
-    var v=(0.95-t*0.30).toFixed(3);
-    wrap.style.setProperty('--eo',v);
-    if(img) img.style.setProperty('--eo',v);
-  }
-  addEventListener('scroll',function(){ if(!pending){ pending=true; requestAnimationFrame(fade); } },{passive:true});
-  fade();
+  // paint the mark as a repeating field behind the whole document
+  (function paintField(){
+    var field=document.getElementById('markField'); if(!field||!vec) return;
+    fetch('assets/doomsday-a.png').then(function(r){return r.blob();}).then(function(b){
+      var fr=new FileReader();
+      fr.onload=function(){
+        var clone=vec.cloneNode(true);
+        clone.removeAttribute('id'); clone.removeAttribute('style');
+        // breathing room above and below so the repeats do not touch
+        clone.setAttribute('viewBox','0 -120 600 840');
+        clone.setAttribute('width','600'); clone.setAttribute('height','840');
+        clone.querySelectorAll('image').forEach(function(im){ im.setAttribute('href',fr.result); });
+        var xml=new XMLSerializer().serializeToString(clone);
+        field.style.backgroundImage='url("data:image/svg+xml;charset=utf-8,'+
+          encodeURIComponent(xml).replace(/"/g,'%22')+'")';
+
+      };
+      fr.readAsDataURL(b);
+    }).catch(function(){});
+  })();
 })();
 
 /* ============================================================
