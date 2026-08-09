@@ -406,9 +406,49 @@
     position:absolute;inset:0;width:100%;height:100%;display:block;z-index:1;
     /* contain, not cover — several of these are wide logo plates rather than
        portrait posters, and cropping them to fill mangled the artwork */
-    object-fit:contain;object-position:center center;
+    object-fit:cover;object-position:center center;
     background:linear-gradient(165deg,#0e2116 0%,#060f0a 100%);
   }
+  /* ===== COMPOSED ONE-SHEET =====
+     For titles with no portrait poster in existence. The official logo sits on
+     a themed field that fills the whole tile, so there is no dead space at the
+     top or bottom and nothing gets cropped. --pt is the per-title accent. */
+  .e-poster.composed{background:#05100a}
+  .pwash{
+    position:absolute;inset:0;z-index:1;
+    background:
+      radial-gradient(120% 78% at 50% 4%, color-mix(in srgb, var(--pt) 72%, #fff 6%), transparent 68%),
+      radial-gradient(150% 100% at 50% 108%, rgba(0,0,0,.92), transparent 62%),
+      linear-gradient(168deg, color-mix(in srgb, var(--pt) 58%, #000) 0%,
+                              color-mix(in srgb, var(--pt) 22%, #000) 52%,
+                              #05100a 100%);
+  }
+  /* a faint sheen so the field is not flat */
+  .pwash::after{
+    content:'';position:absolute;inset:0;
+    background:linear-gradient(122deg, rgba(255,255,255,.16) 0%, rgba(255,255,255,0) 38%),
+               radial-gradient(90% 40% at 50% 100%, rgba(255,255,255,.10), transparent 70%);
+  }
+  .e-poster.composed .plogo{
+    position:absolute;left:5%;right:5%;top:50%;transform:translateY(-58%);
+    width:90%;height:auto;max-height:66%;object-fit:contain;z-index:2;
+    /* these are JPEGs with their own dark plate; screen drops the black out so
+       only the artwork sits on the themed field */
+    mix-blend-mode:screen;
+    filter:brightness(1.5) contrast(1.15) saturate(1.1)
+           drop-shadow(0 1px 5px rgba(0,0,0,.7));
+  }
+  .pyear{
+    position:absolute;left:0;right:0;bottom:7px;z-index:3;text-align:center;
+    font-family:var(--mono);font-size:8.5px;letter-spacing:.22em;
+    color:rgba(255,255,255,.82);text-shadow:0 1px 4px rgba(0,0,0,.9);
+  }
+  .e-poster.composed::after{
+    content:'';position:absolute;inset:0;z-index:4;pointer-events:none;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.14), inset 0 -22px 26px -20px rgba(0,0,0,.8);
+  }
+  @media (max-width:640px){ .pyear{font-size:7.5px;bottom:5px} }
+
   /* the fan-made card, uncovered when no poster loads */
   .pfall{
     position:absolute;inset:0;display:flex;flex-direction:column;
@@ -1593,6 +1633,42 @@ var EXTENSIONS = [
 ];
 
 
+/* Entries with no portrait poster in existence: Wikipedia uses a wordmark for
+   TV series. These get a composed one-sheet instead — the official logo on a
+   themed field, filling the tile rather than letterboxing inside it. */
+var COMPOSED={
+  'agatha':'#4b2a6b',
+  'bornagain1':'#a01018',
+  'bornagain2':'#7c0d14',
+  'btsv':'#d62b70',
+  'dd1':'#b3121d',
+  'dd2':'#8f0f18',
+  'dd3':'#6d0b12',
+  'echo':'#7a1f2b',
+  'eyesofwakanda':'#4a2f8f',
+  'hawkeye15':'#5a2d82',
+  'hawkeye6':'#4a2470',
+  'ironheart':'#b0452e',
+  'jj1':'#6a2d8f',
+  'legion':'#c94f7c',
+  'loki1':'#1f7a42',
+  'loki2':'#16713a',
+  'marvelzombies':'#5a1f1f',
+  'moonknight':'#8e93a8',
+  'msmarvel':'#1e5aa8',
+  'os-consultant':'#2a4a6b',
+  'os-thorshammer':'#2a4a6b',
+  'pun1':'#3a3f45',
+  'pun2':'#2b2f34',
+  'secretinvasion':'#2f6b4f',
+  'shehulk':'#3f9a4f',
+  'tfatws':'#1f4e8c',
+  'visionquest':'#8a1f2a',
+  'wandavision':'#a51d2a',
+  'whatif1':'#7a3fb5',
+  'xmen97':'#d4a017'
+};
+
 /* Poster art, hotlinked from the Wikipedia article for each title.
    Every URL was verified to serve a real image at build time. A title
    whose image fails to load falls back to a generated card. */
@@ -1852,11 +1928,21 @@ function entryHTML(it){
 function posterHTML(it,plain){
   var words=plain.replace(/^The\s+/,'').split(/[:\u2014-]/)[0].trim().split(/\s+/);
   var initials=words.slice(0,3).map(function(w){return w[0];}).join('');
-  var h='<div class="e-poster" aria-hidden="true">';
+  var url=POSTERS[it.id], theme=COMPOSED[it.id];
+  var h='<div class="e-poster'+(theme?' composed':'')+'" aria-hidden="true"'+
+        (theme?' style="--pt:'+theme+'"':'')+'>';
+  // the card underneath, uncovered if nothing loads
   h+= '<span class="pfall"><b>'+initials.toUpperCase()+'</b><i>'+plain+'</i><u>'+it.y+'</u></span>';
-  if(POSTERS[it.id]){
-    h+= '<img src="'+POSTERS[it.id]+'" alt="" loading="lazy" decoding="async" '+
-        'referrerpolicy="no-referrer" onerror="this.remove()">';
+  if(url){
+    if(theme){
+      h+= '<span class="pwash"></span>';
+      h+= '<img class="plogo" src="'+url+'" alt="" loading="lazy" decoding="async" '+
+          'referrerpolicy="no-referrer" onerror="this.remove()">';
+      h+= '<span class="pyear">'+it.y+'</span>';
+    } else {
+      h+= '<img src="'+url+'" alt="" loading="lazy" decoding="async" '+
+          'referrerpolicy="no-referrer" onerror="this.remove()">';
+    }
   }
   h+='</div>';
   return h;

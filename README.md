@@ -54,3 +54,8 @@ title (`upload.wikimedia.org`). The URLs live in the `POSTERS` map in
 `index.html` and `_posters.json`; each was verified to serve a real image at
 build time. A title whose image ever fails to load falls back to a generated
 card carrying its initials, name and year, so no row is ever left blank.
+
+Wikipedia has no portrait poster for a television series — its infobox image is
+the wordmark. Those 30 entries get a composed one-sheet instead: the official
+logo, screen-blended onto a field themed to that title, filling the tile rather
+than letterboxing inside it. The remaining 78 use their real poster art.
