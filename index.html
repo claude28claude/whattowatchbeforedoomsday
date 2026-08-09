@@ -296,7 +296,31 @@
   .planner .out{color:var(--acc-lt);font-family:var(--mono);font-size:13.5px}
 
   /* ============ CONTROLS ============ */
-  .controls{position:sticky;top:0;z-index:20;margin-top:34px;padding:14px;border-radius:16px}
+  /* The full control panel stays put at the top of the list. Scroll up to
+     reach the filters. The only thing that follows you down the page is a
+     bare search tile — nothing else rides along. */
+  .controls{position:static;margin-top:34px;padding:14px;border-radius:16px}
+  #stickySearch{
+    position:fixed;top:14px;left:50%;transform:translateX(-50%) translateY(-140%);
+    z-index:40;width:min(420px,calc(100vw - 32px));
+    padding:7px;border-radius:99px;
+    opacity:0;pointer-events:none;transition:transform .28s cubic-bezier(.2,.8,.2,1),opacity .22s ease;
+  }
+  #stickySearch.show{transform:translateX(-50%) translateY(0);opacity:1;pointer-events:auto}
+  #stickySearch input{
+    width:100%;background:rgba(4,12,8,.6);border:1px solid rgba(160,220,180,.18);
+    color:var(--ink);border-radius:99px;padding:9px 40px 9px 17px;
+    font-family:var(--sans);font-size:14.5px;
+  }
+  #stickySearch input::placeholder{color:var(--ink-faint)}
+  #stickySearch input:focus{outline:none;border-color:var(--acc)}
+  #stickySearch .up{
+    position:absolute;right:14px;top:50%;transform:translateY(-50%);
+    background:transparent;border:0;color:var(--ink-faint);cursor:pointer;
+    font-family:var(--mono);font-size:15px;line-height:1;padding:4px 6px;border-radius:8px;
+  }
+  #stickySearch .up:hover{color:var(--acc)}
+  @media (prefers-reduced-motion:reduce){#stickySearch{transition:none}}
   .ctl-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
   .ctl-row + .ctl-row{margin-top:10px}
   /* on small screens the filter rows fold away behind a single button */
@@ -349,7 +373,7 @@
     border:0;border-radius:14px;background:transparent;
     padding:12px 12px;transition:background .14s;position:relative;
   }
-  .entry + .entry::before{content:'';position:absolute;left:106px;right:12px;top:0;height:1px;
+  .entry + .entry::before{content:'';position:absolute;left:129px;right:12px;top:0;height:1px;
     background:rgba(140,200,160,.09)}
   .entry:hover{background:rgba(140,220,160,.055)}
   .entry:hover::before,.entry:hover + .entry::before{background:transparent}
@@ -374,13 +398,16 @@
     border:solid #06120b;border-width:0 2.5px 2.5px 0;transform:rotate(42deg)}
   /* ===== POSTERS ===== */
   .e-poster{
-    flex:none;position:relative;width:46px;height:69px;border-radius:7px;overflow:hidden;
+    flex:none;position:relative;width:69px;height:104px;border-radius:9px;overflow:hidden;
     margin-top:1px;background:#0a1a12;
     box-shadow:0 0 0 1px rgba(160,220,180,.16), 0 6px 14px rgba(0,0,0,.5);
   }
   .e-poster img{
-    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;
-    z-index:1;background:#0a1a12;
+    position:absolute;inset:0;width:100%;height:100%;display:block;z-index:1;
+    /* contain, not cover — several of these are wide logo plates rather than
+       portrait posters, and cropping them to fill mangled the artwork */
+    object-fit:contain;object-position:center center;
+    background:linear-gradient(165deg,#0e2116 0%,#060f0a 100%);
   }
   /* the fan-made card, uncovered when no poster loads */
   .pfall{
@@ -391,15 +418,15 @@
       linear-gradient(165deg,#16341f 0%,#0a1a12 55%,#050d09 100%);
     border-top:2px solid rgba(142,222,77,.5);
   }
-  .pfall b{font-family:var(--serif);font-size:17px;line-height:1;color:var(--acc-lt);
+  .pfall b{font-family:var(--serif);font-size:25px;line-height:1;color:var(--acc-lt);
     letter-spacing:.02em;text-shadow:0 0 10px rgba(142,222,77,.5)}
-  .pfall i{font-style:normal;font-family:var(--sans);font-size:5.6px;line-height:1.25;
-    color:var(--ink-dim);margin-top:3px;max-height:22px;overflow:hidden;
+  .pfall i{font-style:normal;font-family:var(--sans);font-size:8px;line-height:1.3;
+    color:var(--ink-dim);margin-top:5px;max-height:34px;overflow:hidden;
     display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
-  .pfall u{text-decoration:none;font-family:var(--mono);font-size:6px;letter-spacing:.1em;
+  .pfall u{text-decoration:none;font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;
     color:var(--ink-faint);margin-top:3px}
   .entry.done .e-poster{filter:grayscale(.75) brightness(.72)}
-  @media (max-width:640px){ .e-poster{width:40px;height:60px} .pfall b{font-size:15px} }
+  @media (max-width:640px){ .e-poster{width:60px;height:90px} .pfall b{font-size:21px} .pfall i{font-size:7px} }
 
   .e-body{flex:1;min-width:0;cursor:pointer;border-radius:8px}
   .e-body:focus-visible{outline:2px solid var(--acc);outline-offset:3px}
@@ -724,6 +751,12 @@
   <!-- ============ CONTROLS + LIST ============ -->
   <div id="listZone">
   <h2 class="sr-only">The watch order</h2>
+  <div class="glass" id="stickySearch">
+    <label class="sr-only" for="searchSticky">Search the watch order</label>
+    <input id="searchSticky" type="search" placeholder="Search a title…" aria-label="Search the watch order">
+    <button class="up" id="btnUp" title="Back to the filters" aria-label="Back to the filters">&#9650;</button>
+  </div>
+
   <div class="controls glass folded" id="controls">
     <div class="ctl-row">
       <label class="sr-only" for="search">Search the watch order</label>
@@ -2030,9 +2063,41 @@ document.querySelectorAll('[data-filter]').forEach(function(b){
   });
 });
 var searchEl=document.getElementById('search');
-searchEl.addEventListener('input',function(){ state.q=searchEl.value.trim().toLowerCase(); render(); });
+var searchSticky=document.getElementById('searchSticky');
+var stickyBar=document.getElementById('stickySearch');
+
+function applySearch(v,from){
+  state.q=v.trim().toLowerCase();
+  if(from!==searchEl) searchEl.value=v;
+  if(from!==searchSticky) searchSticky.value=v;
+  render();
+}
+searchEl.addEventListener('input',function(){ applySearch(searchEl.value,searchEl); });
+searchSticky.addEventListener('input',function(){ applySearch(searchSticky.value,searchSticky); });
+
+/* the bare search tile follows you down; everything else stays at the top */
+var ctlWrap=document.getElementById('controls'), sPending=false;
+function stickyCheck(){
+  sPending=false;
+  var past=ctlWrap.getBoundingClientRect().bottom < 4;
+  var listEnd=document.getElementById('listZone').getBoundingClientRect().bottom > 120;
+  stickyBar.classList.toggle('show', past && listEnd);
+}
+addEventListener('scroll',function(){ if(!sPending){ sPending=true; requestAnimationFrame(stickyCheck); } },{passive:true});
+addEventListener('resize',stickyCheck);
+stickyCheck();
+
+document.getElementById('btnUp').addEventListener('click',function(){
+  ctlWrap.scrollIntoView({behavior:'smooth',block:'start'});
+  setTimeout(function(){ searchEl.focus(); },450);
+});
+
 document.addEventListener('keydown',function(e){
-  if(e.key==='/' && document.activeElement!==searchEl){ e.preventDefault(); searchEl.focus(); }
+  if(e.key!=='/' ) return;
+  var a=document.activeElement;
+  if(a===searchEl||a===searchSticky) return;
+  e.preventDefault();
+  (stickyBar.classList.contains('show')?searchSticky:searchEl).focus();
 });
 
 function toast(msg){
