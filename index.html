@@ -64,15 +64,38 @@
   }
   #logoImg[hidden]{display:none}
   /* ONE mark. Pinned to the viewport — it does not travel with the page. */
+  /* The inline SVG is ~6000 paths inside blur filters. Animating it live made
+     the browser re-rasterise the whole thing every frame, which is what caused
+     the flicker behind the mark on slower devices. It is now drawn once, baked
+     to an image, and shown on a single GPU-composited layer. Identical output,
+     one layer instead of thousands of filtered vectors. */
   #emblemWrap{
     position:fixed;top:-2vh;left:50%;transform:translateX(-50%);
     width:min(96vh,104vw);height:auto;z-index:0;pointer-events:none;
     -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 56%,rgba(0,0,0,.7) 78%,rgba(0,0,0,.3) 93%,transparent 100%);
             mask-image:linear-gradient(180deg,#000 0%,#000 56%,rgba(0,0,0,.7) 78%,rgba(0,0,0,.3) 93%,transparent 100%);
     opacity:.44;
+    contain:paint;
+  }
+  /* once baked, take the live SVG out of the render tree completely.
+     visibility:hidden would leave its ~3900 filtered paths in play. */
+  #emblemWrap.baked{display:none}
+  #markLayer{
+    position:fixed;top:-2vh;left:50%;
+    width:min(96vh,104vw);aspect-ratio:1/1;
+    z-index:0;pointer-events:none;opacity:.44;
+    background-repeat:no-repeat;background-position:center top;background-size:100% auto;
+    -webkit-mask-image:linear-gradient(180deg,#000 0%,#000 56%,rgba(0,0,0,.7) 78%,rgba(0,0,0,.3) 93%,transparent 100%);
+            mask-image:linear-gradient(180deg,#000 0%,#000 56%,rgba(0,0,0,.7) 78%,rgba(0,0,0,.3) 93%,transparent 100%);
+    transform:translateX(-50%) translateZ(0);
+    will-change:transform;
     animation:breathe 16s ease-in-out infinite;
   }
-  @keyframes breathe{0%,100%{transform:translateX(-50%) scale(1)}50%{transform:translateX(-50%) scale(1.016)}}
+  @keyframes breathe{
+    0%,100%{transform:translateX(-50%) translateZ(0) scale(1)}
+    50%    {transform:translateX(-50%) translateZ(0) scale(1.016)}
+  }
+  @media (prefers-reduced-motion:reduce){#markLayer{animation:none}}
 
   /* light travelling out along the timeline branches, as in the Loki finale */
   #treeLit path{stroke-dasharray:var(--len) var(--len);animation:flow 9s linear infinite;animation-delay:var(--d)}
@@ -381,21 +404,32 @@
   .entry.done .e-title{text-decoration:line-through;text-decoration-color:var(--ink-faint)}
   .entry:focus-within{background:rgba(140,220,160,.07)}
 
-  /* 44px tap target; the visible box stays 24px */
-  .cb{
-    flex:none;width:44px;height:44px;margin:-6px 0 0 -10px;cursor:pointer;
-    background:transparent;border:0;position:relative;border-radius:12px;
-    display:flex;align-items:center;justify-content:center;
+  /* The poster is the control: click it to mark the title watched. */
+  .cb.e-poster{
+    padding:0;border:0;background:transparent;cursor:pointer;appearance:none;
+    transition:transform .14s ease, box-shadow .14s ease, filter .18s ease;
   }
-  .cb::before{
-    content:'';width:24px;height:24px;border-radius:7px;
-    border:1.5px solid var(--edge-hot);background:rgba(4,12,8,.72);transition:.15s;
+  .cb.e-poster:hover{transform:translateY(-2px) scale(1.03);
+    box-shadow:0 0 0 1px rgba(142,222,77,.45), 0 10px 20px rgba(0,0,0,.55)}
+  .cb.e-poster:focus-visible{outline:2px solid var(--acc);outline-offset:3px}
+  .cb.e-poster:active{transform:scale(.97)}
+
+  /* tick badge, drawn over the corner of the art */
+  .ptick{
+    position:absolute;right:4px;bottom:4px;z-index:6;width:20px;height:20px;border-radius:50%;
+    background:var(--doom);box-shadow:0 0 0 2px rgba(3,12,7,.85), 0 0 12px var(--doom-glow);
+    opacity:0;transform:scale(.4);transition:opacity .16s ease, transform .18s cubic-bezier(.2,1.5,.4,1);
   }
-  .cb:hover::before{border-color:var(--doom)}
-  .cb:focus-visible{outline:2px solid var(--acc);outline-offset:-4px}
-  .cb.on::before{background:var(--doom);border-color:var(--doom);box-shadow:0 0 14px var(--doom-glow)}
-  .cb.on::after{content:'';position:absolute;left:19px;top:14px;width:6px;height:12px;
-    border:solid #06120b;border-width:0 2.5px 2.5px 0;transform:rotate(42deg)}
+  .ptick::after{
+    content:'';position:absolute;left:7px;top:3.5px;width:5px;height:10px;
+    border:solid #04140b;border-width:0 2.4px 2.4px 0;transform:rotate(42deg);
+  }
+  .cb.on .ptick{opacity:1;transform:scale(1)}
+  .cb.on{filter:grayscale(.55) brightness(.62)}
+  .cb.on .ptick{filter:none}
+  @media (max-width:640px){ .ptick{width:17px;height:17px;right:3px;bottom:3px}
+    .ptick::after{left:6px;top:3px;width:4px;height:8px;border-width:0 2px 2px 0} }
+  @media (prefers-reduced-motion:reduce){.cb.e-poster,.ptick{transition:none}}
   /* ===== POSTERS ===== */
   .e-poster{
     flex:none;position:relative;width:69px;height:104px;border-radius:9px;overflow:hidden;
@@ -465,7 +499,7 @@
     display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
   .pfall u{text-decoration:none;font-family:var(--mono);font-size:8.5px;letter-spacing:.1em;
     color:var(--ink-faint);margin-top:3px}
-  .entry.done .e-poster{filter:grayscale(.75) brightness(.72)}
+  
   @media (max-width:640px){ .e-poster{width:60px;height:90px} .pfall b{font-size:21px} .pfall i{font-size:7px} }
 
   .e-body{flex:1;min-width:0;cursor:pointer;border-radius:8px}
@@ -632,6 +666,7 @@
      The "A" is the real Marvel Studios Avengers: Doomsday wordmark glyph
      (assets/doomsday-a.png, cropped from the official logo, 1155x1650 alpha).
      The ring, the metal and the stained glass are built around it. ===== -->
+<div id="markLayer"></div>
 <svg id="emblemWrap" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
   <defs>
     <linearGradient id="metalG" x1="0.12" y1="0" x2="0.88" y2="1">
@@ -1199,14 +1234,33 @@
   }
   if(stars) stars.innerHTML=sp.join('');
 
-  // if a real logo file is present, use it and drop the vector
-  var img=document.getElementById('logoImg'), vec=document.getElementById('emblemWrap');
-  if(img){
-    img.addEventListener('load',function(){
-      if(img.naturalWidth>1){ img.hidden=false; vec.style.display='none'; }
-    });
-    img.addEventListener('error',function(){ img.remove(); });
-  }
+  var vec=document.getElementById('emblemWrap');
+
+  /* Draw the mark once and hand the browser a finished image. Live, this is
+     thousands of paths inside blur filters and every repaint re-runs them. */
+  (function bakeMark(){
+    var layer=document.getElementById('markLayer');
+    if(!layer||!vec) return;
+    fetch('assets/doomsday-a.png').then(function(r){return r.blob();}).then(function(b){
+      var fr=new FileReader();
+      fr.onload=function(){
+        var clone=vec.cloneNode(true);
+        clone.removeAttribute('id'); clone.removeAttribute('style'); clone.removeAttribute('class');
+        clone.setAttribute('width','1200'); clone.setAttribute('height','1200');
+        clone.querySelectorAll('image').forEach(function(im){ im.setAttribute('href',fr.result); });
+        var xml=new XMLSerializer().serializeToString(clone);
+        var url='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(xml).replace(/"/g,'%22');
+        var probe=new Image();
+        probe.onload=function(){
+          layer.style.backgroundImage='url("'+url+'")';
+          vec.classList.add('baked');       // keep it in the DOM as the source
+        };
+        probe.onerror=function(){};          // leave the live SVG showing
+        probe.src=url;
+      };
+      fr.readAsDataURL(b);
+    }).catch(function(){});
+  })();
 
 })();
 
@@ -1890,9 +1944,7 @@ function entryHTML(it){
   var h='';
   var plain=it.t.replace(/&amp;/g,'and').replace(/"/g,'');
   h+='<div class="entry'+(on?' done':'')+(open?' open':'')+'" data-id="'+it.id+'">';
-  h+= '<button class="cb'+(on?' on':'')+'" data-cb="'+it.id+'" role="checkbox" aria-checked="'+on+'"'+
-      ' aria-label="Mark '+plain+' as watched"></button>';
-  h+= posterHTML(it,plain);
+  h+= posterHTML(it,plain,on);
   h+= '<div class="e-body" role="button" tabindex="0" aria-expanded="'+open+'">';
   h+=  '<div class="e-line1"><span class="e-no">'+String(it.n).padStart(2,'0')+'</span>';
   h+=   '<span class="e-title">'+it.t+'</span>';
@@ -1925,11 +1977,13 @@ function entryHTML(it){
 
 /* A poster if one exists, otherwise a generated card carrying the title.
    The card sits underneath; a failed image simply uncovers it. */
-function posterHTML(it,plain){
+function posterHTML(it,plain,on){
   var words=plain.replace(/^The\s+/,'').split(/[:\u2014-]/)[0].trim().split(/\s+/);
   var initials=words.slice(0,3).map(function(w){return w[0];}).join('');
   var url=POSTERS[it.id], theme=COMPOSED[it.id];
-  var h='<div class="e-poster'+(theme?' composed':'')+'" aria-hidden="true"'+
+  var h='<button type="button" class="cb e-poster'+(theme?' composed':'')+(on?' on':'')+'"'+
+        ' data-cb="'+it.id+'" role="checkbox" aria-checked="'+on+'"'+
+        ' aria-label="Mark '+plain+' as watched"'+
         (theme?' style="--pt:'+theme+'"':'')+'>';
   // the card underneath, uncovered if nothing loads
   h+= '<span class="pfall"><b>'+initials.toUpperCase()+'</b><i>'+plain+'</i><u>'+it.y+'</u></span>';
@@ -1944,7 +1998,8 @@ function posterHTML(it,plain){
           'referrerpolicy="no-referrer" onerror="this.remove()">';
     }
   }
-  h+='</div>';
+  h+= '<span class="ptick" aria-hidden="true"></span>';
+  h+='</button>';
   return h;
 }
 
@@ -1969,8 +2024,9 @@ function delegate(root){
   });
   root.addEventListener('keydown',function(e){
     if(e.key!==' ' && e.key!=='Enter') return;
-    var cb=e.target.closest('.cb');
-    if(cb){ e.preventDefault(); toggle(cb.dataset.cb); return; }
+    // .cb is a real <button>: the browser already turns Space/Enter into a
+    // click, so handling it here too would toggle twice and cancel out.
+    if(e.target.closest('.cb')) return;
     var body=e.target.closest('.e-body');
     if(body){ e.preventDefault(); setOpen(body.parentNode, !body.parentNode.classList.contains('open')); }
   });
@@ -1998,8 +2054,7 @@ function paintEntry(id){
   document.querySelectorAll('.entry[data-id="'+id+'"]').forEach(function(e){
     e.classList.toggle('done',on);
     var cb=e.querySelector('.cb');
-    cb.classList.toggle('on',on);
-    cb.setAttribute('aria-checked',on);
+    if(cb){ cb.classList.toggle('on',on); cb.setAttribute('aria-checked',on); }
   });
 }
 
