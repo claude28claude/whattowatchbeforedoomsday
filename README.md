@@ -35,6 +35,20 @@ announced past December 2026, and a second countdown to *Avengers: Secret Wars*.
 
 Single file, no build step, no dependencies, no tracking. Open `index.html`.
 
+## Install it as an app
+
+It is an installable PWA. Chrome, Edge and Brave show an install icon in the
+address bar (or use the **Install app** button in the controls); Android Chrome
+offers "Install app" in the menu; iOS Safari uses Share -> Add to Home Screen.
+
+Installed, it opens full-screen with its own icon and **works offline** — the
+service worker precaches the shell and caches poster art as you browse. Bump
+`CACHE` in `sw.js` whenever `index.html` changes so clients pick up the update.
+
+Files: `manifest.webmanifest`, `sw.js`, and `assets/icon-*.png` (192, 512 and a
+maskable 512 whose art sits inside the safe zone), all generated from the
+official A glyph.
+
 ## Credits and rights
 
 Fan project. Not affiliated with, endorsed by, or connected to Marvel Studios,

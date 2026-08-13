@@ -6,6 +6,14 @@
 <title>The Doomsday Protocol — Every Marvel Movie &amp; Show to Watch Before Avengers: Doomsday</title>
 <meta name="description" content="A fan-made, deeply annotated watch order for Avengers: Doomsday (18 December 2026). 90 core entries plus the Marvel One-Shots, Sony's Spider-Man Universe and the Spider-Verse films as extensions. Release order and timeline order, runtimes, stop points, and a per-title reason it matters.">
 <meta name="theme-color" content="#030806">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="application-name" content="The Doomsday Protocol">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Doomsday">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%2305070a'/%3E%3Ccircle cx='50' cy='50' r='34' fill='none' stroke='%236f8fa0' stroke-width='11' stroke-dasharray='176 21'/%3E%3Cpath d='M29 83 L50 22 L71 83' fill='none' stroke='%236f8fa0' stroke-width='11'/%3E%3Cpath d='M53 30 L82 14' stroke='%236f8fa0' stroke-width='9'/%3E%3Cpath d='M38 62 L62 62' stroke='%236f8fa0' stroke-width='8'/%3E%3Cpath d='M42 74 L50 55 L58 74 Z' fill='%2396e05a'/%3E%3C/svg%3E">
 <style>
   :root{
@@ -362,6 +370,8 @@
   .chip:hover{color:var(--ink-dim);border-color:var(--edge-hot)}
   .chip.on{border-color:var(--acc);color:var(--acc);background:rgba(142,222,77,.1)}
   .chip.danger:hover{border-color:var(--crimson);color:var(--crimson)}
+  #btnInstall{border-color:var(--acc);color:var(--acc);background:rgba(142,222,77,.10)}
+  #btnInstall[hidden]{display:none}
   .search{flex:1;min-width:180px;background:rgba(4,12,8,.72);border:1px solid var(--edge);
     color:var(--ink);border-radius:99px;padding:8px 15px;font-family:var(--sans);font-size:14px}
   .search::placeholder{color:var(--ink-faint)}
@@ -858,6 +868,7 @@
         <button class="chip" id="btnShare">Copy progress</button>
         <button class="chip" id="btnExport">Save to file</button>
         <button class="chip" id="btnImport">Load from file</button>
+        <button class="chip" id="btnInstall" hidden>Install app</button>
         <button class="chip danger" id="btnReset">Reset all</button>
         <input type="file" id="fileIn" accept="application/json,.json" hidden>
       </div>
@@ -997,10 +1008,15 @@
     </details>
 
     <details class="faq glass">
-      <summary>Put it on your phone's home screen</summary>
+      <summary>Install it as an app</summary>
+      <p>This is a proper installable app, not just a bookmark. Once installed it opens
+      full-screen with no browser chrome, gets its own icon, and <b>works offline</b> — the list,
+      your ticks and every poster you have already seen are cached on your device.</p>
+      <p><b>Chrome, Edge or Brave on desktop:</b> click the install icon in the address bar, or use
+      the <b>Install app</b> button in the controls above.</p>
+      <p><b>Android (Chrome):</b> tap the three-dot menu, then "Install app" or "Add to Home screen".</p>
       <p><b>iPhone / iPad (Safari):</b> tap the Share button, scroll down, tap "Add to Home Screen".</p>
-      <p><b>Android (Chrome):</b> tap the three-dot menu, then "Add to Home screen" or "Install app".</p>
-      <p>It opens full-screen and your ticks stay put.</p>
+      <p>Your progress lives in the browser either way, so installing keeps everything you have ticked.</p>
     </details>
   </section>
 
@@ -2326,6 +2342,41 @@ document.getElementById('btnShare').addEventListener('click',function(){
     navigator.clipboard.writeText(txt).then(function(){ toast('Progress copied to clipboard'); },
                                            function(){ toast('Could not copy — clipboard blocked'); });
   } else { toast('Clipboard not available in this browser'); }
+});
+
+/* ============================================================
+   INSTALL AS AN APP
+   ============================================================ */
+if('serviceWorker' in navigator){
+  addEventListener('load',function(){
+    navigator.serviceWorker.register('sw.js',{scope:'./'}).then(function(reg){
+      // if a new version is waiting, take it on the next load
+      reg.addEventListener('updatefound',function(){
+        var w=reg.installing;
+        if(w) w.addEventListener('statechange',function(){
+          if(w.state==='installed' && navigator.serviceWorker.controller) w.postMessage('skip-waiting');
+        });
+      });
+    }).catch(function(){ /* offline support simply stays off */ });
+  });
+}
+
+var deferredPrompt=null, installBtn=document.getElementById('btnInstall');
+addEventListener('beforeinstallprompt',function(e){
+  e.preventDefault(); deferredPrompt=e;
+  if(installBtn) installBtn.hidden=false;
+});
+if(installBtn) installBtn.addEventListener('click',function(){
+  if(!deferredPrompt) return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(function(c){
+    if(c.outcome==='accepted'){ installBtn.hidden=true; toast('Installing…'); }
+    deferredPrompt=null;
+  });
+});
+addEventListener('appinstalled',function(){
+  if(installBtn) installBtn.hidden=true;
+  toast('Installed. Look for it with your apps.');
 });
 
 document.getElementById('stamp').textContent=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});

@@ -1,0 +1,48 @@
+{
+  "name": "The Doomsday Protocol",
+  "short_name": "Doomsday",
+  "description": "Every Marvel film and series worth watching before Avengers: Doomsday — 94 core entries plus extensions, with runtimes, stop points and a reason each one earns its place.",
+  "id": "/whattowatchbeforedoomsday/",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui", "browser"],
+  "orientation": "any",
+  "background_color": "#030806",
+  "theme_color": "#030806",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["entertainment", "utilities", "lifestyle"],
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Jump to the watch order",
+      "short_name": "The list",
+      "url": "./#listZone"
+    },
+    {
+      "name": "What comes after Doomsday",
+      "short_name": "After",
+      "url": "./#after"
+    }
+  ]
+}
