@@ -7,7 +7,7 @@
 
 ## What it is
 
-94 core entries across six parts, plus 14 optional extension entries. Every title
+94 core entries across six parts, plus 27 optional extension entries. Every title
 carries its runtime, director, streaming home, in-universe timeline placing,
 post-credits count, first appearances, and a written answer to *why it is on the
 list at all*.
@@ -19,8 +19,10 @@ list at all*.
 - **Part V** — The X-Men (the complete Fox catalogue, 17)
 - **Part VI** — The Final Run (Phase 6)
 
-Plus the Marvel One-Shots, Sony's Spider-Man Universe and the Spider-Verse films
-as separately tracked extensions, an "After Doomsday" timeline of everything
+Plus five separately tracked extension blocks — the Marvel One-Shots, Sony's
+Spider-Man Universe, the Spider-Verse films, the Marvel Television era (Luke
+Cage, Iron Fist, The Defenders, Agent Carter, Runaways, Cloak & Dagger,
+Inhumans, Helstrom and the later Jessica Jones seasons) and the animated shelf — an "After Doomsday" timeline of everything
 announced past December 2026, and a second countdown to *Avengers: Secret Wars*.
 
 ## Features
@@ -70,6 +72,10 @@ build time. A title whose image ever fails to load falls back to a generated
 card carrying its initials, name and year, so no row is ever left blank.
 
 Wikipedia has no portrait poster for a television series — its infobox image is
-the wordmark. Those 30 entries get a composed one-sheet instead: the official
+the wordmark. Those 43 entries get a composed one-sheet instead: the official
 logo, screen-blended onto a field themed to that title, filling the tile rather
 than letterboxing inside it. The remaining 78 use their real poster art.
+
+Agents of S.H.I.E.L.D. is the only live-action Marvel show deliberately left
+untracked — 136 episodes is too large a bet on a payoff that may never come. It
+is described in the exclusions section rather than listed.
