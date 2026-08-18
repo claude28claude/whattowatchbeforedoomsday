@@ -697,7 +697,30 @@
   .tr-date{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;
     text-transform:uppercase;color:var(--acc)}
   .tr-note{display:block;font-size:13.5px;color:var(--ink-dim);margin-top:7px;line-height:1.55}
-  @media (max-width:640px){ .tr-grid{grid-template-columns:1fr} }
+  /* ===== NOSTALGIA ===== */
+  /* warmer than the trailer cards: these look back, those look forward */
+  .tr-card.nostalgia{
+    background:linear-gradient(160deg,rgba(56,42,22,.30),rgba(10,16,11,.42));
+    border:1px solid rgba(214,178,110,.20);
+  }
+  .tr-card.nostalgia:hover{box-shadow:0 0 0 1px rgba(224,190,122,.45), 0 16px 34px rgba(0,0,0,.5)}
+  .tr-card.nostalgia .tr-kind{color:#e2c48a;border-color:rgba(214,178,110,.45)}
+  .tr-card.nostalgia .tr-date{color:#d9b877}
+  .tr-card.nostalgia .tr-thumb img,.tr-card.nostalgia .tr-stack img{
+    filter:sepia(.28) saturate(1.1) contrast(1.03)}
+  .tr-card.nostalgia:hover .tr-thumb img,.tr-card.nostalgia:hover .tr-stack img{filter:none}
+  .tr-card.nostalgia:hover .tr-play{background:#e2c48a;border-color:#e2c48a}
+  .tr-card.nostalgia:hover .tr-play::after{border-left-color:#1a1206}
+
+  /* the playlist card stacks two thumbnails so it reads as a collection */
+  .tr-card.playlist{grid-column:1/-1}
+  .tr-stack{position:relative;display:block;aspect-ratio:16/7;border-radius:10px;
+    overflow:hidden;margin-bottom:11px;background:#0d1109}
+  .tr-stack img{position:absolute;top:0;height:100%;width:52%;object-fit:cover}
+  .tr-stack img:first-of-type{left:0;clip-path:polygon(0 0,100% 0,88% 100%,0 100%)}
+  .tr-stack img:nth-of-type(2){right:0;clip-path:polygon(12% 0,100% 0,100% 100%,0 100%)}
+  @media (max-width:640px){ .tr-grid{grid-template-columns:1fr} .tr-stack{aspect-ratio:16/9} }
+
 
   .scroll-hint{text-align:center;margin-top:26px;font-family:var(--mono);font-size:10.5px;
     letter-spacing:.28em;color:var(--ink-faint);text-transform:uppercase}
@@ -1052,6 +1075,38 @@
           <h4>Special Look</h4>
           <span class="tr-date">This week &middot; D23 2026</span>
           <span class="tr-note">The newest footage, straight out of D23 &mdash; and the first real look at Downey's Doom, voice and all.</span>
+        </a>
+    </div>
+
+    <div class="sec-head" style="margin-top:52px">
+      <h2>Or just feel it all at once</h2>
+      <p>Three hundred and forty-five hours is the long way round. These are Marvel's own compilations &mdash; eighteen years of it cut down to something you can watch tonight. Not a substitute for the list, but a very good reason to start it.</p>
+    </div>
+    <div class="tr-grid nostalgia-grid">
+        <a class="tr-card nostalgia glass" href="https://www.youtube.com/watch?v=-65VtGmPoi0" target="_blank" rel="noopener noreferrer">
+          <span class="tr-kind">Compilation</span>
+          <span class="tr-thumb"><img src="https://i.ytimg.com/vi/-65VtGmPoi0/hqdefault.jpg" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer"><i class="tr-play"></i></span>
+          <h4>85 Iconic MCU Moments</h4>
+          <span class="tr-date">Marvel 85th Anniversary &middot; 4K</span>
+          <span class="tr-note">Eighty-five moments in one run, from the first suit to the last stand. If you want the whole saga to hit you at once instead of over 345 hours, start here.</span>
+        </a>
+        <a class="tr-card nostalgia glass" href="https://www.youtube.com/watch?v=qaeHKoq_CLM" target="_blank" rel="noopener noreferrer">
+          <span class="tr-kind">Compilation</span>
+          <span class="tr-thumb"><img src="https://i.ytimg.com/vi/qaeHKoq_CLM/hqdefault.jpg" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer"><i class="tr-play"></i></span>
+          <h4>Tony Stark's Best Iron Man Suit Ups</h4>
+          <span class="tr-date">MCU Compilation &middot; 4K</span>
+          <span class="tr-note">Every suit-up, back to back. Worth remembering exactly who Robert Downey Jr. was on this road before you watch him come back as the man on the other side of it.</span>
+        </a>
+        <a class="tr-card nostalgia playlist glass" href="https://www.youtube.com/playlist?list=PLK5HARgNfgj8St77rTENQD8_LLwRbhinA" target="_blank" rel="noopener noreferrer">
+          <span class="tr-kind">Playlist &middot; 67 videos</span>
+          <span class="tr-stack">
+            <img src="https://i.ytimg.com/vi/qaeHKoq_CLM/hqdefault.jpg" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">
+            <img src="https://i.ytimg.com/vi/-65VtGmPoi0/hqdefault.jpg" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">
+            <i class="tr-play"></i>
+          </span>
+          <h4>Official Compilations</h4>
+          <span class="tr-date">Marvel Entertainment &middot; the whole shelf</span>
+          <span class="tr-note">Marvel's own playlist of every compilation they have cut &mdash; suit-ups, best fights, every Stan Lee cameo, whole character arcs in eight minutes. Sixty-seven of them, and a very easy evening to lose.</span>
         </a>
     </div>
     <div class="scroll-hint">The road does not stop here — keep scrolling<i>&#9662;</i></div>

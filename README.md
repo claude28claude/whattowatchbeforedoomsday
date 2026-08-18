@@ -41,6 +41,8 @@ announced past December 2026, and a second countdown to *Avengers: Secret Wars*.
 - Every official Doomsday video Marvel has released: four teasers, the full
   trailer and the D23 Special Look, each verified as a Marvel Entertainment
   upload rather than a fan re-upload
+- A nostalgia shelf below them: Marvel's own retrospective compilations and the
+  full 67-video Official Compilations playlist
 - Keyboard accessible, screen-reader announced, print stylesheet
 
 Single file, no build step, no dependencies, no tracking. Open `index.html`.
