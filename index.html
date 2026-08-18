@@ -611,6 +611,25 @@
   .card.wide{grid-column:1/-1}
 
   details.faq{border-radius:var(--r);padding:15px 18px;margin-bottom:9px}
+
+  /* ===== CAST GUIDE ===== */
+  .cast-count{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;color:var(--ink-faint);
+    text-transform:uppercase;margin:-6px 0 16px}
+  .cast-group summary em{font-style:normal;font-family:var(--mono);font-size:10.5px;
+    letter-spacing:.16em;color:var(--ink-faint)}
+  .cast-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(232px,1fr));gap:12px;margin-top:14px}
+  .cast-card{border:1px solid rgba(142,222,77,.16);border-radius:13px;padding:14px 15px;
+    background:linear-gradient(165deg,rgba(20,44,30,.35),rgba(5,14,10,.30))}
+  .cast-card h4{font-family:var(--serif);font-size:17px;color:var(--ink);margin-bottom:3px;line-height:1.25}
+  .cast-card p{font-size:14px;color:var(--ink-dim);margin-top:8px}
+  .cast-actor{font-size:14px !important;color:var(--acc-lt) !important;margin-top:1px !important;font-weight:600}
+  .cast-tag{font-family:var(--mono);font-size:9px !important;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--ink-faint) !important;margin-top:6px !important}
+  .cast-watch{font-size:12.5px !important;color:var(--ink-faint) !important;
+    border-top:1px solid rgba(142,222,77,.14);padding-top:8px;margin-top:10px !important}
+  .cast-watch b{color:var(--ink-dim)}
+  @media (max-width:640px){ .cast-grid{grid-template-columns:1fr} }
+
   details.faq summary{cursor:pointer;font-weight:600;font-size:16px;color:var(--ink);list-style:none}
   details.faq summary::-webkit-details-marker{display:none}
   details.faq summary::before{content:'+ ';color:var(--acc);font-family:var(--mono)}
@@ -957,6 +976,317 @@
       <p class="date">In cinemas · 18 December 2026</p>
     </div>
     <div class="scroll-hint">The road does not stop here — keep scrolling<i>&#9662;</i></div>
+  </section>
+
+  <div class="rule"></div>
+
+  <section id="cast">
+    <div class="sec-head">
+      <h2>Who is actually in it</h2>
+      <p>Optional, and spoiler-light. Every announced cast member, who they are, and the one thing worth knowing before December. Each group folds open &mdash; none of this is required reading, and nothing here goes beyond what Marvel has already announced.</p>
+    </div>
+    <p class="cast-count">38 announced so far &middot; grouped by where they are coming from</p>
+    <details class="faq glass cast-group" id="cast-doom">
+      <summary>The one it is named after <em>&middot; 1</em></summary>
+      <div class="cast-grid">
+        <div class="cast-card">
+          <h4>Victor von Doom / Doctor Doom</h4>
+          <p class="cast-actor">Robert Downey Jr.</p>
+          <p class="cast-tag">New to the MCU</p>
+          <p>Not Tony Stark. Downey returns as a different man entirely, and Marvel has been explicit about that. In the comics Doom rules Latveria, a genius on Reed Richards' level who blames Richards for the accident that scarred him &mdash; which is why the Fantastic Four arriving first matters.</p>
+          <p class="cast-watch">Best met in <b>The Fantastic Four: First Steps</b></p>
+        </div>
+      </div>
+    </details>
+    <details class="faq glass cast-group" id="cast-avengers">
+      <summary>The Avengers still standing <em>&middot; 11</em></summary>
+      <div class="cast-grid">
+        <div class="cast-card">
+          <h4>Steve Rogers / Captain America</h4>
+          <p class="cast-actor">Chris Evans</p>
+          <p class="cast-tag">Last seen: Endgame</p>
+          <p>Returned the Infinity Stones, chose to live out a life in the past, and handed the shield to Sam as an old man. How he is back &mdash; and as whom &mdash; is the film's biggest open question.</p>
+          <p class="cast-watch">Best met in <b>Avengers: Endgame</b></p>
+        </div>
+        <div class="cast-card">
+          <h4>Sam Wilson / Captain America</h4>
+          <p class="cast-actor">Anthony Mackie</p>
+          <p class="cast-tag">Last seen: Brave New World</p>
+          <p>Took the shield from Steve and spent a whole series earning the right to carry it. No super-soldier serum; he does it on skill and wings.</p>
+          <p class="cast-watch">Best met in <b>The Falcon and the Winter Soldier</b></p>
+        </div>
+        <div class="cast-card">
+          <h4>Bucky Barnes / Winter Soldier</h4>
+          <p class="cast-actor">Sebastian Stan</p>
+          <p class="cast-tag">Last seen: Thunderbolts*</p>
+          <p>Steve's oldest friend, brainwashed by HYDRA for seventy years, slowly rebuilt since. Ended Thunderbolts* on the political side of the board rather than the fighting side.</p>
+          <p class="cast-watch">Best met in <b>Captain America: The Winter Soldier</b></p>
+        </div>
+        <div class="cast-card">
+          <h4>Thor</h4>
+          <p class="cast-actor">Chris Hemsworth</p>
+          <p class="cast-tag">Last seen: Love and Thunder</p>
+          <p>Lost Asgard, his family and his hammer, and is now raising a daughter. The longest-serving Avenger still on the roster.</p>
+          <p class="cast-watch">Best met in <b>Thor: Ragnarok</b></p>
+        </div>
+        <div class="cast-card">
+          <h4>Loki</h4>
+          <p class="cast-actor">Tom Hiddleston</p>
+          <p class="cast-tag">Last seen: Loki Season 2</p>
+          <p>Sits at the centre of the multiverse holding every timeline together by hand. If Doomsday is about universes colliding, he is the one currently stopping that.</p>
+          <p class="cast-watch">Best met in <b>Loki &mdash; Season 2</b></p>
+        </div>
+        <div class="cast-card">
+          <h4>Stephen Strange</h4>
+          <p class="cast-actor">Benedict Cumberbatch</p>
+          <p class="cast-tag">Last seen: Multiverse of Madness</p>
+          <p>The MCU's authority on incursions &mdash; the rule that two universes touching destroys both. He also opened the door No Way Home walked through.</p>
+          <p class="cast-watch">Best met in <b>Doctor Strange in the Multiverse of Madness</b></p>
+        </div>
+        <div class="cast-card">
+          <h4>Peter Parker / Spider-Man</h4>
+          <p class="cast-actor">Tom Holland</p>
+          <p class="cast-tag">Last seen: Brand New Day</p>
+          <p>The world forgot he exists, including everyone he loved. He has been rebuilding from nothing ever since.</p>
+          <p class="cast-watch">Best met in <b>Spider-Man: No Way Home</b></p>
+        </div>
+        <div class="cast-card">
+          <h4>Clint Barton / Hawkeye</h4>
+          <p class="cast-actor">Jeremy Renner</p>
+          <p class="cast-tag">Last seen: Hawkeye</p>
+          <p>Retired, then unretired, and trained a successor in Kate Bishop. Carries Natasha's death harder than anyone.</p>
+          <p class="cast-watch">Best met in <b>Hawkeye</b></p>
+        </div>
+        <div class="cast-card">
+          <h4>Scott Lang / Ant-Man</h4>
+          <p class="cast-actor">Paul Rudd</p>
+          <p class="cast-tag">Last seen: Quantumania</p>
+          <p>The Quantum Realm runs through his whole story &mdash; it is how Endgame's time heist worked and how Kang got out.</p>
+          <p class="cast-watch">Best met in <b>Ant-Man</b></p>
+        </div>
+        <div class="cast-card">
+          <h4>Cassie Lang</h4>
+          <p class="cast-actor">Kathryn Newton</p>
+          <p class="cast-tag">Last seen: Quantumania</p>
+          <p>Scott's daughter, now suited up as Stature. One of the Young Avengers Marvel has been quietly assembling.</p>
+          <p class="cast-watch">Best met in <b>Ant-Man and the Wasp: Quantumania</b></p>
+        </div>
+        <div class="cast-card">
+          <h4>Shang-Chi</h4>
+          <p class="cast-actor">Simu Liu</p>
+          <p class="cast-tag">Last seen: his own film</p>
+          <p>Inherited the Ten Rings, which lit up at the end of his film as a signal to something nobody has explained yet.</p>
+          <p class="cast-watch">Best met in <b>Shang-Chi and the Legend of the Ten Rings</b></p>
+        </div>
+      </div>
+    </details>
+    <details class="faq glass cast-group" id="cast-tbolts">
+      <summary>The Thunderbolts <em>&middot; 5</em></summary>
+      <div class="cast-grid">
+        <div class="cast-card">
+          <h4>Yelena Belova</h4>
+          <p class="cast-actor">Florence Pugh</p>
+          <p class="cast-tag">Last seen: Thunderbolts*</p>
+          <p>Natasha's sister, raised in the Red Room, recruited by Valentina, and now effectively leading the team that replaced the Avengers.</p>
+          <p class="cast-watch">Best met in <b>Black Widow</b></p>
+        </div>
+        <div class="cast-card">
+          <h4>Alexei Shostakov / Red Guardian</h4>
+          <p class="cast-actor">David Harbour</p>
+          <p class="cast-tag">Last seen: Thunderbolts*</p>
+          <p>The Soviet answer to Captain America, decades past his prime, and Yelena's adoptive father.</p>
+          <p class="cast-watch">Best met in <b>Black Widow</b></p>
+        </div>
+        <div class="cast-card">
+          <h4>John Walker / U.S. Agent</h4>
+          <p class="cast-actor">Wyatt Russell</p>
+          <p class="cast-tag">Last seen: Thunderbolts*</p>
+          <p>Handed the shield by the government, took the serum, killed a man with it on camera, and was stripped of the title.</p>
+          <p class="cast-watch">Best met in <b>The Falcon and the Winter Soldier</b></p>
+        </div>
+        <div class="cast-card">
+          <h4>Ava Starr / Ghost</h4>
+          <p class="cast-actor">Hannah John-Kamen</p>
+          <p class="cast-tag">Last seen: Thunderbolts*</p>
+          <p>Phases through solid matter because a quantum accident is slowly killing her.</p>
+          <p class="cast-watch">Best met in <b>Ant-Man and the Wasp</b></p>
+        </div>
+        <div class="cast-card">
+          <h4>Bob Reynolds / Sentry</h4>
+          <p class="cast-actor">Lewis Pullman</p>
+          <p class="cast-tag">Last seen: Thunderbolts*</p>
+          <p>The most powerful being the MCU has introduced and the least stable. His other half, the Void, is the real danger.</p>
+          <p class="cast-watch">Best met in <b>Thunderbolts*</b></p>
+        </div>
+      </div>
+    </details>
+    <details class="faq glass cast-group" id="cast-ff">
+      <summary>The Fantastic Four <em>&middot; 4</em></summary>
+      <div class="cast-grid">
+        <div class="cast-card">
+          <h4>Reed Richards / Mister Fantastic</h4>
+          <p class="cast-actor">Pedro Pascal</p>
+          <p class="cast-tag">From Earth-828</p>
+          <p>The smartest man in his universe and Doom's opposite number. In the comics their rivalry is the engine of everything Doom does.</p>
+          <p class="cast-watch">Best met in <b>The Fantastic Four: First Steps</b></p>
+        </div>
+        <div class="cast-card">
+          <h4>Sue Storm / Invisible Woman</h4>
+          <p class="cast-actor">Vanessa Kirby</p>
+          <p class="cast-tag">From Earth-828</p>
+          <p>Invisibility and force fields, and the one who actually holds the family together.</p>
+          <p class="cast-watch">Best met in <b>The Fantastic Four: First Steps</b></p>
+        </div>
+        <div class="cast-card">
+          <h4>Johnny Storm / Human Torch</h4>
+          <p class="cast-actor">Joseph Quinn</p>
+          <p class="cast-tag">From Earth-828</p>
+          <p>Sue's younger brother. Flight and fire, and the least serious person in any room.</p>
+          <p class="cast-watch">Best met in <b>The Fantastic Four: First Steps</b></p>
+        </div>
+        <div class="cast-card">
+          <h4>Ben Grimm / The Thing</h4>
+          <p class="cast-actor">Ebon Moss-Bachrach</p>
+          <p class="cast-tag">From Earth-828</p>
+          <p>Reed's oldest friend, turned to orange rock by the same accident and never turned back.</p>
+          <p class="cast-watch">Best met in <b>The Fantastic Four: First Steps</b></p>
+        </div>
+      </div>
+    </details>
+    <details class="faq glass cast-group" id="cast-wakanda">
+      <summary>Wakanda and Talokan <em>&middot; 5</em></summary>
+      <div class="cast-grid">
+        <div class="cast-card">
+          <h4>Shuri / Black Panther</h4>
+          <p class="cast-actor">Letitia Wright</p>
+          <p class="cast-tag">Last seen: Wakanda Forever</p>
+          <p>Took the mantle after T'Challa's death. A better engineer than she is a warrior, which is rather the point of her.</p>
+          <p class="cast-watch">Best met in <b>Black Panther: Wakanda Forever</b></p>
+        </div>
+        <div class="cast-card">
+          <h4>M'Baku</h4>
+          <p class="cast-actor">Winston Duke</p>
+          <p class="cast-tag">Last seen: Wakanda Forever</p>
+          <p>Leader of the Jabari, once Wakanda's rival and now its steadiest ally.</p>
+          <p class="cast-watch">Best met in <b>Black Panther</b></p>
+        </div>
+        <div class="cast-card">
+          <h4>Namor</h4>
+          <p class="cast-actor">Tenoch Huerta Mej&iacute;a</p>
+          <p class="cast-tag">Last seen: Wakanda Forever</p>
+          <p>King of Talokan, centuries old, and answerable to nobody. He fought Wakanda to a truce rather than a defeat.</p>
+          <p class="cast-watch">Best met in <b>Black Panther: Wakanda Forever</b></p>
+        </div>
+        <div class="cast-card">
+          <h4>Namora</h4>
+          <p class="cast-actor">Mabel Cadena</p>
+          <p class="cast-tag">Last seen: Wakanda Forever</p>
+          <p>Namor's cousin and commander, and considerably less interested in peace than he is.</p>
+          <p class="cast-watch">Best met in <b>Black Panther: Wakanda Forever</b></p>
+        </div>
+        <div class="cast-card">
+          <h4>Attuma</h4>
+          <p class="cast-actor">Alex Livinalli</p>
+          <p class="cast-tag">Last seen: Wakanda Forever</p>
+          <p>Talokanil warrior and Namor's enforcer.</p>
+          <p class="cast-watch">Best met in <b>Black Panther: Wakanda Forever</b></p>
+        </div>
+      </div>
+    </details>
+    <details class="faq glass cast-group" id="cast-xmen">
+      <summary>The X-Men, from another universe entirely <em>&middot; 9</em></summary>
+      <div class="cast-grid">
+        <div class="cast-card">
+          <h4>Charles Xavier / Professor X</h4>
+          <p class="cast-actor">Patrick Stewart</p>
+          <p class="cast-tag">Earth-10005</p>
+          <p>Founder of the X-Men and the world's most powerful telepath. A version of him already died in Multiverse of Madness &mdash; this is not that one.</p>
+          <p class="cast-watch">Best met in <b>X-Men</b></p>
+        </div>
+        <div class="cast-card">
+          <h4>Erik Lehnsherr / Magneto</h4>
+          <p class="cast-actor">Ian McKellen</p>
+          <p class="cast-tag">Earth-10005</p>
+          <p>Holocaust survivor, master of magnetism, and Xavier's oldest friend and oldest opponent. Both at once, always.</p>
+          <p class="cast-watch">Best met in <b>X-Men</b></p>
+        </div>
+        <div class="cast-card">
+          <h4>Scott Summers / Cyclops</h4>
+          <p class="cast-actor">James Marsden</p>
+          <p class="cast-tag">Earth-10005</p>
+          <p>Field leader of the X-Men, and the most rigid man in any room he is in.</p>
+          <p class="cast-watch">Best met in <b>X-Men</b></p>
+        </div>
+        <div class="cast-card">
+          <h4>Hank McCoy / Beast</h4>
+          <p class="cast-actor">Kelsey Grammer</p>
+          <p class="cast-tag">Earth-10005</p>
+          <p>Blue, enormous, and the smartest person in the mansion. Already turned up in The Marvels' post-credits scene.</p>
+          <p class="cast-watch">Best met in <b>X-Men: The Last Stand</b></p>
+        </div>
+        <div class="cast-card">
+          <h4>Kurt Wagner / Nightcrawler</h4>
+          <p class="cast-actor">Alan Cumming</p>
+          <p class="cast-tag">Earth-10005</p>
+          <p>Teleporter, devout Catholic, and the gentlest of them. Mystique's son.</p>
+          <p class="cast-watch">Best met in <b>X2: X-Men United</b></p>
+        </div>
+        <div class="cast-card">
+          <h4>Raven Darkh&ouml;lme / Mystique</h4>
+          <p class="cast-actor">Rebecca Romijn</p>
+          <p class="cast-tag">Earth-10005</p>
+          <p>Shapeshifter who can be anyone at all. Spent the original trilogy on Magneto's side of the argument.</p>
+          <p class="cast-watch">Best met in <b>X-Men</b></p>
+        </div>
+        <div class="cast-card">
+          <h4>Remy LeBeau / Gambit</h4>
+          <p class="cast-actor">Channing Tatum</p>
+          <p class="cast-tag">Earth-10005</p>
+          <p>Charges objects with kinetic energy. Tatum spent over a decade trying to get this part made before Deadpool &amp; Wolverine finally put him on screen.</p>
+          <p class="cast-watch">Best met in <b>Deadpool &amp; Wolverine</b></p>
+        </div>
+        <div class="cast-card">
+          <h4>Logan / Wolverine</h4>
+          <p class="cast-actor">Hugh Jackman</p>
+          <p class="cast-tag">Earth-10005</p>
+          <p>Adamantium skeleton, healing factor, a very long memory. His own timeline ended in Logan, which Deadpool &amp; Wolverine went out of its way to leave intact.</p>
+          <p class="cast-watch">Best met in <b>Logan</b></p>
+        </div>
+        <div class="cast-card">
+          <h4>Wade Wilson / Deadpool</h4>
+          <p class="cast-actor">Ryan Reynolds</p>
+          <p class="cast-tag">Earth-10005</p>
+          <p>Knows he is in a film. Deadpool &amp; Wolverine is the reason the Fox universe and the MCU can touch at all.</p>
+          <p class="cast-watch">Best met in <b>Deadpool &amp; Wolverine</b></p>
+        </div>
+      </div>
+    </details>
+    <details class="faq glass cast-group" id="cast-misc">
+      <summary>And also <em>&middot; 3</em></summary>
+      <div class="cast-grid">
+        <div class="cast-card">
+          <h4>Peggy Carter</h4>
+          <p class="cast-actor">Hayley Atwell</p>
+          <p class="cast-tag">Which one is the question</p>
+          <p>Steve's Peggy died of old age. Captain Carter of Earth-838 was cut in half by the Scarlet Witch. There is more than one, and the film has not said which this is.</p>
+          <p class="cast-watch">Best met in <b>Captain America: The First Avenger</b></p>
+        </div>
+        <div class="cast-card">
+          <h4>Joaqu&iacute;n Torres / Falcon</h4>
+          <p class="cast-actor">Danny Ramirez</p>
+          <p class="cast-tag">Last seen: Brave New World</p>
+          <p>Took the wings when Sam took the shield.</p>
+          <p class="cast-watch">Best met in <b>Captain America: Brave New World</b></p>
+        </div>
+        <div class="cast-card">
+          <h4>Love</h4>
+          <p class="cast-actor">India Rose Hemsworth</p>
+          <p class="cast-tag">Last seen: Love and Thunder</p>
+          <p>Gorr's daughter, resurrected and raised by Thor. Played by Hemsworth's own daughter.</p>
+          <p class="cast-watch">Best met in <b>Thor: Love and Thunder</b></p>
+        </div>
+      </div>
+    </details>
   </section>
 
   <div class="rule"></div>
@@ -1652,9 +1982,9 @@ var PARTS = [
   {id:'ironheart',t:'Ironheart',y:2025,type:'series',eps:6,run:290,tier:'optional',tl:2027.3,dir:'Chinaka Hodge (creator)',where:'Disney+ / JioHotstar (IN)',pc:0,
    why:'Riri’s solo run. Its real contribution is putting magic and technology in the same room and introducing Mephisto to the MCU.',
    intro:'Riri Williams, Parker Robbins / The Hood, Mephisto'},
-  {id:'ff4',t:'The Fantastic Four: First Steps',y:2025,type:'film',run:115,tier:'essential',tl:9300,tlt:'Earth-828',dir:'Matt Shakman',where:'Disney+ / JioHotstar (IN)',pc:2,
+  {id:'ff4',t:'The Fantastic Four: First Steps',y:2025,type:'film',run:114,tier:'essential',tl:9300,tlt:'Earth-828',dir:'Matt Shakman',where:'Disney+ / JioHotstar (IN)',pc:2,
    why:'Marvel’s First Family, from a separate retro-futurist universe. They are central to Doomsday, and Doom’s history with them is the whole reason he is the villain.',
-   intro:'Reed, Sue, Johnny, Ben, Franklin Richards, Galactus, Silver Surfer, Earth-828'},
+   intro:'Reed, Sue, Johnny, Ben, Franklin Richards, Galactus, Shalla-Bal as the Silver Surfer, Earth-828'},
   {id:'eyesofwakanda',t:'Eyes of Wakanda',y:2025,type:'series',eps:4,run:114,tier:'optional',tl:-3000,tlt:'Ancient Wakanda → 1896',dir:'Todd Harris (creator)',where:'Disney+ / JioHotstar (IN)',pc:0,
    why:'Four animated stories about the Hatut Zaraze, Wakanda’s war dogs, hunting stolen vibranium across centuries of history. It is the deepest look at Wakanda’s past anyone has made, and it costs you under two hours.',
    intro:'The Hatut Zaraze across Wakandan history, vibranium recovered from the wider world',

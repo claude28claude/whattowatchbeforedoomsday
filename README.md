@@ -36,6 +36,8 @@ announced past December 2026, and a second countdown to *Avengers: Secret Wars*.
 - Save/load progress to a file to move between devices
 - Filters, search, jump-to-part, mark-a-whole-part-watched
 - A finish-by-date pace planner
+- A cast guide: all 38 announced Doomsday cast members, grouped by faction,
+  with actor, a short backstory and which entry to meet them in
 - Keyboard accessible, screen-reader announced, print stylesheet
 
 Single file, no build step, no dependencies, no tracking. Open `index.html`.
