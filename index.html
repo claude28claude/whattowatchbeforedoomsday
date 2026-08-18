@@ -304,6 +304,41 @@
 
   /* ============ PROGRESS ============ */
   .progress-card{padding:26px 24px;margin-top:40px}
+
+  /* the priority bar: brighter, larger, and sitting above the complete one */
+  .progress-card.primary{
+    margin-top:44px;margin-bottom:16px;
+    border:1px solid rgba(142,222,77,.28);
+    box-shadow:inset 0 0 0 1px rgba(198,246,214,.10),
+               inset 0 1.5px 0 rgba(232,255,240,.40),
+               0 0 34px rgba(142,222,77,.10),
+               0 22px 54px rgba(0,0,0,.34);
+  }
+  .pc-top .lbl.hot{color:var(--acc);letter-spacing:.2em}
+  .progress-card.primary .pct{font-size:44px;color:var(--acc-lt);
+    text-shadow:0 0 26px var(--acc-glow)}
+  .bar.exp{height:18px;border:1px solid rgba(142,222,77,.24)}
+  .bar.exp i{background:linear-gradient(90deg,#3f8f5e,#8ede4d 70%,#cdff96);
+    box-shadow:0 0 22px var(--acc-glow), inset 0 1px 0 rgba(255,255,255,.28)}
+  .progress-card.primary .pc-msg{color:var(--ink);font-size:15.5px}
+
+  .exp-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:12px;margin-top:20px}
+  .exp-stats div{border-top:1px solid rgba(142,222,77,.20);padding-top:9px}
+  .exp-stats b{display:block;font-family:var(--serif);font-size:24px;color:var(--acc-lt)}
+  .exp-stats span{display:block;font-family:var(--mono);font-size:9px;letter-spacing:.16em;
+    color:var(--ink-faint);text-transform:uppercase;margin-top:5px;line-height:1.5}
+  .exp-note{margin-top:18px;padding-top:15px;border-top:1px dashed rgba(142,222,77,.18);
+    font-size:14px;color:var(--ink-dim);line-height:1.65}
+  .exp-note b{color:var(--acc-lt)}
+  #btnExpFilter{margin-left:6px;vertical-align:baseline;
+    border-color:var(--acc);color:var(--acc);background:rgba(142,222,77,.10)}
+  #btnExpFilter:hover{background:rgba(142,222,77,.18)}
+  @media (max-width:640px){
+    .progress-card.primary .pct{font-size:36px}
+    .bar.exp{height:15px}
+    #btnExpFilter{display:block;margin:10px 0 0}
+  }
+
   .pc-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
   .pc-top .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.26em;color:var(--ink-faint);text-transform:uppercase}
   .pc-top .pct{font-family:var(--serif);font-size:34px;color:var(--acc-lt)}
@@ -808,9 +843,29 @@
 
   <!-- ============ PROGRESS ============ -->
   <h2 class="sr-only">Your progress</h2>
+
+  <div class="progress-card glass primary" id="expCard">
+    <div class="pc-top">
+      <span class="lbl hot">The full experience &middot; what Doomsday actually needs</span>
+      <span class="pct" id="expPct">0%</span>
+    </div>
+    <div class="bar exp"><i id="expFill"></i></div>
+    <div class="pc-msg" id="expMsg">Nothing ticked yet.</div>
+    <p class="sr-only" id="srExp" aria-live="polite"></p>
+    <div class="exp-stats">
+      <div><b id="expDone">0 / 0</b><span>Of the ones that matter</span></div>
+      <div><b id="expLeft">0h</b><span>Hours to a full experience</span></div>
+      <div><b id="expPace">0m</b><span>Per day to finish in time</span></div>
+    </div>
+    <p class="exp-note">Everything tagged <b>Essential</b> or <b>Recommended</b> &mdash; the titles Doomsday
+    leans on or brings characters from. All fifteen on <b>Disney+'s own official Doomsday watchlist</b> sit
+    inside this set. The bar below tracks the complete road including every Optional title.
+    <button class="chip" id="btnExpFilter" type="button">Show me just these</button></p>
+  </div>
+
   <div class="progress-card glass">
     <div class="pc-top">
-      <span class="lbl">Protocol Progress · core road</span>
+      <span class="lbl">Everything &middot; the complete core road</span>
       <span class="pct" id="pct">0%</span>
     </div>
     <div class="bar"><i id="barFill"></i></div>
@@ -858,6 +913,7 @@
         <button class="chip on" data-filter="all">Everything</button>
         <button class="chip" data-filter="films">Films only</button>
         <button class="chip" data-filter="essential">Essentials only</button>
+        <button class="chip" data-filter="experience">Full experience</button>
         <button class="chip" data-filter="todo">Unwatched</button>
       </div>
       <div class="ctl-row">
@@ -1949,6 +2005,10 @@ EXTENSIONS.forEach(function(p){ p.items.forEach(function(it){ it._core=false; EX
 CORE.forEach(function(it,i){ it.n=i+1; });
 EXT.forEach(function(it,i){ it.n=i+1; });
 
+/* Essential + Recommended: the titles Doomsday actually leans on. Disney+'s own
+   fifteen-title official watchlist is a strict subset of this set. */
+var EXPERIENCE=CORE.filter(function(i){return i.tier==='essential'||i.tier==='recommended';});
+
 var watched={};
 try{ watched=JSON.parse(localStorage.getItem(KEY)||'{}')||{}; }catch(e){ watched={}; }
 
@@ -2028,6 +2088,7 @@ function emptyMessage(isExt){
       : '<b>Everything is ticked.</b> The whole road is behind you — there is nothing left unwatched. Switch back to Everything to see the full list.';
   }
   if(state.filter==='essential' && isExt) return 'Nothing in the extensions is rated Essential — that is the point of them being extensions.';
+  if(state.filter==='experience' && isExt) return 'The extensions are all Optional by definition, so none of them are part of the full experience.';
   if(state.filter==='films' && isExt) return 'No films in the extensions match. Some extension entries are shorts rather than features.';
   return 'Nothing matches the current filter. Switch back to Everything to see the full list.';
 }
@@ -2037,6 +2098,7 @@ function passFilter(it){
   // "Films only" means things you watch as a film — including cinema specials
   if(state.filter==='films' && !(it.type==='film' || (it.type==='special' && it.where==='Cinemas'))) return false;
   if(state.filter==='essential' && it.tier!=='essential') return false;
+  if(state.filter==='experience' && it.tier==='optional') return false;
   if(state.filter==='todo' && watched[it.id]) return false;
   return true;
 }
@@ -2234,6 +2296,31 @@ function updateStats(){
   ];
   var mi = pct>=100?6 : pct>=90?5 : pct>=75?4 : pct>=50?3 : pct>=25?2 : pct>0?1 : 0;
   document.getElementById('pcMsg').textContent=msgs[mi];
+  // --- the priority bar: essential + recommended only
+  var expDone=EXPERIENCE.filter(function(i){return watched[i.id];});
+  var expTotalMin=EXPERIENCE.reduce(function(a,i){return a+i.run;},0);
+  var expDoneMin=expDone.reduce(function(a,i){return a+i.run;},0);
+  var expLeftMin=expTotalMin-expDoneMin;
+  var expPct=Math.round(expDone.length/EXPERIENCE.length*100);
+  document.getElementById('expPct').textContent=expPct+'%';
+  document.getElementById('expFill').style.width=expPct+'%';
+  document.getElementById('expDone').textContent=expDone.length+' / '+EXPERIENCE.length;
+  document.getElementById('expLeft').textContent=hrs(expLeftMin)+'h';
+  document.getElementById('expPace').textContent=Math.round(expLeftMin/Math.max(1,daysLeft))+'m';
+  var expMsgs=[
+    'Nothing ticked yet. '+EXPERIENCE.length+' titles stand between you and the full experience.',
+    'Started. This is the set Doomsday actually leans on.',
+    'A quarter of what matters is behind you.',
+    'Halfway to the full experience.',
+    'Three quarters. The rest is mostly the recent run.',
+    'Nearly there — only a handful of the ones that matter left.',
+    'Full experience unlocked. Anything else is for the love of it.'
+  ];
+  var ei = expPct>=100?6 : expPct>=90?5 : expPct>=75?4 : expPct>=50?3 : expPct>=25?2 : expPct>0?1 : 0;
+  document.getElementById('expMsg').textContent=expMsgs[ei];
+  document.getElementById('srExp').textContent=
+    expPct+' per cent of the essential and recommended set watched, '+expDone.length+' of '+EXPERIENCE.length+'.';
+
   document.getElementById('srProgress').textContent=
     pct+' per cent complete. '+done.length+' of '+CORE.length+' entries watched, '+hrs(leftMin)+' hours remaining.';
 
@@ -2383,6 +2470,14 @@ document.getElementById('partNav').addEventListener('click',function(e){
 });
 
 /* save / load progress as a file, so it can move between devices */
+document.getElementById('btnExpFilter').addEventListener('click',function(){
+  document.querySelectorAll('[data-filter]').forEach(function(x){x.classList.remove('on');});
+  var b=document.querySelector('[data-filter="experience"]');
+  if(b) b.classList.add('on');
+  state.filter='experience'; render();
+  document.getElementById('listZone').scrollIntoView({behavior:'smooth',block:'start'});
+});
+
 document.getElementById('btnExport').addEventListener('click',function(){
   var payload={app:'doomsday-protocol',version:2,saved:new Date().toISOString(),watched:watched};
   var blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
