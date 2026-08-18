@@ -669,6 +669,36 @@
   .sw-card .gap{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;color:var(--ink-faint);
     text-transform:uppercase;margin-top:10px}
 
+  /* ===== TRAILERS ===== */
+  .tr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(238px,1fr));gap:13px}
+  .tr-card{display:block;position:relative;padding:11px;border-radius:16px;text-decoration:none;
+    transition:transform .15s ease, box-shadow .15s ease}
+  .tr-card:hover{transform:translateY(-3px);
+    box-shadow:0 0 0 1px rgba(142,222,77,.4), 0 16px 34px rgba(0,0,0,.5)}
+  .tr-card:focus-visible{outline:2px solid var(--acc);outline-offset:3px}
+  .tr-thumb{position:relative;display:block;border-radius:10px;overflow:hidden;
+    aspect-ratio:16/9;background:#08150e;margin-bottom:11px}
+  .tr-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .tr-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    width:42px;height:42px;border-radius:50%;background:rgba(3,10,6,.72);
+    border:1.5px solid rgba(226,255,236,.7);backdrop-filter:blur(2px)}
+  .tr-play::after{content:'';position:absolute;left:16px;top:12px;
+    border-left:14px solid rgba(240,255,244,.95);
+    border-top:9px solid transparent;border-bottom:9px solid transparent}
+  .tr-card:hover .tr-play{background:var(--acc);border-color:var(--acc)}
+  .tr-card:hover .tr-play::after{border-left-color:#04140b}
+  .tr-kind{position:absolute;top:20px;left:20px;z-index:2;
+    font-family:var(--mono);font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;
+    padding:4px 9px;border-radius:99px;background:rgba(3,10,6,.8);color:var(--ink-dim);
+    border:1px solid rgba(160,220,180,.3)}
+  .tr-card.special .tr-kind{background:rgba(142,222,77,.9);color:#04140b;border-color:transparent}
+  .tr-card.trailer .tr-kind{color:var(--acc-lt);border-color:rgba(142,222,77,.5)}
+  .tr-card h4{font-family:var(--serif);font-size:16.5px;color:var(--ink);margin:0 0 4px;line-height:1.3}
+  .tr-date{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--acc)}
+  .tr-note{display:block;font-size:13.5px;color:var(--ink-dim);margin-top:7px;line-height:1.55}
+  @media (max-width:640px){ .tr-grid{grid-template-columns:1fr} }
+
   .scroll-hint{text-align:center;margin-top:26px;font-family:var(--mono);font-size:10.5px;
     letter-spacing:.28em;color:var(--ink-faint);text-transform:uppercase}
   .scroll-hint i{display:block;font-style:normal;font-size:18px;color:var(--acc);margin-top:8px;
@@ -974,6 +1004,55 @@
       <h3>Avengers: Doomsday</h3>
       <p>Directed by Anthony and Joe Russo. Robert Downey Jr. returns — not as Tony Stark, but as Victor Von Doom. The Fantastic Four, the Thunderbolts, the surviving Avengers, and a cast of X-Men from a universe that was never supposed to touch this one, all pulled onto the same board.</p>
       <p class="date">In cinemas · 18 December 2026</p>
+    </div>
+
+    <div class="sec-head" style="margin-top:56px">
+      <h2>Everything Marvel has actually shown</h2>
+      <p>All six official releases so far &mdash; four teasers, the full trailer, and this week's Special Look from D23. Every link goes to the Marvel Entertainment channel, newest last.</p>
+    </div>
+    <div class="tr-grid">
+        <a class="tr-card teaser glass" href="https://www.youtube.com/watch?v=UiMg566PREA" target="_blank" rel="noopener noreferrer">
+          <span class="tr-kind">Teaser</span>
+          <span class="tr-thumb"><img src="https://i.ytimg.com/vi/UiMg566PREA/hqdefault.jpg" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer"><i class="tr-play"></i></span>
+          <h4>Teaser 1 &middot; Steve Rogers Will Return</h4>
+          <span class="tr-date">23 December 2025</span>
+          <span class="tr-note">The first tease, and the one that broke the internet: Chris Evans returning as Steve Rogers.</span>
+        </a>
+        <a class="tr-card teaser glass" href="https://www.youtube.com/watch?v=1clWprLC5Ak" target="_blank" rel="noopener noreferrer">
+          <span class="tr-kind">Teaser</span>
+          <span class="tr-thumb"><img src="https://i.ytimg.com/vi/1clWprLC5Ak/hqdefault.jpg" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer"><i class="tr-play"></i></span>
+          <h4>Teaser 2 &middot; Thor Will Return</h4>
+          <span class="tr-date">30 December 2025</span>
+          <span class="tr-note">Chris Hemsworth confirmed back, a week after Evans.</span>
+        </a>
+        <a class="tr-card teaser glass" href="https://www.youtube.com/watch?v=kH1XlwHQv9o" target="_blank" rel="noopener noreferrer">
+          <span class="tr-kind">Teaser</span>
+          <span class="tr-thumb"><img src="https://i.ytimg.com/vi/kH1XlwHQv9o/hqdefault.jpg" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer"><i class="tr-play"></i></span>
+          <h4>Teaser 3 &middot; The X-Men Will Return</h4>
+          <span class="tr-date">6 January 2026</span>
+          <span class="tr-note">Patrick Stewart, Ian McKellen and James Marsden &mdash; the Fox cast, confirmed.</span>
+        </a>
+        <a class="tr-card teaser glass" href="https://www.youtube.com/watch?v=399Ez7WHK5s" target="_blank" rel="noopener noreferrer">
+          <span class="tr-kind">Teaser</span>
+          <span class="tr-thumb"><img src="https://i.ytimg.com/vi/399Ez7WHK5s/hqdefault.jpg" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer"><i class="tr-play"></i></span>
+          <h4>Teaser 4 &middot; Only in Theaters</h4>
+          <span class="tr-date">13 January 2026</span>
+          <span class="tr-note">Wakanda and the Fantastic Four: Shuri, M'Baku, Namor and the Thing.</span>
+        </a>
+        <a class="tr-card trailer glass" href="https://www.youtube.com/watch?v=irVNGjRFZGk" target="_blank" rel="noopener noreferrer">
+          <span class="tr-kind">Trailer</span>
+          <span class="tr-thumb"><img src="https://i.ytimg.com/vi/irVNGjRFZGk/hqdefault.jpg" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer"><i class="tr-play"></i></span>
+          <h4>The Official Trailer</h4>
+          <span class="tr-date">20 July 2026</span>
+          <span class="tr-note">The first full trailer. Doom stays mostly in shadow.</span>
+        </a>
+        <a class="tr-card special glass" href="https://www.youtube.com/watch?v=X1aFkAkFASk" target="_blank" rel="noopener noreferrer">
+          <span class="tr-kind">Special Look</span>
+          <span class="tr-thumb"><img src="https://i.ytimg.com/vi/X1aFkAkFASk/hqdefault.jpg" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer"><i class="tr-play"></i></span>
+          <h4>Special Look</h4>
+          <span class="tr-date">This week &middot; D23 2026</span>
+          <span class="tr-note">The newest footage, straight out of D23 &mdash; and the first real look at Downey's Doom, voice and all.</span>
+        </a>
     </div>
     <div class="scroll-hint">The road does not stop here — keep scrolling<i>&#9662;</i></div>
   </section>

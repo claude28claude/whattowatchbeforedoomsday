@@ -38,6 +38,9 @@ announced past December 2026, and a second countdown to *Avengers: Secret Wars*.
 - A finish-by-date pace planner
 - A cast guide: all 38 announced Doomsday cast members, grouped by faction,
   with actor, a short backstory and which entry to meet them in
+- Every official Doomsday video Marvel has released: four teasers, the full
+  trailer and the D23 Special Look, each verified as a Marvel Entertainment
+  upload rather than a fan re-upload
 - Keyboard accessible, screen-reader announced, print stylesheet
 
 Single file, no build step, no dependencies, no tracking. Open `index.html`.
