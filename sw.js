@@ -1,17 +1,21 @@
 /* The Doomsday Protocol — service worker.
  *
- * Bump CACHE when index.html changes; the old cache is dropped on activate.
+ * Bump CACHE when index.html, styles.css, data.js or app.js change; the old
+ * cache is dropped on activate.
  * Strategy:
  *   navigations      network first, cached shell as the offline fallback
  *   same-origin      cache first (the shell and icons never change in place)
  *   Wikipedia art    stale-while-revalidate, opaque responses cached as-is
  */
-const CACHE = 'doomsday-protocol-v8';
+const CACHE = 'doomsday-protocol-v11';
 const POSTERS = 'doomsday-posters-v1';
 
 const SHELL = [
   './',
   './index.html',
+  './styles.css',
+  './data.js',
+  './app.js',
   './manifest.webmanifest',
   './assets/doomsday-a.png',
   './assets/doomsday-logo.png',
@@ -79,7 +83,24 @@ self.addEventListener('fetch', (e) => {
     return;
   }
 
-  // everything else we ship
+  // Code and styles: network first, same as the page. index.html is fetched
+  // fresh on every navigation, so serving a cached app.js or styles.css beside
+  // it could pair new markup with old logic if CACHE was ever left un-bumped.
+  // They are small; correctness beats the few ms.
+  if (/\.(?:js|css)$/.test(url.pathname)) {
+    e.respondWith(
+      fetch(req)
+        .then((res) => {
+          const copy = res.clone();
+          caches.open(CACHE).then((c) => c.put(req, copy)).catch(() => {});
+          return res;
+        })
+        .catch(() => caches.match(req))
+    );
+    return;
+  }
+
+  // static assets we ship (icons, the glyph): these never change in place
   e.respondWith(
     caches.match(req).then((hit) =>
       hit || fetch(req).then((res) => {

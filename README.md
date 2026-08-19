@@ -45,7 +45,22 @@ announced past December 2026, and a second countdown to *Avengers: Secret Wars*.
   full 67-video Official Compilations playlist
 - Keyboard accessible, screen-reader announced, print stylesheet
 
-Single file, no build step, no dependencies, no tracking. Open `index.html`.
+No build step, no dependencies, no tracking. Open `index.html`.
+
+## Layout
+
+It used to be one 205KB file, which made every edit expensive to reason about.
+It is now four, split by concern:
+
+| file | size | what it is |
+|---|---|---|
+| `index.html` | ~55 KB | markup and prose only |
+| `styles.css` | ~44 KB | all styling |
+| `data.js`    | ~71 KB | `PARTS`, `EXTENSIONS`, `POSTERS`, `COMPOSED` |
+| `app.js`     | ~35 KB | rendering, state, countdowns, PWA wiring |
+
+`data.js` declares globals and **must load before `app.js`**. Still plain static
+files - no bundler, no transpile. Changing a colour means opening 44KB, not 205KB.
 
 ## Install it as an app
 
