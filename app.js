@@ -5,6 +5,12 @@
 (function(){
 "use strict";
 
+/* Honour the OS "reduce motion" setting for programmatic scrolling too.
+   The stylesheet flattens animations and transitions; page-flinging smooth
+   scroll is only reachable from script, so it is read from the same query. */
+var RM = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+function sb(){ return (RM && RM.matches) ? 'auto' : 'smooth'; }
+
 /* ============================================================
    YGGDRASIL BRANCH FIELD
    Timeline strands converging at the core and splaying wide at the
@@ -317,7 +323,7 @@ function entryHTML(it){
   h+=   '<span class="tag '+(it.tier==='essential'?'ess':it.tier==='recommended'?'rec':'opt')+'">'+tierLabel(it.tier)+'</span>';
   h+=   '<span class="tag run">'+fmtRun(it)+'</span>';
   if(it.soon) h+='<span class="tag soon">Not out yet</span>';
-  if(state.order==='timeline') h+='<span class="tag">'+tlLabel(it)+'</span>';
+  if(state.order==='timeline') h+='<span class="tag tl">'+tlLabel(it)+'</span>';
   h+=  '</div>';
   h+=  '<div class="detail">';
   h+=   '<div class="why"><b>Why it is on the list</b>'+it.why+'</div>';
@@ -382,6 +388,9 @@ function delegate(root){
     if(cb){ e.preventDefault(); e.stopPropagation(); toggle(cb.dataset.cb); return; }
     var mark=e.target.closest('[data-markpart]');
     if(mark){ markPart(mark.dataset.markpart); return; }
+    // the caret looks like the control for opening the row, so make it one
+    var car=e.target.closest('.e-caret');
+    if(car){ var en=car.parentNode; setOpen(en,!en.classList.contains('open')); return; }
     var body=e.target.closest('.e-body');
     if(body) setOpen(body.parentNode, !body.parentNode.classList.contains('open'));
   });
@@ -617,7 +626,7 @@ addEventListener('resize',stickyCheck);
 stickyCheck();
 
 document.getElementById('btnUp').addEventListener('click',function(){
-  ctlWrap.scrollIntoView({behavior:'smooth',block:'start'});
+  ctlWrap.scrollIntoView({behavior:sb(),block:'start'});
   setTimeout(function(){ searchEl.focus(); },450);
 });
 
@@ -664,7 +673,7 @@ document.getElementById('partNav').addEventListener('click',function(e){
   var target = b.dataset.jump==='ext'
     ? document.getElementById('extensions')
     : document.getElementById('part-'+b.dataset.jump);
-  if(target) target.scrollIntoView({behavior:'smooth',block:'start'});
+  if(target) target.scrollIntoView({behavior:sb(),block:'start'});
 });
 
 /* save / load progress as a file, so it can move between devices */
@@ -673,7 +682,7 @@ document.getElementById('btnExpFilter').addEventListener('click',function(){
   var b=document.querySelector('[data-filter="experience"]');
   if(b) b.classList.add('on');
   state.filter='experience'; render();
-  document.getElementById('listZone').scrollIntoView({behavior:'smooth',block:'start'});
+  document.getElementById('listZone').scrollIntoView({behavior:sb(),block:'start'});
 });
 
 document.getElementById('btnExport').addEventListener('click',function(){

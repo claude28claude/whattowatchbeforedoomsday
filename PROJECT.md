@@ -150,10 +150,43 @@ limit, then strip the `?utm_*` query.
 
 **Palette** — green throughout (`--acc:#8ede4d` on `--bg:#030806`), matching the
 logo. The old brass variables were renamed `--acc / --acc-lt / --acc-glow`;
-**do not reintroduce gold.** Slate-blue survives as the metal secondary.
+**do not reintroduce gold.**
+
+Bright `--acc` means **interactive or selected** — links, chips, the `.on` state,
+focus rings, progress fill. Ornamental greens (timeline dots, dates, the scroll
+arrow, the "when" labels) use the deeper `--doom`. Keep that split: it is what
+makes the buttons stand out on a page that is green everywhere.
+
+Hue on a `.tag` means **priority only** (`ess` / `rec` / `opt` / `soon`). Kind
+and runtime already say what they are in words, so they are neutral. `--violet`
+means Secret Wars and nothing else. Every red derives from `--crimson-rgb`.
 
 **Radius scale** — `--r-xs 10 / --r-sm 14 / --r-md 18 / --r-lg 24`, sized by
 container weight. This replaced eight ad-hoc values.
+
+**Motion scale** — `--t-fast 140ms` (pointer state), `--t-mid 220ms` (reveal and
+confirm), `--t-slow 420ms` (progress fills, hero letters), on `--e-out`
+(`cubic-bezier(.2,.8,.2,1)`). `--e-pop` overshoots and is reserved for the tick
+badge alone. **Every transition on the page uses these** — no bare `transition:.15s`
+shorthand, which silently means `all` and fades the focus ring too.
+
+**Geometry tokens** — `--maxw 1060px` + `--gutter 20px` are shared by the top bar,
+the hero and `.wrap`, so the whole page sits on one column. `--row-text-x` is where
+an entry's title starts (93px desktop, 84px mobile); the row divider hangs off it
+so it can never drift from the text again. `--measure 72ch` caps the long prose
+blocks at a readable line length.
+
+**Hairlines** — one mint (`--rim: 198,246,214`) in three strengths: `--rim-1`
+dividers inside a container, `--rim-2` a container's own edge, `--rim-3` a lit
+edge. Neutral 1px edges draw from these rather than inventing a hue.
+
+**Watched state** — the row's *text column* dims (`.entry.done .e-body`), the art
+desaturates via `.cb.on > *:not(.ptick)`, and the tick badge stays at full
+strength. Never put the filter on `.cb` itself: it greys the badge inside it.
+
+**Reduced motion** — ONE block at the end of the file covering everything, plus
+`sb()` in app.js for programmatic smooth scroll. Do not add per-component
+`prefers-reduced-motion` rules; there were seven and they missed half the page.
 
 **Glass** — `.glass` (blur + gradient + inset hairline) goes on ~13 *large*
 containers only. Inner elements set `backdrop-filter:none` explicitly. Blur on all
@@ -175,7 +208,7 @@ drifting on one composited layer. Deliberately almost invisible.
 
 ## 7. Service worker rules
 
-- **Bump `CACHE` in `sw.js` on every content change.** Currently `v11`.
+- **Bump `CACHE` in `sw.js` on every content change.** Currently `v12`.
 - Navigations: network-first, cached `index.html` as the offline fallback.
 - Same-origin **`.js` / `.css`: network-first**. They were cache-first, which meant
   a forgotten `CACHE` bump could pair a fresh `index.html` with a stale `app.js`.
