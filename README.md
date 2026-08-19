@@ -49,6 +49,9 @@ No build step, no dependencies, no tracking. Open `index.html`.
 
 ## Layout
 
+For architecture, decisions, gotchas and the deploy recipe, see **`PROJECT.md`**.
+
+
 It used to be one 205KB file, which made every edit expensive to reason about.
 It is now four, split by concern:
 
