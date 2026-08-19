@@ -22,8 +22,10 @@ list at all*.
 Plus five separately tracked extension blocks — the Marvel One-Shots, Sony's
 Spider-Man Universe, the Spider-Verse films, the Marvel Television era (Luke
 Cage, Iron Fist, The Defenders, Agent Carter, Runaways, Cloak & Dagger,
-Inhumans, Helstrom and the later Jessica Jones seasons) and the animated shelf — an "After Doomsday" timeline of everything
-announced past December 2026, and a second countdown to *Avengers: Secret Wars*.
+Inhumans, Helstrom and the later Jessica Jones seasons) and the animated shelf.
+
+Below the road there is an "After Doomsday" timeline of everything announced
+past December 2026, and a second countdown to *Avengers: Secret Wars*.
 
 ## Features
 
@@ -49,9 +51,6 @@ No build step, no dependencies, no tracking. Open `index.html`.
 
 ## Layout
 
-For architecture, decisions, gotchas and the deploy recipe, see **`PROJECT.md`**.
-
-
 It used to be one 205KB file, which made every edit expensive to reason about.
 It is now four, split by concern:
 
@@ -65,6 +64,8 @@ It is now four, split by concern:
 `data.js` declares globals and **must load before `app.js`**. Still plain static
 files - no bundler, no transpile. Changing a colour means opening 44KB, not 205KB.
 
+For architecture, decisions, gotchas and the deploy recipe, see **`PROJECT.md`**.
+
 ## Install it as an app
 
 It is an installable PWA. Chrome, Edge and Brave show an install icon in the
@@ -73,7 +74,8 @@ offers "Install app" in the menu; iOS Safari uses Share -> Add to Home Screen.
 
 Installed, it opens full-screen with its own icon and **works offline** — the
 service worker precaches the shell and caches poster art as you browse. Bump
-`CACHE` in `sw.js` whenever `index.html` changes so clients pick up the update.
+`CACHE` in `sw.js` whenever any of the four shell files (`index.html`,
+`styles.css`, `data.js`, `app.js`) changes so clients pick up the update.
 
 Files: `manifest.webmanifest`, `sw.js`, and `assets/icon-*.png` (192, 512 and a
 maskable 512 whose art sits inside the safe zone), all generated from the
@@ -95,7 +97,8 @@ change; nothing here is a leak, and nothing rumoured is presented as confirmed.
 
 Each entry shows its poster, hotlinked from the Wikipedia article for that
 title (`upload.wikimedia.org`). The URLs live in the `POSTERS` map in
-`index.html` and `_posters.json`; each was verified to serve a real image at
+`data.js` (and in `_posters.json`, the build artefact they came from); each was
+verified to serve a real image at
 build time. A title whose image ever fails to load falls back to a generated
 card carrying its initials, name and year, so no row is ever left blank.
 
