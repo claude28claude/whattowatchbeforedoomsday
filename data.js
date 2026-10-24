@@ -353,14 +353,14 @@ var PARTS = [
    why:'Peter’s first film since the world forgot him, and the last MCU film before Doomsday. Its single post-credits scene points directly at where he turns up next — which makes this the closest thing to a formal prologue Doomsday has.',
    intro:'Peter post-No Way Home, Ned’s Spider-Tracker, Mark Ruffalo’s Hulk',
    note:'Released 31 July 2026 to strong reviews — widely called the best of the MCU Spider-Man films. One post-credits scene, right at the very end of the credits, so stay in your seat. Upgraded from Recommended to Essential now that it has actually landed.'},
-  {id:'visionquest',t:'VisionQuest',y:2026,type:'series',eps:8,run:320,tier:'recommended',tl:2027.8,dir:'Terry Matalas (showrunner)',where:'Disney+ / JioHotstar (IN)',pc:0,soon:true,
+  {id:'visionquest',t:'VisionQuest',y:2026,type:'series',eps:8,run:320,tier:'recommended',tl:2027.8,dir:'Terry Matalas (showrunner)',where:'Disney+ / JioHotstar (IN)',pc:0,
    why:'White Vision’s story, picking up from WandaVision, and the last announced series before Doomsday. Positioned as a direct lead-in.',
    intro:'White Vision, announced returning cast from WandaVision',
-   note:'Announced for Disney+ in late 2026. Episode count and runtime estimated.'},
-  {id:'endgameencore',t:'Avengers: Endgame Encore',y:2026,type:'special',eps:1,run:188,tier:'recommended',tl:2027.9,dir:'Anthony and Joe Russo',where:'Cinemas',pc:0,soon:true,
+   note:'Airing now. Premiered 13 October 2026 (14 October internationally), two episodes a week for three weeks and then weekly; the eighth and final episode lands 10 November 2026 — five weeks clear of Doomsday. Eight episodes confirmed; total runtime still estimated.'},
+  {id:'endgameencore',t:'Avengers: Endgame Encore',y:2026,type:'special',eps:1,run:188,tier:'recommended',tl:2027.9,dir:'Anthony and Joe Russo',where:'Cinemas',pc:0,
    why:'A theatrical re-release of Endgame recut with several minutes of new footage that lead directly into Doomsday. Deliberately the last thing on this list — it is built to be the final thing you watch before the cinema.',
    intro:'New opening and bonus scenes bridging Endgame to Doomsday',
-   note:'Announced for 25 September 2026. If you cannot get to a screening, the original Endgame at the top of this list still covers everything the plot requires — the new footage is a bridge, not a prerequisite. Runtime estimated.'}
+   note:'Released 25 September 2026, so check whether it is still playing near you — these re-releases are short runs. If you cannot get to a screening, the original Endgame at the top of this list still covers everything the plot requires; the new footage is a bridge, not a prerequisite. Runtime estimated.'}
 ]}
 ];
 
@@ -427,7 +427,7 @@ var EXTENSIONS = [
   {id:'btsv',t:'Spider-Man: Beyond the Spider-Verse',y:2027,type:'film',run:130,tier:'optional',tl:9702,tlt:'Earth-1610',dir:'Sony Pictures Animation',where:'Cinemas',pc:0,soon:true,
    why:'The finale, and the resolution of Across’s cliffhanger. Dated for after Doomsday, so it sits past the finish line — it also appears in the After Doomsday section below.',
    intro:'Announced as the trilogy’s conclusion',
-   note:'Announced for 4 June 2027. Runtime estimated. Outside MCU continuity entirely.'}
+   note:'Dated 18 June 2027 by Sony Pictures Animation — moved back from 4 June. Runtime estimated. Outside MCU continuity entirely.'}
 ]},
 {
   no:'Extension D', title:'The Marvel Television Era', sub:'The live-action shows the core list skips',

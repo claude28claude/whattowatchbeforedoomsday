@@ -208,7 +208,7 @@ drifting on one composited layer. Deliberately almost invisible.
 
 ## 7. Service worker rules
 
-- **Bump `CACHE` in `sw.js` on every content change.** Currently `v12`.
+- **Bump `CACHE` in `sw.js` on every content change.** Currently `v13`.
 - Navigations: network-first, cached `index.html` as the offline fallback.
 - Same-origin **`.js` / `.css`: network-first**. They were cache-first, which meant
   a forgotten `CACHE` bump could pair a fresh `index.html` with a stale `app.js`.
@@ -266,9 +266,13 @@ measure the old file.
   file paths not moving.
 - **The site publicly hosts Marvel's wordmark.** Non-commercial fan guide with a
   disclaimer in the footer and README, but it is real studio art on a public URL.
-- **Unreleased dates** (VisionQuest, Endgame Encore, everything under After
+- **Unreleased dates** (Beyond the Spider-Verse, everything under After
   Doomsday) are as announced and will move. Anything reported-but-not-official is
-  marked as such — grey dots on the timeline, brass for studio-confirmed.
+  marked as such — grey dots on the timeline, green for studio-confirmed.
+  Status last checked 24 October 2026: VisionQuest is mid-run (premiered
+  13 Oct, finale 10 Nov), Endgame Encore released 25 Sept, the X-Men film and
+  Ghost Rider both became studio-dated at D23 in August 2026, and Beyond the
+  Spider-Verse moved from 4 to 18 June 2027.
 - **Cast list** is only what Marvel has announced. No leaks, no rumours.
 - **The composed one-sheets are designed cards, not character art.** If real
   character posters are ever wanted for those 43, they need image files dropped

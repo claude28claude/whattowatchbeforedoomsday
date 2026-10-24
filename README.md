@@ -33,7 +33,7 @@ past December 2026, and a second countdown to *Avengers: Secret Wars*.
   titles Doomsday actually leans on, which contains all 15 of Disney+'s own
   official watchlist) above the complete 94-entry road
 - Release order and timeline order
-- Live countdowns to Doomsday, Endgame Encore and Secret Wars
+- Live countdowns to Doomsday, the VisionQuest finale and Secret Wars
 - Progress saved in the browser, per title — adding entries never scrambles it
 - Save/load progress to a file to move between devices
 - Filters, search, jump-to-part, mark-a-whole-part-watched

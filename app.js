@@ -554,7 +554,7 @@ document.getElementById('targetDate').addEventListener('change',function(){ upda
 var SECRETWARS=new Date('2027-12-17T00:00:00');
 var cdTarget=DOOMSDAY;
 var LABELS={
-  '2026-09-25T00:00:00':'25 September 2026 · Endgame Encore in cinemas',
+  '2026-11-10T00:00:00':'10 November 2026 · VisionQuest finale on Disney+',
   '2026-12-18T00:00:00':'18 December 2026'
 };
 
