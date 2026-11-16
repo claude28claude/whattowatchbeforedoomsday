@@ -814,12 +814,17 @@ render();
 (function partTwo(){
   if(window.parent!==window) return;            // never nest the two sites
   var wrap=document.getElementById('partTwo');
+  var seam=document.getElementById('seam');
   var back=document.getElementById('p2Back');
   if(!wrap) return;
   var LOCAL=/^(localhost|127\.0\.0\.1)$/.test(location.hostname);
   var SRC=(LOCAL?'http://'+location.hostname+':8126/':'https://claude28claude.github.io/road-to-secret-wars/')+'?embed=dd';
   var ORIGIN=new URL(SRC).origin;
   wrap.hidden=false;                            // below everything, so nothing above it moves
+  if(seam){
+    seam.hidden=false;
+    if(window.SeamFluid){ try{ window.SeamFluid(seam); }catch(err){ seam.classList.add('no-fluid'); } }
+  }
 
   var frame=null;
   function load(){
@@ -827,13 +832,25 @@ render();
     frame=document.createElement('iframe');
     frame.title='Part two: the Road to Secret Wars';
     frame.src=SRC;
-    frame.addEventListener('load',function(){ var w=wrap.querySelector('.p2-wait'); if(w) w.remove(); });
+    frame.addEventListener('load',function(){
+      var w=wrap.querySelector('.p2-wait'); if(w) w.remove();
+      /* Same address on the live site, so the wheel can be caught inside the
+         frame: while the frame is only partly on screen, scrolling down over
+         it moves this page (to reveal the rest) instead of the page inside it. */
+      try{
+        frame.contentWindow.addEventListener('wheel',function(e){
+          if(e.deltaY>0 && window.scrollY<full()-1){ e.preventDefault(); snapping=false; window.scrollBy(0,e.deltaY); }
+        },{passive:false});
+      }catch(err){ /* a different address (local testing): the browser keeps them apart */ }
+    });
     wrap.appendChild(frame);
   }
 
   // FULL = the frame fills the screen; END = the last of this page fills it
+  // (the liquid seam sits between the two)
+  function seamTop(){ return seam && !seam.hidden ? seam.offsetTop : wrap.offsetTop; }
   function full(){ return Math.min(wrap.offsetTop, document.documentElement.scrollHeight-window.innerHeight); }
-  function end(){ return Math.max(0, wrap.offsetTop-window.innerHeight); }
+  function end(){ return Math.max(0, seamTop()-window.innerHeight); }
   /* an automatic move runs until it arrives, the reader takes over (wheel,
      touch, keys), or the browser says scrolling ended - never on a short
      timer, which cut moves off half way on slow devices */
@@ -861,14 +878,17 @@ render();
     if(e.data && e.data.rtsw==='part-one') goUp();
   });
 
-  /* Never leave the reader half on one site and half on the other: when
-     scrolling stops in the seam, finish the move in the direction they were
-     going. A small nudge (under 60px) springs back. */
+  /* Where scrolling stops decides what happens:
+     - the whole liquid seam on screen: stay - that is someone looking at it;
+     - otherwise, caught between the two sites: finish the move in the
+       direction they were going (a nudge under 60px springs back). */
   var lastY=window.scrollY, dir='down', timer=null, touching=false;
   function settle(){
     if(snapping||touching) return;
     var y=window.scrollY, E=end(), F=full();
     if(y<=E+1 || y>=F-1) return;
+    var st=seamTop(), sh=wrap.offsetTop-st;
+    if(sh>0 && y<=st && y+window.innerHeight>=st+sh) return;
     if(dir==='down') go(y-E>60 ? F : E);
     else go(F-y>60 ? E : F);
   }

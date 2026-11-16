@@ -7,7 +7,7 @@
  *   same-origin      cache first (the shell and icons never change in place)
  *   Wikipedia art    stale-while-revalidate, opaque responses cached as-is
  */
-const CACHE = 'doomsday-protocol-v16';
+const CACHE = 'doomsday-protocol-v17';
 const POSTERS = 'doomsday-posters-v1';
 
 const SHELL = [
@@ -16,6 +16,7 @@ const SHELL = [
   './styles.css',
   './data.js',
   './app.js',
+  './fluid.js',
   './manifest.webmanifest',
   './assets/doomsday-a.png',
   './assets/doomsday-logo.png',
