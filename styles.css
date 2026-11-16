@@ -914,20 +914,15 @@
   .p2-back[hidden]{display:none}
   @media print{ #partTwo,.p2-back{display:none !important} }
 
-  /* ===== THE SEAM =====
-     Where part one meets part two: a band of live liquid (fluid.js), green
-     from Doomsday above, violet from Secret Wars below, stirred by the
-     pointer. Hidden when this page is itself embedded. */
-  .seam{position:relative;z-index:3;height:clamp(180px,30vh,300px);overflow:hidden;cursor:crosshair;touch-action:pan-y;
-    background:linear-gradient(180deg,#030806 0%,#0c2a12 30%,#1d0f3a 70%,#070308 100%)}
-  .seam[hidden]{display:none}
-  .seam canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-  .seam-label{position:absolute;inset:0;z-index:2;pointer-events:none;display:flex;flex-direction:column;
-    justify-content:space-between;align-items:center;padding:12px 16px;
-    font-family:var(--mono);font-size:10px;letter-spacing:.3em;text-transform:uppercase}
-  .seam-label i{font-style:normal;opacity:.6;text-shadow:0 1px 6px rgba(0,0,0,.9)}
-  .seam-label i:first-child{color:#bff59a}
-  .seam-label i:last-child{color:#dccbff}
-  .seam.no-fluid{background-size:100% 220%;animation:seamDrift 9s ease-in-out infinite alternate}
-  @keyframes seamDrift{from{background-position:0 0}to{background-position:0 100%}}
-  @media print{ .seam{display:none !important} }
+
+  /* ===== THE END OF DOOMSDAY =====
+     Secret Wars' violet rises from the bottom edge as a live liquid, swirls
+     into this site's green and fades out up the page. Behind the content,
+     never takes clicks; the pointer stirs it from anywhere over it. */
+  .edge-fluid{position:absolute;left:0;right:0;z-index:-1;pointer-events:none;overflow:hidden;opacity:.78}
+  .edge-fluid canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .edge-fluid.bottom{bottom:0;height:min(115vh,1150px);
+    -webkit-mask-image:linear-gradient(0deg,rgba(0,0,0,.9) 0%,rgba(0,0,0,.6) 18%,rgba(0,0,0,.22) 45%,rgba(0,0,0,.06) 70%,transparent 88%);
+            mask-image:linear-gradient(0deg,rgba(0,0,0,.9) 0%,rgba(0,0,0,.6) 18%,rgba(0,0,0,.22) 45%,rgba(0,0,0,.06) 70%,transparent 88%)}
+  .edge-fluid.no-fluid{background:radial-gradient(120% 60% at 50% 100%,rgba(180,140,255,.24),transparent 70%)}
+  @media print{ .edge-fluid{display:none !important} }

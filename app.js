@@ -811,6 +811,17 @@ render();
    down past the end and you arrive at its top; scroll up from its top and
    you are back here. Skipped entirely when this page is the embedded one.
    ============================================================ */
+/* The end of the page glows with Secret Wars' violet as a live liquid
+   (fluid.js). Mostly violet ink, fed from the bottom edge; on everywhere,
+   including when this page is shown above the Road to Secret Wars, because
+   that is exactly where the handover from green to violet is seen. */
+(function edgeLiquid(){
+  var host=document.getElementById('edgeFluid');
+  if(!host) return;
+  if(!window.SeamFluid){ host.classList.add('no-fluid'); return; }
+  try{ window.SeamFluid(host,{top:0.28}); }catch(err){ host.classList.add('no-fluid'); }
+})();
+
 (function partTwo(){
   if(window.parent!==window) return;            // never nest the two sites
   var wrap=document.getElementById('partTwo');
@@ -821,10 +832,6 @@ render();
   var SRC=(LOCAL?'http://'+location.hostname+':8126/':'https://claude28claude.github.io/road-to-secret-wars/')+'?embed=dd';
   var ORIGIN=new URL(SRC).origin;
   wrap.hidden=false;                            // below everything, so nothing above it moves
-  if(seam){
-    seam.hidden=false;
-    if(window.SeamFluid){ try{ window.SeamFluid(seam); }catch(err){ seam.classList.add('no-fluid'); } }
-  }
 
   var frame=null;
   function load(){

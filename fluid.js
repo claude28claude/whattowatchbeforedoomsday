@@ -1,27 +1,32 @@
-/* The seam between The Doomsday Protocol and the Road to Secret Wars.
+/* Live liquid where The Doomsday Protocol and the Road to Secret Wars meet.
  *
  * A small real-time fluid simulation (stable fluids: advect, curl, vorticity,
- * divergence, pressure, subtract gradient) running on the graphics card in a
- * band between the two sites. Doomsday-green liquid fills the top of the
- * band and Secret-Wars-violet the bottom, each topped up from its own edge.
- * The two layers slide past each other in opposite directions, and where
- * they meet that shear rolls up into curling waves (a Kelvin-Helmholtz
- * instability - the way wind curls water). Moving the mouse (or a finger)
- * through the band stirs it.
+ * divergence, pressure, subtract gradient) on the graphics card. Green ink is
+ * fed in along the top edge and violet along the bottom; the two layers slide
+ * past each other so they curl into one another, and the pointer stirs it.
+ *
+ * Drawn as a GLOWING, SEE-THROUGH layer (bloom + gloss, dark = transparent),
+ * so it sits behind a page's content rather than in a box of its own:
+ *   - Secret Wars: across the top of the page, mostly green (Doomsday's
+ *     colour running into this site), fading down the hero;
+ *   - Doomsday: across the end of the page, mostly violet (Secret Wars'
+ *     colour rising into this one), fading up.
  *
  * The same file ships with both sites. Usage:
- *   SeamFluid(hostElement)
- * It only runs while the band is on screen, honours reduced motion (no
- * ambient pouring, still answers the pointer), and if WebGL or float
- * render targets are missing it leaves the host's CSS gradient showing.
+ *   SeamFluid(hostElement, {top: share of ink fed from the top edge, 0..1})
+ * It only runs while on screen, honours reduced motion (no ambient flow,
+ * still answers the pointer), and if WebGL or float render targets are
+ * missing it leaves the host's CSS fallback showing.
  */
 (function(){
 "use strict";
 
 var GREEN=[0.30,0.80,0.16], VIOLET=[0.52,0.28,1.00];
 
-function SeamFluid(host){
+function SeamFluid(host,opts){
   if(!host) return null;
+  opts=opts||{};
+  var TOP=opts.top==null?0.5:opts.top;   // share of the ink fed from the top edge
   var canvas=document.createElement('canvas');
   canvas.setAttribute('aria-hidden','true');
   var ctx=getContext(canvas);
@@ -101,7 +106,23 @@ function SeamFluid(host){
       'c=c*diffuse+spec*.35;'+
       'c=1.-exp(-c*1.35);'+                                  // soft tone curve: glows, never clips
       'vec3 bg=mix(vec3(.028,.012,.034),vec3(.012,.032,.024),vUv.y);'+
-      'gl_FragColor=vec4(bg+c*(1.-bg),1.);}'
+      'gl_FragColor=vec4(bg+c*(1.-bg),1.);}',
+    /* the page layer: same liquid, plus a soft bloom around it, and dark
+       areas go see-through so the page shows behind (premultiplied alpha) */
+    glow:HEAD+'uniform sampler2D uTexture;uniform vec2 texelSize;'+
+      'void main(){vec3 c=texture2D(uTexture,vUv).rgb;'+
+      'vec3 l=texture2D(uTexture,vL).rgb,r=texture2D(uTexture,vR).rgb,t=texture2D(uTexture,vT).rgb,b=texture2D(uTexture,vB).rgb;'+
+      'float dx=length(r)-length(l),dy=length(t)-length(b);vec3 n=normalize(vec3(dx,dy,length(texelSize)));'+
+      'float diffuse=clamp(dot(n,vec3(0.,0.,1.))+.7,.7,1.);'+
+      'float spec=pow(clamp(dot(n,normalize(vec3(-.35,.5,1.))),0.,1.),28.)*min(length(c)*1.8,1.);'+
+      'vec3 halo=vec3(0.);'+
+      'for(int i=0;i<8;i++){float a=float(i)*.785398;vec2 d=vec2(cos(a),sin(a));'+
+      'halo+=texture2D(uTexture,vUv+d*texelSize*3.).rgb+.7*texture2D(uTexture,vUv+d*texelSize*8.).rgb;}'+
+      'halo/=13.6;'+
+      'c=c*diffuse+spec*.55+halo*.65;'+
+      'c=1.-exp(-c*1.7);'+
+      'float a=clamp(max(c.r,max(c.g,c.b))*1.3,0.,1.);'+
+      'gl_FragColor=vec4(c,a);}'
   };
 
   function compile(type,src){
@@ -279,9 +300,10 @@ function SeamFluid(host){
   }
 
   function render(){
-    gl.useProgram(P.display.p);
-    gl.uniform2f(P.display.u.texelSize,3/gl.drawingBufferWidth,3/gl.drawingBufferHeight);
-    gl.uniform1i(P.display.u.uTexture,dye.read.attach(0));
+    var D=P.glow;
+    gl.useProgram(D.p);
+    gl.uniform2f(D.u.texelSize,3/gl.drawingBufferWidth,3/gl.drawingBufferHeight);
+    gl.uniform1i(D.u.uTexture,dye.read.attach(0));
     blit(null);
   }
 
@@ -295,9 +317,9 @@ function SeamFluid(host){
   function ambient(dt){
     feed-=dt; kick-=dt;
     while(feed<=0){
-      feed+=0.035;
-      side^=1;
-      var x=Math.random(), k=0.6+Math.random()*0.8, v=90+Math.random()*260, r=0.35+Math.random()*0.75;
+      feed+=0.028;
+      side=Math.random()<TOP?1:0;
+      var x=Math.random(), k=0.7+Math.random()*0.9, v=110+Math.random()*300, r=0.35+Math.random()*0.8;
       if(side) splat(x,0.985,(Math.random()-0.5)*160,-v,scale(GREEN,0.22*k),r);
       else     splat(x,0.015,(Math.random()-0.5)*160, v,scale(VIOLET,0.25*k),r);
     }
@@ -329,15 +351,17 @@ function SeamFluid(host){
     ptr.x=x; ptr.y=y;
     if(Math.abs(dx)+Math.abs(dy)<0.5) return;
     // the colour you drag is the liquid you are in: green near the top, violet near the bottom
-    var c=scale(mix(VIOLET,GREEN,Math.min(1,Math.max(0,y*1.2-0.1))),0.38);
+    var c=scale(mix(VIOLET,GREEN,Math.min(1,Math.max(0,y*1.2-0.1))),0.5);
     pending.push([x,y,dx,dy,c]);
     wake();
   }
   var pending=[];
-  host.addEventListener('mousemove',function(e){ onMove(e.clientX,e.clientY); });
-  host.addEventListener('mouseleave',function(){ ptr.set=false; });
-  host.addEventListener('touchmove',function(e){ var t=e.touches[0]; if(t) onMove(t.clientX,t.clientY); },{passive:true});
-  host.addEventListener('touchend',function(){ ptr.set=false; },{passive:true});
+  // the layer sits behind the page and takes no clicks, so listen on the window
+  addEventListener('pointermove',function(e){ onMove(e.clientX,e.clientY); },{passive:true});
+  addEventListener('pointerleave',function(){ ptr.set=false; });
+  addEventListener('touchmove',function(e){ var t=e.touches[0]; if(t) onMove(t.clientX,t.clientY); },{passive:true});
+  addEventListener('touchend',function(){ ptr.set=false; },{passive:true});
+  addEventListener('scroll',function(){ ptr.set=false; },{passive:true});
 
   /* ---------------- run only while it can be seen ---------------- */
   var visible=false, raf=0, last=0;
@@ -375,7 +399,7 @@ function SeamFluid(host){
 
 /* WebGL2 with half-float targets, else WebGL1 with the half-float extension */
 function getContext(canvas){
-  var opts={alpha:false,depth:false,stencil:false,antialias:false,preserveDrawingBuffer:false,powerPreference:'low-power'};
+  var opts={alpha:true,premultipliedAlpha:true,depth:false,stencil:false,antialias:false,preserveDrawingBuffer:false,powerPreference:'low-power'};
   var gl=canvas.getContext('webgl2',opts), ext;
   if(gl){
     if(!gl.getExtension('EXT_color_buffer_float') && !gl.getExtension('EXT_color_buffer_half_float')) return null;
