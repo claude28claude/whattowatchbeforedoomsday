@@ -803,4 +803,85 @@ render();
     });
   });
 })();
+
+/* ============================================================
+   PART TWO, BELOW THE PAGE
+   The Road to Secret Wars sits in a full-screen frame under the footer
+   (?embed=dd, so it does not put this page above itself again). Scroll
+   down past the end and you arrive at its top; scroll up from its top and
+   you are back here. Skipped entirely when this page is the embedded one.
+   ============================================================ */
+(function partTwo(){
+  if(window.parent!==window) return;            // never nest the two sites
+  var wrap=document.getElementById('partTwo');
+  var back=document.getElementById('p2Back');
+  if(!wrap) return;
+  var LOCAL=/^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+  var SRC=(LOCAL?'http://'+location.hostname+':8126/':'https://claude28claude.github.io/road-to-secret-wars/')+'?embed=dd';
+  var ORIGIN=new URL(SRC).origin;
+  wrap.hidden=false;                            // below everything, so nothing above it moves
+
+  var frame=null;
+  function load(){
+    if(frame) return;
+    frame=document.createElement('iframe');
+    frame.title='Part two: the Road to Secret Wars';
+    frame.src=SRC;
+    frame.addEventListener('load',function(){ var w=wrap.querySelector('.p2-wait'); if(w) w.remove(); });
+    wrap.appendChild(frame);
+  }
+
+  // FULL = the frame fills the screen; END = the last of this page fills it
+  function full(){ return Math.min(wrap.offsetTop, document.documentElement.scrollHeight-window.innerHeight); }
+  function end(){ return Math.max(0, wrap.offsetTop-window.innerHeight); }
+  /* an automatic move runs until it arrives, the reader takes over (wheel,
+     touch, keys), or the browser says scrolling ended - never on a short
+     timer, which cut moves off half way on slow devices */
+  var snapping=false, target=0, snapT=null;
+  function go(y){ snapping=true; target=y; clearTimeout(snapT); snapT=setTimeout(function(){ snapping=false; },4000);
+    scrollTo({top:y,behavior:sb()}); }
+  function release(){ snapping=false; }
+  ['wheel','touchstart','keydown'].forEach(function(ev){ addEventListener(ev,release,{passive:true}); });
+  addEventListener('scrollend',function(){ if(snapping && Math.abs(window.scrollY-target)<2) snapping=false; });
+  function goDown(){ load(); go(full()); }
+  function goUp(){ go(end()); }
+
+  if(back) back.addEventListener('click',goUp);
+  // the "Part two" link on the Secret Wars card now scrolls down to it
+  document.querySelectorAll('a[href*="road-to-secret-wars"]').forEach(function(a){
+    a.innerHTML='Part two continues below &darr;';
+    a.addEventListener('click',function(e){
+      if(e.ctrlKey||e.metaKey||e.shiftKey||e.button!==0) return;   // new-tab clicks still open the real site
+      e.preventDefault(); goDown();
+    });
+  });
+  // the Secret Wars page's own "part one" links, from inside the frame
+  addEventListener('message',function(e){
+    if(!frame || e.source!==frame.contentWindow || e.origin!==ORIGIN) return;
+    if(e.data && e.data.rtsw==='part-one') goUp();
+  });
+
+  /* Never leave the reader half on one site and half on the other: when
+     scrolling stops in the seam, finish the move in the direction they were
+     going. A small nudge (under 60px) springs back. */
+  var lastY=window.scrollY, dir='down', timer=null, touching=false;
+  function settle(){
+    if(snapping||touching) return;
+    var y=window.scrollY, E=end(), F=full();
+    if(y<=E+1 || y>=F-1) return;
+    if(dir==='down') go(y-E>60 ? F : E);
+    else go(F-y>60 ? E : F);
+  }
+  addEventListener('scroll',function(){
+    var y=window.scrollY;
+    if(y!==lastY) dir = y<lastY ? 'up' : 'down';
+    lastY=y;
+    if(y>wrap.offsetTop-window.innerHeight*4) load();   // start loading a few screens early
+    if(back) back.hidden = y < full()-window.innerHeight*0.5;
+    if(snapping && Math.abs(y-target)<2) snapping=false;
+    clearTimeout(timer); timer=setTimeout(settle,160);
+  },{passive:true});
+  addEventListener('touchstart',function(){ touching=true; },{passive:true});
+  addEventListener('touchend',function(){ touching=false; clearTimeout(timer); timer=setTimeout(settle,160); },{passive:true});
+})();
 })();
