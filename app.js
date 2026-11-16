@@ -811,15 +811,16 @@ render();
    down past the end and you arrive at its top; scroll up from its top and
    you are back here. Skipped entirely when this page is the embedded one.
    ============================================================ */
-/* The end of the page glows with Secret Wars' violet as a live liquid
-   (fluid.js). Mostly violet ink, fed from the bottom edge; on everywhere,
-   including when this page is shown above the Road to Secret Wars, because
-   that is exactly where the handover from green to violet is seen. */
+/* The last screen of the page (fluid.js): its bottom quarter is a dark
+   liquid of Secret Wars' violet and black with this site's green particles
+   flowing through it; the rest of the screen carries a faint green liquid.
+   On everywhere, including when this page is shown above the Road to Secret
+   Wars, because that is exactly where the handover is seen. */
 (function edgeLiquid(){
   var host=document.getElementById('edgeFluid');
   if(!host) return;
-  if(!window.SeamFluid){ host.classList.add('no-fluid'); return; }
-  try{ window.SeamFluid(host,{top:0.28}); }catch(err){ host.classList.add('no-fluid'); }
+  if(!window.EdgeLiquid){ host.classList.add('no-fluid'); return; }
+  try{ window.EdgeLiquid(host,{edge:'bottom',edgeColor:[0.70,0.55,1.00],ownColor:[0.55,0.87,0.30]}); }catch(err){ host.classList.add('no-fluid'); }
 })();
 
 (function partTwo(){

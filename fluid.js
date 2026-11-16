@@ -1,418 +1,280 @@
 /* Live liquid where The Doomsday Protocol and the Road to Secret Wars meet.
  *
- * A small real-time fluid simulation (stable fluids: advect, curl, vorticity,
- * divergence, pressure, subtract gradient) on the graphics card. Green ink is
- * fed in along the top edge and violet along the bottom; the two layers slide
- * past each other so they curl into one another, and the pointer stirs it.
+ * One screen tall, drawn behind a page's content, see-through:
+ *   - the EDGE quarter (top of Secret Wars, bottom of Doomsday) is a dark,
+ *     slowly flowing liquid of the OTHER site's colour and black, glossy and
+ *     glowing; this site's own colour streams into it as particles that swirl
+ *     through the flow;
+ *   - the rest of the screen is a faint liquid of this site's OWN colour that
+ *     fades away.
+ * The liquid is painted, not simulated (domain-warped noise, smooth at any
+ * size); the particles are a small swarm moving through a matching flow
+ * field. The pointer bends the liquid around it and scatters the particles.
  *
- * Drawn as a GLOWING, SEE-THROUGH layer (bloom + gloss, dark = transparent),
- * so it sits behind a page's content rather than in a box of its own:
- *   - Secret Wars: across the top of the page, mostly green (Doomsday's
- *     colour running into this site), fading down the hero;
- *   - Doomsday: across the end of the page, mostly violet (Secret Wars'
- *     colour rising into this one), fading up.
- *
- * The same file ships with both sites. Usage:
- *   SeamFluid(hostElement, {top: share of ink fed from the top edge, 0..1})
- * It only runs while on screen, honours reduced motion (no ambient flow,
- * still answers the pointer), and if WebGL or float render targets are
- * missing it leaves the host's CSS fallback showing.
+ * Usage (same file on both sites):
+ *   EdgeLiquid(host, {edge:'top'|'bottom', edgeColor:[r,g,b], ownColor:[r,g,b]})
+ * Runs only while on screen; reduced motion freezes the flow (the pointer
+ * still moves it); without WebGL the host's CSS fallback shows.
  */
 (function(){
 "use strict";
 
-var GREEN=[0.30,0.80,0.16], VIOLET=[0.52,0.28,1.00];
-
-function SeamFluid(host,opts){
+function EdgeLiquid(host,opts){
   if(!host) return null;
   opts=opts||{};
-  var TOP=opts.top==null?0.5:opts.top;   // share of the ink fed from the top edge
+  var TOP=opts.edge!=='bottom';
+  var EDGE=opts.edgeColor||[0.55,0.87,0.30], OWN=opts.ownColor||[0.70,0.55,1.00];
   var canvas=document.createElement('canvas');
   canvas.setAttribute('aria-hidden','true');
-  var ctx=getContext(canvas);
-  if(!ctx){ host.classList.add('no-fluid'); return null; }
+  var gl=canvas.getContext('webgl',{alpha:true,premultipliedAlpha:true,antialias:false,depth:false,stencil:false,
+                                    preserveDrawingBuffer:false,powerPreference:'low-power'});
+  if(!gl){ host.classList.add('no-fluid'); return null; }
   host.insertBefore(canvas,host.firstChild);
   host.classList.add('has-fluid');
-  var gl=ctx.gl, ext=ctx.ext;
-
   var RM=window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)');
-  var CFG={
-    SIM:96,            // grid cells across the band's short side
-    DYE:512,           // dye pixels across the short side (capped below)
-    DENSITY_DISSIPATION:0.20,
-    VELOCITY_DISSIPATION:0.30,
-    SHEAR:30,          // how hard the two layers slide past each other
-    PRESSURE:0.8,
-    PRESSURE_ITERATIONS:24,
-    CURL:22,
-    SPLAT_RADIUS:0.0026,
-    SPLAT_FORCE:5200
-  };
 
-  /* ---------------- shaders ---------------- */
-  var baseVS=
-    'precision highp float;attribute vec2 aPosition;varying vec2 vUv,vL,vR,vT,vB;uniform vec2 texelSize;'+
-    'void main(){vUv=aPosition*.5+.5;vL=vUv-vec2(texelSize.x,0.);vR=vUv+vec2(texelSize.x,0.);'+
-    'vT=vUv+vec2(0.,texelSize.y);vB=vUv-vec2(0.,texelSize.y);gl_Position=vec4(aPosition,0.,1.);}';
-  var HEAD='precision highp float;precision highp sampler2D;varying vec2 vUv,vL,vR,vT,vB;';
-  var FS={
-    splat:HEAD+'uniform sampler2D uTarget;uniform float aspectRatio,radius;uniform vec3 color;uniform vec2 point;'+
-      'void main(){vec2 p=vUv-point;p.x*=aspectRatio;vec3 s=exp(-dot(p,p)/radius)*color;'+
-      'gl_FragColor=vec4(texture2D(uTarget,vUv).xyz+s,1.);}',
-    advection:HEAD+'uniform sampler2D uVelocity,uSource;uniform vec2 texelSize,dyeTexelSize;uniform float dt,dissipation;'+
-      'vec4 bilerp(sampler2D sam,vec2 uv,vec2 ts){vec2 st=uv/ts-.5;vec2 i=floor(st);vec2 f=fract(st);'+
-      'vec4 a=texture2D(sam,(i+vec2(.5,.5))*ts);vec4 b=texture2D(sam,(i+vec2(1.5,.5))*ts);'+
-      'vec4 c=texture2D(sam,(i+vec2(.5,1.5))*ts);vec4 d=texture2D(sam,(i+vec2(1.5,1.5))*ts);'+
-      'return mix(mix(a,b,f.x),mix(c,d,f.x),f.y);}'+
-      'void main(){vec2 coord=vUv-dt*bilerp(uVelocity,vUv,texelSize).xy*texelSize;'+
-      'gl_FragColor=bilerp(uSource,coord,dyeTexelSize)/(1.+dissipation*dt);}',
-    divergence:HEAD+'uniform sampler2D uVelocity;'+
-      'void main(){float L=texture2D(uVelocity,vL).x,R=texture2D(uVelocity,vR).x,T=texture2D(uVelocity,vT).y,B=texture2D(uVelocity,vB).y;'+
-      'vec2 C=texture2D(uVelocity,vUv).xy;if(vL.x<0.)L=-C.x;if(vR.x>1.)R=-C.x;if(vT.y>1.)T=-C.y;if(vB.y<0.)B=-C.y;'+
-      'gl_FragColor=vec4(.5*(R-L+T-B),0.,0.,1.);}',
-    curl:HEAD+'uniform sampler2D uVelocity;'+
-      'void main(){float L=texture2D(uVelocity,vL).y,R=texture2D(uVelocity,vR).y,T=texture2D(uVelocity,vT).x,B=texture2D(uVelocity,vB).x;'+
-      'gl_FragColor=vec4(.5*(R-L-T+B),0.,0.,1.);}',
-    vorticity:HEAD+'uniform sampler2D uVelocity,uCurl;uniform float curl,dt;'+
-      'void main(){float L=texture2D(uCurl,vL).x,R=texture2D(uCurl,vR).x,T=texture2D(uCurl,vT).x,B=texture2D(uCurl,vB).x,C=texture2D(uCurl,vUv).x;'+
-      'vec2 f=.5*vec2(abs(T)-abs(B),abs(R)-abs(L));f/=length(f)+.0001;f*=curl*C;f.y*=-1.;'+
-      'vec2 v=texture2D(uVelocity,vUv).xy+f*dt;v=clamp(v,-1000.,1000.);gl_FragColor=vec4(v,0.,1.);}',
-    pressure:HEAD+'uniform sampler2D uPressure,uDivergence;'+
-      'void main(){float L=texture2D(uPressure,vL).x,R=texture2D(uPressure,vR).x,T=texture2D(uPressure,vT).x,B=texture2D(uPressure,vB).x;'+
-      'float d=texture2D(uDivergence,vUv).x;gl_FragColor=vec4((L+R+B+T-d)*.25,0.,0.,1.);}',
-    gradient:HEAD+'uniform sampler2D uPressure,uVelocity;'+
-      'void main(){float L=texture2D(uPressure,vL).x,R=texture2D(uPressure,vR).x,T=texture2D(uPressure,vT).x,B=texture2D(uPressure,vB).x;'+
-      'vec2 v=texture2D(uVelocity,vUv).xy-vec2(R-L,T-B);gl_FragColor=vec4(v,0.,1.);}',
-    /* the two layers slide past each other: top one way, bottom the other,
-       with a slow wobble along the band so the waves never line up */
-    shear:HEAD+'uniform sampler2D uVelocity;uniform float dt,shear,time;'+
-      'void main(){vec2 v=texture2D(uVelocity,vUv).xy;float y=clamp((vUv.y-.5)*5.,-6.,6.);'+
-      'float s=(exp(2.*y)-1.)/(exp(2.*y)+1.);float wob=1.+.35*sin(time*.45+vUv.x*5.3);'+
-      'v.x+=dt*shear*s*wob;gl_FragColor=vec4(v,0.,1.);}',
-    /* each edge keeps topping up its own colour */
-    refill:HEAD+'uniform sampler2D uSource;uniform vec3 top,bottom;uniform float amount,edge;'+
-      'void main(){vec3 c=texture2D(uSource,vUv).rgb;'+
-      'float t=smoothstep(1.-edge,1.,vUv.y),b=1.-smoothstep(0.,edge,vUv.y);'+
-      'c=mix(c,top,clamp(t*amount,0.,1.));c=mix(c,bottom,clamp(b*amount,0.,1.));gl_FragColor=vec4(c,1.);}',
-    clear:HEAD+'uniform sampler2D uTexture;uniform float value;void main(){gl_FragColor=value*texture2D(uTexture,vUv);}',
-    /* the picture: dark green above, dark violet below, the liquid on top,
-       lit from the front so it reads as a surface rather than smoke */
-    display:HEAD+'uniform sampler2D uTexture;uniform vec2 texelSize;'+
-      'void main(){vec3 c=texture2D(uTexture,vUv).rgb;'+
-      'vec3 l=texture2D(uTexture,vL).rgb,r=texture2D(uTexture,vR).rgb,t=texture2D(uTexture,vT).rgb,b=texture2D(uTexture,vB).rgb;'+
-      'float dx=length(r)-length(l),dy=length(t)-length(b);vec3 n=normalize(vec3(dx,dy,length(texelSize)));'+
-      'float diffuse=clamp(dot(n,vec3(0.,0.,1.))+.72,.72,1.);'+
-      'float spec=pow(clamp(dot(n,normalize(vec3(-.35,.45,1.))),0.,1.),24.)*min(length(c)*1.6,1.);'+
-      'c=c*diffuse+spec*.35;'+
-      'c=1.-exp(-c*1.35);'+                                  // soft tone curve: glows, never clips
-      'vec3 bg=mix(vec3(.028,.012,.034),vec3(.012,.032,.024),vUv.y);'+
-      'gl_FragColor=vec4(bg+c*(1.-bg),1.);}',
-    /* the page layer: same liquid, plus a soft bloom around it, and dark
-       areas go see-through so the page shows behind (premultiplied alpha) */
-    glow:HEAD+'uniform sampler2D uTexture;uniform vec2 texelSize;'+
-      'void main(){vec3 c=texture2D(uTexture,vUv).rgb;'+
-      'vec3 l=texture2D(uTexture,vL).rgb,r=texture2D(uTexture,vR).rgb,t=texture2D(uTexture,vT).rgb,b=texture2D(uTexture,vB).rgb;'+
-      'float dx=length(r)-length(l),dy=length(t)-length(b);vec3 n=normalize(vec3(dx,dy,length(texelSize)));'+
-      'float diffuse=clamp(dot(n,vec3(0.,0.,1.))+.7,.7,1.);'+
-      'float spec=pow(clamp(dot(n,normalize(vec3(-.35,.5,1.))),0.,1.),28.)*min(length(c)*1.8,1.);'+
-      'vec3 halo=vec3(0.);'+
-      'for(int i=0;i<8;i++){float a=float(i)*.785398;vec2 d=vec2(cos(a),sin(a));'+
-      'halo+=texture2D(uTexture,vUv+d*texelSize*3.).rgb+.7*texture2D(uTexture,vUv+d*texelSize*8.).rgb;}'+
-      'halo/=13.6;'+
-      'c=c*diffuse+spec*.55+halo*.65;'+
-      'c=1.-exp(-c*1.7);'+
-      'float a=clamp(max(c.r,max(c.g,c.b))*1.3,0.,1.);'+
-      'gl_FragColor=vec4(c,a);}'
-  };
+  /* ---------------- the liquid ---------------- */
+  var VS='attribute vec2 aPos;varying vec2 vUv;void main(){vUv=aPos*.5+.5;gl_Position=vec4(aPos,0.,1.);}';
+  var FS=[
+    'precision highp float;varying vec2 vUv;',
+    'uniform vec2 res;uniform float time,edgeTop;uniform vec3 edgeCol,ownCol;uniform vec4 ptr[8];',
+    'float hash(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+45.32);return fract(p.x*p.y);}',
+    'float noise(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);',
+    ' return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),f.x),f.y);}',
+    'float fbm(vec2 p){float v=0.,a=.5;mat2 m=mat2(1.6,1.2,-1.2,1.6);for(int i=0;i<4;i++){v+=a*noise(p);p=m*p;a*=.5;}return v;}',
+    // the flowing marble: warp the plane by noise, twice
+    'float liquid(vec2 p,float t){',
+    ' vec2 q=vec2(fbm(p+vec2(0.,t)),fbm(p+vec2(5.2,1.3)-t));',
+    ' vec2 r=vec2(fbm(p+3.6*q+vec2(1.7,9.2)+.7*t),fbm(p+3.6*q+vec2(8.3,2.8)-.6*t));',
+    ' return fbm(p+3.4*r);}',
+    'void main(){',
+    ' float aspect=res.x/res.y;',
+    ' vec2 p=vec2(vUv.x*aspect,vUv.y)*1.7;',
+    // the pointer drags the liquid round with it
+    ' for(int i=0;i<8;i++){vec4 P=ptr[i];if(P.z<=0.)continue;',
+    '  vec2 c=vec2(P.x*aspect,P.y)*1.7;vec2 d=p-c;float s=P.z*exp(-dot(d,d)*7.);',
+    '  float a=s*P.w*2.2;p=c+mat2(cos(a),-sin(a),sin(a),cos(a))*d;}',
+    ' float t=time*.045;',
+    ' float f=liquid(p,t);',
+    ' float e=.012;float fx=liquid(p+vec2(e,0.),t),fy=liquid(p+vec2(0.,e),t);',
+    ' vec3 n=normalize(vec3((f-fx)/e*.06,(f-fy)/e*.06,1.));',
+    ' float spec=pow(max(dot(n,normalize(vec3(-.4,.6,1.))),0.),40.);',
+    ' float z=edgeTop>.5?1.-vUv.y:vUv.y;',             // 0 at the shared edge, 1 a screen away
+    // edge quarter: the other site's colour and black, glossy
+    ' float body=smoothstep(.36,.66,f);',
+    ' float vein=smoothstep(.015,0.,abs(f-.56))*.9;',   // bright threads along the folds
+    ' vec3 dark=mix(vec3(0.),edgeCol*.78,body)+edgeCol*vein*.6+spec*mix(vec3(1.),edgeCol,.3)*.45*body;',
+    ' float darkA=mix(.94,.0,smoothstep(.0,.27,z));',
+    ' dark*=.55+.45*smoothstep(.0,.07,z);',
+    // the rest: a faint liquid of this site's own colour, fading out
+    ' float own=smoothstep(.46,.78,f);',
+    ' vec3 lite=ownCol*own*.5+ownCol*vein*.3+spec*ownCol*.3*own;',
+    ' float fz=smoothstep(1.,.32,z)*smoothstep(.10,.30,z);',
+    ' lite*=fz;',
+    ' float liteA=clamp(max(lite.r,max(lite.g,lite.b))*1.25,0.,1.);',
+    ' vec3 col=dark*darkA+lite;',
+    ' float A=clamp(darkA+liteA,0.,1.);',
+    ' gl_FragColor=vec4(col,A);}'
+  ].join('\n');
 
-  function compile(type,src){
-    var s=gl.createShader(type); gl.shaderSource(s,src); gl.compileShader(s);
-    if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s));
-    return s;
-  }
-  var VS=compile(gl.VERTEX_SHADER,baseVS);
-  function program(fs){
-    var p=gl.createProgram();
-    gl.attachShader(p,VS); gl.attachShader(p,compile(gl.FRAGMENT_SHADER,fs));
-    gl.bindAttribLocation(p,0,'aPosition'); gl.linkProgram(p);
+  /* ---------------- the particles ---------------- */
+  var PVS='attribute vec3 aP;attribute float aL;uniform float dpr;varying float vL;'+
+    'void main(){vL=aL;gl_Position=vec4(aP.x*2.-1.,aP.y*2.-1.,0.,1.);gl_PointSize=aP.z*dpr;}';
+  // particles glow only where the liquid is, so they read as suspended in it
+  var PFS='precision mediump float;varying float vL;uniform vec3 col;uniform sampler2D uLiquid;uniform vec2 res;'+
+    'void main(){vec2 d=gl_PointCoord-.5;float r=length(d);float core=smoothstep(.5,.0,r);float glow=core*core;'+
+    'vec4 L=texture2D(uLiquid,gl_FragCoord.xy/res);float inL=clamp(max(L.r,max(L.g,L.b))*2.6,0.,1.);'+
+    'float a=min(1.,glow*vL*(.10+.90*inL)*2.2);vec3 c=mix(col,vec3(1.),smoothstep(.25,.0,r)*.6);gl_FragColor=vec4(c*a,a);}';
+  var CFS='precision mediump float;varying vec2 vUv;uniform sampler2D uTex;void main(){gl_FragColor=texture2D(uTex,vUv);}';
+
+  function sh(type,src){ var s=gl.createShader(type); gl.shaderSource(s,src); gl.compileShader(s);
+    if(!gl.getShaderParameter(s,gl.COMPILE_STATUS)) throw new Error(gl.getShaderInfoLog(s)); return s; }
+  function prog(vs,fs,attrs){ var p=gl.createProgram(); gl.attachShader(p,sh(gl.VERTEX_SHADER,vs)); gl.attachShader(p,sh(gl.FRAGMENT_SHADER,fs));
+    attrs.forEach(function(a,i){ gl.bindAttribLocation(p,i,a); }); gl.linkProgram(p);
     if(!gl.getProgramParameter(p,gl.LINK_STATUS)) throw new Error(gl.getProgramInfoLog(p));
-    var u={}, n=gl.getProgramParameter(p,gl.ACTIVE_UNIFORMS);
-    for(var i=0;i<n;i++){ var name=gl.getActiveUniform(p,i).name; u[name]=gl.getUniformLocation(p,name); }
-    return {p:p,u:u};
-  }
-  var P={};
-  try{ Object.keys(FS).forEach(function(k){ P[k]=program(FS[k]); }); }
-  catch(err){ fail(err); return null; }
+    var u={},n=gl.getProgramParameter(p,gl.ACTIVE_UNIFORMS);
+    for(var i=0;i<n;i++){ var nm=gl.getActiveUniform(p,i).name.replace(/\[0\]$/,''); u[nm]=gl.getUniformLocation(p,nm); }
+    return {p:p,u:u}; }
+  var L,PT,CP;
+  try{ L=prog(VS,FS,['aPos']); PT=prog(PVS,PFS,['aP','aL']); CP=prog(VS,CFS,['aPos']); }
+  catch(err){ canvas.remove(); host.classList.remove('has-fluid'); host.classList.add('no-fluid');
+    if(window.console) console.warn('Edge liquid switched off:',err.message); return null; }
 
-  // one full-screen quad
-  gl.bindBuffer(gl.ARRAY_BUFFER,gl.createBuffer());
-  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,-1,1,1,1,1,-1]),gl.STATIC_DRAW);
-  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER,gl.createBuffer());
-  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER,new Uint16Array([0,1,2,0,2,3]),gl.STATIC_DRAW);
-  gl.vertexAttribPointer(0,2,gl.FLOAT,false,0,0); gl.enableVertexAttribArray(0);
-  function blit(target){
-    if(target){ gl.viewport(0,0,target.w,target.h); gl.bindFramebuffer(gl.FRAMEBUFFER,target.fbo); }
-    else { gl.viewport(0,0,gl.drawingBufferWidth,gl.drawingBufferHeight); gl.bindFramebuffer(gl.FRAMEBUFFER,null); }
-    gl.drawElements(gl.TRIANGLES,6,gl.UNSIGNED_SHORT,0);
+  var quad=gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER,quad);
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+
+  var N=0, px,py,pz,page,pmax,pvx,pvy, pbuf=gl.createBuffer(), pdata, ldata, lbuf=gl.createBuffer();
+  function makeParticles(){
+    N=Math.max(400,Math.min(1800,Math.round(host.clientWidth*1.2)));
+    px=new Float32Array(N);py=new Float32Array(N);pz=new Float32Array(N);
+    page=new Float32Array(N);pmax=new Float32Array(N);pvx=new Float32Array(N);pvy=new Float32Array(N);
+    pdata=new Float32Array(N*3); ldata=new Float32Array(N);
+    for(var i=0;i<N;i++){ spawn(i); page[i]=Math.random()*pmax[i]; }
+  }
+  // z = distance from the shared edge (0..1). Particles are born in this
+  // site's own liquid just past the quarter line and stream into the dark one.
+  function zToY(z){ return TOP?1-z:z; }
+  function spawn(i){
+    var z=0.03+Math.random()*0.30;
+    px[i]=Math.random(); py[i]=zToY(z);
+    pz[i]=3.2+Math.pow(Math.random(),2.2)*7.5;           // CSS px: mostly fine, a few bright motes
+    page[i]=0; pmax[i]=4+Math.random()*7;
+    pvx[i]=0; pvy[i]=0;
   }
 
-  /* ---------------- render targets ---------------- */
-  function fbo(w,h,filter){
-    gl.activeTexture(gl.TEXTURE0);
-    var tex=gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D,tex);
-    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,filter);
-    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,filter);
+  /* ---------------- the pointer ---------------- */
+  var trail=[]; // {x,y,s,spin}
+  var last=null;
+  addEventListener('pointermove',function(e){
+    var r=host.getBoundingClientRect();
+    var x=(e.clientX-r.left)/r.width, y=1-(e.clientY-r.top)/r.height;
+    if(x<0||x>1||y<0||y>1){ last=null; return; }
+    if(last){
+      var dx=x-last.x, dy=y-last.y, sp=Math.min(1,Math.hypot(dx*(r.width/r.height),dy)*18);
+      if(sp>0.02){
+        var spin=(dx*(y-0.5)-dy*(x-0.5))>0?1:-1;
+        trail.unshift({x:x,y:y,s:sp,spin:spin}); if(trail.length>8) trail.pop();
+        wake();
+      }
+    }
+    last={x:x,y:y};
+  },{passive:true});
+  addEventListener('scroll',function(){ last=null; },{passive:true});
+
+  /* ---------------- run ---------------- */
+  // the liquid is painted into a texture first, so the particles can see it
+  var ltex=gl.createTexture(), lfbo=gl.createFramebuffer();
+  function target(w,h){
+    gl.bindTexture(gl.TEXTURE_2D,ltex);
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);
     gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
-    gl.texImage2D(gl.TEXTURE_2D,0,ext.internal,w,h,0,gl.RGBA,ext.type,null);
-    var fb=gl.createFramebuffer(); gl.bindFramebuffer(gl.FRAMEBUFFER,fb);
-    gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,tex,0);
-    gl.viewport(0,0,w,h); gl.clearColor(0,0,0,1); gl.clear(gl.COLOR_BUFFER_BIT);
-    return {tex:tex,fbo:fb,w:w,h:h,tx:1/w,ty:1/h,
-            attach:function(id){ gl.activeTexture(gl.TEXTURE0+id); gl.bindTexture(gl.TEXTURE_2D,tex); return id; }};
+    gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,w,h,0,gl.RGBA,gl.UNSIGNED_BYTE,null);
+    gl.bindFramebuffer(gl.FRAMEBUFFER,lfbo);
+    gl.framebufferTexture2D(gl.FRAMEBUFFER,gl.COLOR_ATTACHMENT0,gl.TEXTURE_2D,ltex,0);
+    gl.bindFramebuffer(gl.FRAMEBUFFER,null);
   }
-  function dbl(w,h,filter){
-    var a=fbo(w,h,filter), b=fbo(w,h,filter);
-    return {w:w,h:h,tx:a.tx,ty:a.ty,get read(){return a;},get write(){return b;},swap:function(){var t=a;a=b;b=t;}};
-  }
-  function res(n){
-    var w=canvas.width, h=canvas.height, aspect=Math.max(w,h)/Math.min(w,h);
-    var long=Math.min(Math.round(n*aspect),2048);
-    return w>=h ? {w:long,h:n} : {w:n,h:long};
-  }
-  var dye,velocity,divergence,curlT,pressure,filter;
-  function build(){
-    filter=ext.linear?gl.LINEAR:gl.NEAREST;
-    var s=res(CFG.SIM), d=res(CFG.DYE);
-    dye=dbl(d.w,d.h,filter);
-    velocity=dbl(s.w,s.h,filter);
-    divergence=fbo(s.w,s.h,gl.NEAREST);
-    curlT=fbo(s.w,s.h,gl.NEAREST);
-    pressure=dbl(s.w,s.h,gl.NEAREST);
-    if(gl.checkFramebufferStatus(gl.FRAMEBUFFER)!==gl.FRAMEBUFFER_COMPLETE) throw new Error('render target');
-  }
-
   function size(){
-    var dpr=Math.min(window.devicePixelRatio||1,2);
-    var w=Math.max(2,Math.round(host.clientWidth*dpr)), h=Math.max(2,Math.round(host.clientHeight*dpr));
+    // the liquid is soft, so it is painted at reduced resolution and stretched:
+    // about 0.6 of a CSS pixel, and never more than ~700k pixels in all
+    var sc=0.6, cw=host.clientWidth, ch=host.clientHeight;
+    if(cw*ch*sc*sc>700000) sc=Math.sqrt(700000/(cw*ch));
+    var w=Math.max(2,Math.round(cw*sc)), h=Math.max(2,Math.round(ch*sc));
     if(w===canvas.width && h===canvas.height) return false;
-    canvas.width=w; canvas.height=h; return true;
-  }
-  size();
-  try{ build(); }catch(err){ fail(err); return null; }
-
-  function fail(err){
-    canvas.remove(); host.classList.remove('has-fluid'); host.classList.add('no-fluid');
-    if(window.console) console.warn('Seam liquid switched off:',err && err.message);
+    canvas.width=w; canvas.height=h; target(w,h); makeParticles(); return true;
   }
 
-  /* ---------------- simulation ---------------- */
-  function splat(x,y,dx,dy,color,radiusScale){
-    var a=canvas.width/canvas.height;
-    gl.useProgram(P.splat.p);
-    gl.uniform1i(P.splat.u.uTarget,velocity.read.attach(0));
-    gl.uniform1f(P.splat.u.aspectRatio,a);
-    gl.uniform2f(P.splat.u.point,x,y);
-    gl.uniform3f(P.splat.u.color,dx,dy,0);
-    var r=CFG.SPLAT_RADIUS*(radiusScale||1); if(a>1) r*=a;
-    gl.uniform1f(P.splat.u.radius,r);
-    blit(velocity.write); velocity.swap();
-    gl.uniform1i(P.splat.u.uTarget,dye.read.attach(0));
-    gl.uniform3f(P.splat.u.color,color[0],color[1],color[2]);
-    blit(dye.write); dye.swap();
+  var t=Math.random()*100, visible=false, raf=0, prev=0;
+  function flow(x,y,tt){
+    // a gentle swirling field, close enough to the painted liquid to read as one
+    var a=Math.sin(y*7.1+tt*0.9)+Math.cos(x*5.3-tt*0.6)*0.8+Math.sin((x+y)*9.0+tt*1.3)*0.4;
+    var b=Math.cos(x*6.7-tt*0.7)+Math.sin(y*4.9+tt*0.5)*0.8+Math.cos((x-y)*8.0-tt*1.1)*0.4;
+    return [a*0.026,b*0.020];
+  }
+  function stepParticles(dt){
+    var aspect=canvas.width/canvas.height, toward=TOP?1:-1;
+    for(var i=0;i<N;i++){
+      page[i]+=dt;
+      var f=flow(px[i]*aspect,py[i],t*0.6);
+      var z=TOP?1-py[i]:py[i];
+      // drift toward the edge while in this site's liquid, wander once inside the dark one
+      var pull=z>0.27?0.020:0.004;
+      var vx=f[0], vy=f[1]+toward*pull;
+      for(var k=0;k<trail.length;k++){
+        var T=trail[k]; if(T.s<=0.01) continue;
+        var dx=(px[i]-T.x)*aspect, dy=py[i]-T.y, d2=dx*dx+dy*dy;
+        if(d2<0.05){
+          var w=T.s*Math.exp(-d2*60)*0.9;
+          vx+=(-dy*T.spin*1.6+dx*0.8)*w/aspect; vy+=(dx*T.spin*1.6+dy*0.8)*w;
+        }
+      }
+      pvx[i]+=(vx-pvx[i])*Math.min(1,dt*3); pvy[i]+=(vy-pvy[i])*Math.min(1,dt*3);
+      px[i]+=pvx[i]*dt; py[i]+=pvy[i]*dt;
+      if(px[i]<0) px[i]+=1; else if(px[i]>1) px[i]-=1;
+      var life=page[i]/pmax[i];
+      var fade=Math.min(1,page[i]*1.5)*Math.min(1,(1-life)*3);
+      // brighter as they cross into the dark liquid, gone near the very edge
+      var zz=TOP?1-py[i]:py[i];
+      var lum=fade*(zz<0.27?1.0:0.35)*Math.min(1,zz*12);
+      if(life>=1 || zz<0.0 || zz>0.45) spawn(i);
+      pdata[i*3]=px[i]; pdata[i*3+1]=py[i]; pdata[i*3+2]=pz[i]; ldata[i]=Math.max(0,lum);
+    }
+    for(var k2=0;k2<trail.length;k2++) trail[k2].s*=Math.pow(0.12,dt);
   }
 
-  var clock=0;
-  function step(dt){
+  var pa=new Float32Array(32);
+  function draw(){
+    gl.viewport(0,0,canvas.width,canvas.height);
+    // liquid, into its texture
+    gl.bindFramebuffer(gl.FRAMEBUFFER,lfbo);
     gl.disable(gl.BLEND);
-    clock+=dt;
-    var sx=velocity.tx, sy=velocity.ty;
-    gl.useProgram(P.shear.p);
-    gl.uniform2f(P.shear.u.texelSize,sx,sy);
-    gl.uniform1i(P.shear.u.uVelocity,velocity.read.attach(0));
-    gl.uniform1f(P.shear.u.dt,dt);
-    gl.uniform1f(P.shear.u.shear,CFG.SHEAR);
-    gl.uniform1f(P.shear.u.time,clock);
-    blit(velocity.write); velocity.swap();
-    gl.useProgram(P.curl.p);
-    gl.uniform2f(P.curl.u.texelSize,sx,sy);
-    gl.uniform1i(P.curl.u.uVelocity,velocity.read.attach(0));
-    blit(curlT);
-
-    gl.useProgram(P.vorticity.p);
-    gl.uniform2f(P.vorticity.u.texelSize,sx,sy);
-    gl.uniform1i(P.vorticity.u.uVelocity,velocity.read.attach(0));
-    gl.uniform1i(P.vorticity.u.uCurl,curlT.attach(1));
-    gl.uniform1f(P.vorticity.u.curl,CFG.CURL);
-    gl.uniform1f(P.vorticity.u.dt,dt);
-    blit(velocity.write); velocity.swap();
-
-    gl.useProgram(P.divergence.p);
-    gl.uniform2f(P.divergence.u.texelSize,sx,sy);
-    gl.uniform1i(P.divergence.u.uVelocity,velocity.read.attach(0));
-    blit(divergence);
-
-    gl.useProgram(P.clear.p);
-    gl.uniform1i(P.clear.u.uTexture,pressure.read.attach(0));
-    gl.uniform1f(P.clear.u.value,CFG.PRESSURE);
-    blit(pressure.write); pressure.swap();
-
-    gl.useProgram(P.pressure.p);
-    gl.uniform2f(P.pressure.u.texelSize,sx,sy);
-    gl.uniform1i(P.pressure.u.uDivergence,divergence.attach(0));
-    for(var i=0;i<CFG.PRESSURE_ITERATIONS;i++){
-      gl.uniform1i(P.pressure.u.uPressure,pressure.read.attach(1));
-      blit(pressure.write); pressure.swap();
-    }
-
-    gl.useProgram(P.gradient.p);
-    gl.uniform2f(P.gradient.u.texelSize,sx,sy);
-    gl.uniform1i(P.gradient.u.uPressure,pressure.read.attach(0));
-    gl.uniform1i(P.gradient.u.uVelocity,velocity.read.attach(1));
-    blit(velocity.write); velocity.swap();
-
-    gl.useProgram(P.advection.p);
-    gl.uniform2f(P.advection.u.texelSize,sx,sy);
-    gl.uniform2f(P.advection.u.dyeTexelSize,sx,sy);
-    var vid=velocity.read.attach(0);
-    gl.uniform1i(P.advection.u.uVelocity,vid);
-    gl.uniform1i(P.advection.u.uSource,vid);
-    gl.uniform1f(P.advection.u.dt,dt);
-    gl.uniform1f(P.advection.u.dissipation,CFG.VELOCITY_DISSIPATION);
-    blit(velocity.write); velocity.swap();
-
-    gl.uniform2f(P.advection.u.dyeTexelSize,dye.tx,dye.ty);
-    gl.uniform1i(P.advection.u.uVelocity,velocity.read.attach(0));
-    gl.uniform1i(P.advection.u.uSource,dye.read.attach(1));
-    gl.uniform1f(P.advection.u.dissipation,CFG.DENSITY_DISSIPATION);
-    blit(dye.write); dye.swap();
+    gl.useProgram(L.p);
+    gl.bindBuffer(gl.ARRAY_BUFFER,quad);
+    gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0,2,gl.FLOAT,false,0,0);
+    gl.disableVertexAttribArray(1);
+    gl.uniform2f(L.u.res,canvas.width,canvas.height);
+    gl.uniform1f(L.u.time,t);
+    gl.uniform1f(L.u.edgeTop,TOP?1:0);
+    gl.uniform3f(L.u.edgeCol,EDGE[0],EDGE[1],EDGE[2]);
+    gl.uniform3f(L.u.ownCol,OWN[0],OWN[1],OWN[2]);
+    for(var k=0;k<8;k++){ var T=trail[k];
+      pa[k*4]=T?T.x:0; pa[k*4+1]=T?T.y:0; pa[k*4+2]=T?T.s:0; pa[k*4+3]=T?T.spin:0; }
+    gl.uniform4fv(L.u.ptr,pa);
+    gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+    // the liquid onto the screen
+    gl.bindFramebuffer(gl.FRAMEBUFFER,null);
+    gl.clearColor(0,0,0,0); gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.useProgram(CP.p);
+    gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D,ltex);
+    gl.uniform1i(CP.u.uTex,0);
+    gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+    // particles, added on top as light, only where the liquid is
+    gl.enable(gl.BLEND); gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
+    gl.useProgram(PT.p);
+    gl.uniform3f(PT.u.col,OWN[0],OWN[1],OWN[2]);
+    gl.uniform1i(PT.u.uLiquid,0);
+    gl.uniform2f(PT.u.res,canvas.width,canvas.height);
+    gl.uniform1f(PT.u.dpr,canvas.width/Math.max(1,host.clientWidth));
+    gl.bindBuffer(gl.ARRAY_BUFFER,pbuf); gl.bufferData(gl.ARRAY_BUFFER,pdata,gl.DYNAMIC_DRAW);
+    gl.enableVertexAttribArray(0); gl.vertexAttribPointer(0,3,gl.FLOAT,false,0,0);
+    gl.bindBuffer(gl.ARRAY_BUFFER,lbuf); gl.bufferData(gl.ARRAY_BUFFER,ldata,gl.DYNAMIC_DRAW);
+    gl.enableVertexAttribArray(1); gl.vertexAttribPointer(1,1,gl.FLOAT,false,0,0);
+    gl.drawArrays(gl.POINTS,0,N);
   }
 
-  function refill(amount,edge){
-    gl.useProgram(P.refill.p);
-    gl.uniform2f(P.refill.u.texelSize,dye.tx,dye.ty);
-    gl.uniform1i(P.refill.u.uSource,dye.read.attach(0));
-    gl.uniform3f(P.refill.u.top,GREEN[0]*0.62,GREEN[1]*0.62,GREEN[2]*0.62);
-    gl.uniform3f(P.refill.u.bottom,VIOLET[0]*0.66,VIOLET[1]*0.66,VIOLET[2]*0.66);
-    gl.uniform1f(P.refill.u.amount,amount);
-    gl.uniform1f(P.refill.u.edge,edge);
-    blit(dye.write); dye.swap();
-  }
-
-  function render(){
-    var D=P.glow;
-    gl.useProgram(D.p);
-    gl.uniform2f(D.u.texelSize,3/gl.drawingBufferWidth,3/gl.drawingBufferHeight);
-    gl.uniform1i(D.u.uTexture,dye.read.attach(0));
-    blit(null);
-  }
-
-  /* ---------------- the two liquids ---------------- */
-  function mix(a,b,t){ return [a[0]+(b[0]-a[0])*t, a[1]+(b[1]-a[1])*t, a[2]+(b[2]-a[2])*t]; }
-  function scale(c,k){ return [c[0]*k,c[1]*k,c[2]*k]; }
-  /* Ink fed in along each edge - green threads from the top, violet from
-     the bottom - which the sliding layers stretch into filaments and curl
-     where they meet. Small nudges along the meeting line keep waves forming. */
-  var feed=0, kick=0, side=0;
-  function ambient(dt){
-    feed-=dt; kick-=dt;
-    while(feed<=0){
-      feed+=0.028;
-      side=Math.random()<TOP?1:0;
-      var x=Math.random(), k=0.7+Math.random()*0.9, v=110+Math.random()*300, r=0.35+Math.random()*0.8;
-      if(side) splat(x,0.985,(Math.random()-0.5)*160,-v,scale(GREEN,0.22*k),r);
-      else     splat(x,0.015,(Math.random()-0.5)*160, v,scale(VIOLET,0.25*k),r);
-    }
-    if(kick<=0){
-      kick=0.12+Math.random()*0.25;
-      var up=(Math.random()<0.5?-1:1)*(300+Math.random()*500);
-      splat(Math.random(),0.42+Math.random()*0.16,(Math.random()-0.5)*400,up,[0,0,0],0.5+Math.random()*0.9);
-    }
-  }
-  // start already marbled: scattered ink in each half, moving every which way
-  function seed(){
-    for(var i=0;i<22;i++){
-      var a=Math.random()*Math.PI*2, f=300+Math.random()*700;
-      splat(Math.random(),0.55+Math.random()*0.45,Math.cos(a)*f,Math.sin(a)*f,scale(GREEN,0.25+Math.random()*0.25),0.5+Math.random()*1.5);
-      a=Math.random()*Math.PI*2; f=300+Math.random()*700;
-      splat(Math.random(),Math.random()*0.45,Math.cos(a)*f,Math.sin(a)*f,scale(VIOLET,0.28+Math.random()*0.25),0.5+Math.random()*1.5);
-    }
-  }
-  seed();
-
-  /* ---------------- the pointer stirs it ---------------- */
-  var ptr={x:0,y:0,set:false};
-  function onMove(clientX,clientY){
-    var r=host.getBoundingClientRect();
-    var x=(clientX-r.left)/r.width, y=1-(clientY-r.top)/r.height;
-    if(x<0||x>1||y<0||y>1){ ptr.set=false; return; }
-    if(!ptr.set){ ptr.x=x; ptr.y=y; ptr.set=true; return; }
-    var dx=(x-ptr.x)*CFG.SPLAT_FORCE*(r.width/r.height), dy=(y-ptr.y)*CFG.SPLAT_FORCE;
-    ptr.x=x; ptr.y=y;
-    if(Math.abs(dx)+Math.abs(dy)<0.5) return;
-    // the colour you drag is the liquid you are in: green near the top, violet near the bottom
-    var c=scale(mix(VIOLET,GREEN,Math.min(1,Math.max(0,y*1.2-0.1))),0.5);
-    pending.push([x,y,dx,dy,c]);
-    wake();
-  }
-  var pending=[];
-  // the layer sits behind the page and takes no clicks, so listen on the window
-  addEventListener('pointermove',function(e){ onMove(e.clientX,e.clientY); },{passive:true});
-  addEventListener('pointerleave',function(){ ptr.set=false; });
-  addEventListener('touchmove',function(e){ var t=e.touches[0]; if(t) onMove(t.clientX,t.clientY); },{passive:true});
-  addEventListener('touchend',function(){ ptr.set=false; },{passive:true});
-  addEventListener('scroll',function(){ ptr.set=false; },{passive:true});
-
-  /* ---------------- run only while it can be seen ---------------- */
-  var visible=false, raf=0, last=0;
   function frame(now){
     raf=0;
     if(!visible || document.hidden) return;
-    var dt=Math.min((now-last)/1000,0.033); last=now;
-    if(size()){ try{ build(); seed(); }catch(err){ fail(err); return; } }
-    if(!(RM && RM.matches)) ambient(dt);
-    while(pending.length){ var p=pending.shift(); splat(p[0],p[1],p[2],p[3],p[4],1); }
-    step(dt); render();
+    var dt=Math.min((now-prev)/1000,0.05); prev=now;
+    size();
+    var still=RM && RM.matches;
+    if(!still || trail.some(function(T){return T.s>0.02;})){ t+=dt; stepParticles(dt); }
+    draw();
     raf=requestAnimationFrame(frame);
   }
-  function wake(){ if(!raf && visible && !document.hidden){ last=performance.now(); raf=requestAnimationFrame(frame); } }
+  function wake(){ if(!raf && visible && !document.hidden){ prev=performance.now(); raf=requestAnimationFrame(frame); } }
+
+  size();
+  for(var w=0;w<90;w++) stepParticles(1/60);           // particles already spread out on first sight
+  draw();
   if(window.IntersectionObserver){
-    new IntersectionObserver(function(es){ visible=es[0].isIntersecting; wake(); },{rootMargin:'120px 0px'}).observe(host);
+    new IntersectionObserver(function(es){ visible=es[0].isIntersecting; wake(); },{rootMargin:'100px 0px'}).observe(host);
   } else { visible=true; wake(); }
   document.addEventListener('visibilitychange',wake);
-  // paint once even before it is seen, so a screenshot or slow device never shows a blank band
-  step(0.016); render();
+
   return {
     canvas:canvas,
-    /* for testing the look: run the simulation for a given number of
-       seconds at exactly 60 frames per second, then draw it once */
-    advance:function(seconds){
-      for(var i=0,n=Math.round(seconds*60);i<n;i++){
-        if(!(RM && RM.matches)) ambient(1/60);
-        while(pending.length){ var p=pending.shift(); splat(p[0],p[1],p[2],p[3],p[4],1); }
-        step(1/60);
-      }
-      render();
+    /* for testing the look: run for a number of seconds at exactly 60fps, draw once */
+    advance:function(seconds){ for(var i=0,n=Math.round(seconds*60);i<n;i++){ t+=1/60; stepParticles(1/60); } draw(); },
+    /* for testing the pointer: a move to (x,y) in 0..1 of the layer, y from the top */
+    pointer:function(x,y){
+      var r=host.getBoundingClientRect();
+      window.dispatchEvent(new PointerEvent('pointermove',{clientX:r.left+x*r.width,clientY:r.top+y*r.height}));
     }
   };
 }
 
-/* WebGL2 with half-float targets, else WebGL1 with the half-float extension */
-function getContext(canvas){
-  var opts={alpha:true,premultipliedAlpha:true,depth:false,stencil:false,antialias:false,preserveDrawingBuffer:false,powerPreference:'low-power'};
-  var gl=canvas.getContext('webgl2',opts), ext;
-  if(gl){
-    if(!gl.getExtension('EXT_color_buffer_float') && !gl.getExtension('EXT_color_buffer_half_float')) return null;
-    ext={internal:gl.RGBA16F,type:gl.HALF_FLOAT,linear:true};
-  } else {
-    gl=canvas.getContext('webgl',opts)||canvas.getContext('experimental-webgl',opts);
-    if(!gl) return null;
-    var hf=gl.getExtension('OES_texture_half_float');
-    if(!hf) return null;
-    ext={internal:gl.RGBA,type:hf.HALF_FLOAT_OES,linear:!!gl.getExtension('OES_texture_half_float_linear')};
-  }
-  return {gl:gl,ext:ext};
-}
-
-window.SeamFluid=SeamFluid;
+window.EdgeLiquid=EdgeLiquid;
 })();

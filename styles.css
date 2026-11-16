@@ -919,10 +919,11 @@
      Secret Wars' violet rises from the bottom edge as a live liquid, swirls
      into this site's green and fades out up the page. Behind the content,
      never takes clicks; the pointer stirs it from anywhere over it. */
-  .edge-fluid{position:absolute;left:0;right:0;z-index:-1;pointer-events:none;overflow:hidden;opacity:.78}
+  .edge-fluid{position:absolute;left:0;right:0;z-index:-1;pointer-events:none;overflow:hidden}
   .edge-fluid canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-  .edge-fluid.bottom{bottom:0;height:min(115vh,1150px);
-    -webkit-mask-image:linear-gradient(0deg,rgba(0,0,0,.9) 0%,rgba(0,0,0,.6) 18%,rgba(0,0,0,.22) 45%,rgba(0,0,0,.06) 70%,transparent 88%);
-            mask-image:linear-gradient(0deg,rgba(0,0,0,.9) 0%,rgba(0,0,0,.6) 18%,rgba(0,0,0,.22) 45%,rgba(0,0,0,.06) 70%,transparent 88%)}
+  .edge-fluid.bottom{bottom:0;height:100vh;height:100svh}
   .edge-fluid.no-fluid{background:radial-gradient(120% 60% at 50% 100%,rgba(180,140,255,.24),transparent 70%)}
   @media print{ .edge-fluid{display:none !important} }
+
+  /* small text over the edge liquid keeps a soft dark halo */
+  footer{text-shadow:0 1px 3px rgba(0,0,0,.95),0 0 12px rgba(0,0,0,.8)}
