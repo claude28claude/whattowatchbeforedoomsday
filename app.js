@@ -773,4 +773,34 @@ document.getElementById('topTally').textContent=
   CORE.length+' core · '+EXT.length+' extension · ~'+hrs(CORE.reduce(function(s,i){return s+i.run;},0))+'h';
 
 render();
+
+/* ============================================================
+   EMBEDDED ABOVE THE ROAD TO SECRET WARS
+   That site shows this page in a frame directly above its own (?embed=sw).
+   Reached by scrolling UP from Secret Wars, so it opens at its own end and
+   is read upward. Its "Part two" link hands control back to the parent.
+   ============================================================ */
+(function embedded(){
+  if(!/[?&]embed=sw\b/.test(location.search) || window.parent===window) return;
+  document.documentElement.classList.add('embedded');
+  var touched=false;
+  ['wheel','touchstart','keydown','mousedown'].forEach(function(ev){
+    addEventListener(ev,function(){ touched=true; },{passive:true,once:true});
+  });
+  function toEnd(){
+    if(touched) return;
+    var el=document.documentElement, was=el.style.scrollBehavior;
+    el.style.scrollBehavior='auto'; window.scrollTo(0,el.scrollHeight); el.style.scrollBehavior=was;
+  }
+  toEnd();
+  addEventListener('load',toEnd);
+  document.querySelectorAll('a[href*="road-to-secret-wars"]').forEach(function(a){
+    a.removeAttribute('target');
+    a.innerHTML='Part two continues below &darr;';
+    a.addEventListener('click',function(e){
+      e.preventDefault();
+      window.parent.postMessage({rtsw:'part-two'},'*');
+    });
+  });
+})();
 })();

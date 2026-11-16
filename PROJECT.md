@@ -208,7 +208,7 @@ drifting on one composited layer. Deliberately almost invisible.
 
 ## 7. Service worker rules
 
-- **Bump `CACHE` in `sw.js` on every content change.** Currently `v14`.
+- **Bump `CACHE` in `sw.js` on every content change.** Currently `v15`.
 - Navigations: network-first, cached `index.html` as the offline fallback.
 - Same-origin **`.js` / `.css`: network-first**. They were cache-first, which meant
   a forgotten `CACHE` bump could pair a fresh `index.html` with a stale `app.js`.
